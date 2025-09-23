@@ -1,0 +1,68 @@
+/* Remove all horizontal lines and unnecessary borders */
+hr {
+    display: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+}
+
+/* Remove borders from all elements */
+* {
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders from specific elements that might be causing the issue */
+.site-header, footer, .site-content, .container, 
+.main-navigation, .sidebar, .widget, .course-thumbnail,
+.post-thumbnail, .content, .comments-area, .comment-list,
+.comment-form, .page-links, .tagcloud, .wp-block,
+.entry-content, .entry-header, .entry-footer, .entry-summary {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Remove any pseudo-elements that might be adding lines */
+::before, ::after {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Remove any background images that might look like lines */
+body, .site-header, footer, .site-content, .container {
+    background-image: none !important;
+}
+
+/* Remove any box-shadows that might look like lines */
+body, .site-header, footer, .site-content, .container,
+.main-navigation, .sidebar, .widget, .course-thumbnail,
+.post-thumbnail, .content, .comments-area, .comment-list,
+.comment-form, .page-links, .tagcloud, .wp-block,
+.entry-content, .entry-header, .entry-footer, .entry-summary {
+    box-shadow: none !important;
+}
+
+/* Remove any text-decoration that might look like lines */
+a, a:hover, a:focus, a:active {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+/* Remove any outlines */
+:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+}
