@@ -92,7 +92,7 @@ function yiontech_lms_scripts() {
     // Enqueue newsletter script if enabled
     $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
     if ($newsletter_enable) {
-        wp_enqueue_script('yiontech-lms-newsletter', get_template_directory_uri() . '/js/newsletter.js', array('jquery'), $theme_version, true);
+        wp_enqueue_script('yiontech_lms-newsletter', get_template_directory_uri() . '/js/newsletter.js', array('jquery'), $theme_version, true);
         wp_localize_script('yiontech_lms-newsletter', 'yiontech_lms_newsletter', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'success_message' => yiontech_lms_get_theme_setting('newsletter_success_message', 'Thank you for subscribing!'),
@@ -100,24 +100,24 @@ function yiontech_lms_scripts() {
     }
     
     // Enqueue user profile script if on profile page
-if (is_page_template('page-profile.php')) {
-    wp_enqueue_script('yiontech-lms-user-profile', get_template_directory_uri() . '/js/user-profile.js', array('jquery'), $theme_version, true);
-    wp_localize_script('yiontech-lms-user-profile', 'yiontech_lms_user_profile', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('yiontech_lms_user_profile_nonce'),
-        'confirm_delete' => __('Are you sure you want to delete your account? This action cannot be undone.', 'yiontech-lms'),
-    ));
-}
+    if (is_page_template('page-profile.php')) {
+        wp_enqueue_script('yiontech-lms-user-profile', get_template_directory_uri() . '/js/user-profile.js', array('jquery'), $theme_version, true);
+        wp_localize_script('yiontech_lms-user-profile', 'yiontech_lms_user_profile', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('yiontech_lms_user_profile_nonce'),
+            'confirm_delete' => __('Are you sure you want to delete your account? This action cannot be undone.', 'yiontech-lms'),
+        ));
+    }
 
-// Enqueue cookie consent script if privacy features are enabled
-$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
-if ($enable_privacy_features) {
-    wp_enqueue_script('yiontech-lms-cookie-consent', get_template_directory_uri() . '/js/cookie-consent.js', array('jquery'), $theme_version, true);
-    wp_localize_script('yiontech-lms-cookie-consent', 'yiontech_lms_cookie_consent', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('yiontech_lms_cookie_consent_nonce'),
-    ));
-}
+    // Enqueue cookie consent script if privacy features are enabled
+    $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+    if ($enable_privacy_features) {
+        wp_enqueue_script('yiontech-lms-cookie-consent', get_template_directory_uri() . '/js/cookie-consent.js', array('jquery'), $theme_version, true);
+        wp_localize_script('yiontech-lms-cookie-consent', 'yiontech_lms_cookie_consent', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('yiontech_lms_cookie_consent_nonce'),
+        ));
+    }
     
     // Add inline script to prevent scroll jumps
     wp_add_inline_script('jquery', '
@@ -139,10 +139,12 @@ add_action('wp_enqueue_scripts', 'yiontech_lms_scripts');
 // Elementor compatibility
 function yiontech_lms_elementor_setup() {
     // Add theme compatibility
-    add_action('elementor/theme/register_locations', function($elementor_theme_manager) {
-        $elementor_theme_manager->register_location('header');
-        $elementor_theme_manager->register_location('footer');
-    });
+    if (function_exists('elementor_theme_do_location')) {
+        add_action('elementor/theme/register_locations', function($elementor_theme_manager) {
+            $elementor_theme_manager->register_location('header');
+            $elementor_theme_manager->register_location('footer');
+        });
+    }
 }
 add_action('after_setup_theme', 'yiontech_lms_elementor_setup');
 
@@ -1327,3 +1329,74 @@ function yiontech_lms_delete_user_account() {
 }
 add_action('wp_ajax_yiontech_lms_delete_user_account', 'yiontech_lms_delete_user_account');
 
+// Helper function to get Elementor templates
+function yiontech_lms_get_elementor_templates($template_type = '') {
+    $args = array(
+        'post_type' => 'elementor_library',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+    );
+    
+    if (!empty($template_type)) {
+        $args['meta_query'] = array(
+            array(
+                'key' => '_elementor_template_type',
+                'value' => $template_type,
+            ),
+        );
+    }
+    
+    $templates = get_posts($args);
+    
+    $template_options = array();
+    if (!empty($templates)) {
+        foreach ($templates as $template) {
+            $template_options[$template->ID] = $template->post_title;
+        }
+    }
+    
+    return $template_options;
+}
+
+// Debug function to check Elementor template loading
+add_action('wp_footer', function() {
+    $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
+    
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        echo "<!-- Debug: Footer Elementor Template ID: " . esc_html($footer_elementor_template) . " -->\n";
+        
+        if ($footer_elementor_template > 0) {
+            $template_post = get_post($footer_elementor_template);
+            if ($template_post) {
+                echo "<!-- Debug: Template Post Status: " . esc_html($template_post->post_status) . " -->\n";
+                echo "<!-- Debug: Template Post Title: " . esc_html($template_post->post_title) . " -->\n";
+                
+                if (function_exists('\\Elementor\\Plugin')) {
+                    $elementor = \Elementor\Plugin::instance();
+                    $document = $elementor->documents->get($footer_elementor_template);
+                    if ($document) {
+                        echo "<!-- Debug: Document is built with Elementor: " . ($document->is_built_with_elementor() ? 'Yes' : 'No') . " -->\n";
+                    } else {
+                        echo "<!-- Debug: Document not found -->\n";
+                    }
+                } else {
+                    echo "<!-- Debug: Elementor Plugin not available -->\n";
+                }
+            } else {
+                echo "<!-- Debug: Template Post not found -->\n";
+            }
+        }
+    }
+}, 1); // High priority to output early
+
+// Add proper Elementor initialization
+add_action('wp', function() {
+    if (class_exists('\\Elementor\\Plugin')) {
+        $elementor = \Elementor\Plugin::instance();
+        
+        // Make sure Elementor frontend is initialized
+        if (method_exists($elementor, 'frontend')) {
+            $elementor->frontend->init();
+        }
+    }
+}, 20); // Priority 20 to run after most initializations

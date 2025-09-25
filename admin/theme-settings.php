@@ -46,6 +46,7 @@ function yiontech_lms_get_default_settings() {
             array('text' => 'Contact', 'url' => '/contact'),
         ),
         'footer_style' => 'default',
+        'footer_elementor_template' => 0, // New setting for Elementor footer template
         'footer_content' => array(
             'column1' => array(
                 'title' => 'About Us',
@@ -214,6 +215,11 @@ function yiontech_lms_sanitize_settings($input) {
     // Sanitize footer settings
     if (isset($input['footer_style'])) {
         $output['footer_style'] = in_array($input['footer_style'], array('default', 'minimal', 'centered')) ? $input['footer_style'] : $current_options['footer_style'];
+    }
+    
+    // Sanitize footer Elementor template
+    if (isset($input['footer_elementor_template'])) {
+        $output['footer_elementor_template'] = absint($input['footer_elementor_template']);
     }
     
     if (isset($input['copyright_text'])) {
@@ -565,6 +571,20 @@ function yiontech_lms_theme_settings_init() {
                 'centered' => 'Centered Footer',
             ),
             'description' => 'Choose footer style',
+        )
+    );
+
+    // Footer Elementor Template
+    add_settings_field(
+        'footer_elementor_template',
+        'Footer Elementor Template',
+        'yiontech_lms_elementor_template_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_footer_section',
+        array(
+            'id' => 'footer_elementor_template',
+            'name' => 'yiontech_lms_theme_settings[footer_elementor_template]',
+            'description' => 'Select an Elementor template for the footer. Leave empty to use the default theme footer.',
         )
     );
 
@@ -1074,7 +1094,7 @@ function yiontech_lms_footer_settings_page() {
                 settings_fields('yiontech_lms_theme_settings');
                 
                 // Output hidden fields for all settings not in this section
-                yiontech_lms_output_hidden_fields(array('footer_style', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding'));
+                yiontech_lms_output_hidden_fields(array('footer_style', 'footer_elementor_template', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding'));
                 
                 yiontech_lms_output_settings_section('yiontech_lms_footer_section');
                 submit_button();
@@ -1425,6 +1445,66 @@ function yiontech_lms_menu_field($args) {
     <?php
 }
 
+function yiontech_lms_elementor_template_select_field($args) {
+    $options = get_option('yiontech_lms_theme_settings');
+    $defaults = yiontech_lms_get_default_settings();
+    $value = isset($options[$args['id']]) ? $options[$args['id']] : $defaults[$args['id']];
+    
+    // Get all Elementor templates (both Theme Builder and regular templates)
+    $all_templates = get_posts(array(
+        'post_type' => 'elementor_library',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+    ));
+    
+    // Group templates by type
+    $theme_builder_templates = array();
+    $regular_templates = array();
+    
+    foreach ($all_templates as $template) {
+        $template_type = get_post_meta($template->ID, '_elementor_template_type', true);
+        
+        if ($template_type === 'footer') {
+            $theme_builder_templates[] = $template;
+        } else {
+            $regular_templates[] = $template;
+        }
+    }
+    
+    ?>
+    <select name="<?php echo esc_attr($args['name']); ?>">
+        <option value="0"><?php _e('— Default Theme Footer —', 'yiontech-lms'); ?></option>
+        
+        <?php if (!empty($theme_builder_templates)) : ?>
+            <optgroup label="<?php esc_attr_e('Theme Builder Footer Templates', 'yiontech-lms'); ?>">
+                <?php foreach ($theme_builder_templates as $template) : ?>
+                    <option value="<?php echo esc_attr($template->ID); ?>" <?php selected($value, $template->ID); ?>>
+                        <?php echo esc_html($template->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </optgroup>
+        <?php endif; ?>
+        
+        <?php if (!empty($regular_templates)) : ?>
+            <optgroup label="<?php esc_attr_e('Other Elementor Templates', 'yiontech-lms'); ?>">
+                <?php foreach ($regular_templates as $template) : ?>
+                    <option value="<?php echo esc_attr($template->ID); ?>" <?php selected($value, $template->ID); ?>>
+                        <?php echo esc_html($template->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </optgroup>
+        <?php endif; ?>
+    </select>
+    <?php if (isset($args['description'])) : ?>
+        <p class="description"><?php echo esc_html($args['description']); ?></p>
+    <?php endif; ?>
+    <?php if (empty($all_templates)) : ?>
+        <p class="description"><?php _e('No templates found. Create templates in Elementor > Templates.', 'yiontech-lms'); ?></p>
+    <?php else : ?>
+        <p class="description"><?php _e('Create templates in Elementor > Templates or Elementor > Theme Builder.', 'yiontech-lms'); ?></p>
+    <?php endif; ?>
+    <?php
+}
 function yiontech_lms_footer_content_field($args) {
     $options = get_option('yiontech_lms_theme_settings');
     $defaults = yiontech_lms_get_default_settings();

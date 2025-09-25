@@ -151,6 +151,7 @@ function yiontech_lms_get_default_settings() {
             array('text' => 'Contact', 'url' => '/contact'),
         ),
         'footer_style' => 'default',
+        'footer_elementor_template' => 0, // New setting for Elementor footer template
         'footer_content' => array(
             'column1' => array(
                 'title' => 'About Us',
@@ -319,6 +320,11 @@ function yiontech_lms_sanitize_settings($input) {
     // Sanitize footer settings
     if (isset($input['footer_style'])) {
         $output['footer_style'] = in_array($input['footer_style'], array('default', 'minimal', 'centered')) ? $input['footer_style'] : $current_options['footer_style'];
+    }
+    
+    // Sanitize footer Elementor template
+    if (isset($input['footer_elementor_template'])) {
+        $output['footer_elementor_template'] = absint($input['footer_elementor_template']);
     }
     
     if (isset($input['copyright_text'])) {
@@ -670,6 +676,20 @@ function yiontech_lms_theme_settings_init() {
                 'centered' => 'Centered Footer',
             ),
             'description' => 'Choose footer style',
+        )
+    );
+
+    // Footer Elementor Template
+    add_settings_field(
+        'footer_elementor_template',
+        'Footer Elementor Template',
+        'yiontech_lms_elementor_template_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_footer_section',
+        array(
+            'id' => 'footer_elementor_template',
+            'name' => 'yiontech_lms_theme_settings[footer_elementor_template]',
+            'description' => 'Select an Elementor template for the footer. Leave empty to use the default theme footer.',
         )
     );
 
@@ -1179,7 +1199,7 @@ function yiontech_lms_footer_settings_page() {
                 settings_fields('yiontech_lms_theme_settings');
                 
                 // Output hidden fields for all settings not in this section
-                yiontech_lms_output_hidden_fields(array('footer_style', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding'));
+                yiontech_lms_output_hidden_fields(array('footer_style', 'footer_elementor_template', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding'));
                 
                 yiontech_lms_output_settings_section('yiontech_lms_footer_section');
                 submit_button();
@@ -1530,6 +1550,66 @@ function yiontech_lms_menu_field($args) {
     <?php
 }
 
+function yiontech_lms_elementor_template_select_field($args) {
+    $options = get_option('yiontech_lms_theme_settings');
+    $defaults = yiontech_lms_get_default_settings();
+    $value = isset($options[$args['id']]) ? $options[$args['id']] : $defaults[$args['id']];
+    
+    // Get all Elementor templates (both Theme Builder and regular templates)
+    $all_templates = get_posts(array(
+        'post_type' => 'elementor_library',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+    ));
+    
+    // Group templates by type
+    $theme_builder_templates = array();
+    $regular_templates = array();
+    
+    foreach ($all_templates as $template) {
+        $template_type = get_post_meta($template->ID, '_elementor_template_type', true);
+        
+        if ($template_type === 'footer') {
+            $theme_builder_templates[] = $template;
+        } else {
+            $regular_templates[] = $template;
+        }
+    }
+    
+    ?>
+    <select name="<?php echo esc_attr($args['name']); ?>">
+        <option value="0"><?php _e('— Default Theme Footer —', 'yiontech-lms'); ?></option>
+        
+        <?php if (!empty($theme_builder_templates)) : ?>
+            <optgroup label="<?php esc_attr_e('Theme Builder Footer Templates', 'yiontech-lms'); ?>">
+                <?php foreach ($theme_builder_templates as $template) : ?>
+                    <option value="<?php echo esc_attr($template->ID); ?>" <?php selected($value, $template->ID); ?>>
+                        <?php echo esc_html($template->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </optgroup>
+        <?php endif; ?>
+        
+        <?php if (!empty($regular_templates)) : ?>
+            <optgroup label="<?php esc_attr_e('Other Elementor Templates', 'yiontech-lms'); ?>">
+                <?php foreach ($regular_templates as $template) : ?>
+                    <option value="<?php echo esc_attr($template->ID); ?>" <?php selected($value, $template->ID); ?>>
+                        <?php echo esc_html($template->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </optgroup>
+        <?php endif; ?>
+    </select>
+    <?php if (isset($args['description'])) : ?>
+        <p class="description"><?php echo esc_html($args['description']); ?></p>
+    <?php endif; ?>
+    <?php if (empty($all_templates)) : ?>
+        <p class="description"><?php _e('No templates found. Create templates in Elementor > Templates.', 'yiontech-lms'); ?></p>
+    <?php else : ?>
+        <p class="description"><?php _e('Create templates in Elementor > Templates or Elementor > Theme Builder.', 'yiontech-lms'); ?></p>
+    <?php endif; ?>
+    <?php
+}
 function yiontech_lms_footer_content_field($args) {
     $options = get_option('yiontech_lms_theme_settings');
     $defaults = yiontech_lms_get_default_settings();
@@ -1763,21 +1843,27 @@ endwhile;
         $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
         $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
         $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+        
+        // Get comment form variables
+        $commenter = wp_get_current_commenter();
+        $req = get_option('require_name_email');
+        $consent = empty($commenter['comment_author_email']) ? '' : ' checked="checked"';
         ?>
         
+        <?php 
         comment_form(array(
             'fields' => array(
-                'author' => '<div class="comment-form-author mb-4">' . '<label for="author">' . __('Name', 'yiontech-lms') . '</label> ' . ($req ? '<span class="required">*</span>' : '') . '<input id="author" name="author" type="text" value="' . esc_attr($commenter['comment_author']) . '" size="30" maxlength="245" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
-                'email'  => '<div class="comment-form-email mb-4">' . '<label for="email">' . __('Email', 'yiontech-lms') . '</label> ' . ($req ? '<span class="required">*</span>' : '') . '<input id="email" name="email" type="email" value="' . esc_attr($commenter['comment_author_email']) . '" size="30" maxlength="100" aria-describedby="email-notes" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
-                'url'    => '<div class="comment-form-url mb-4">' . '<label for="url">' . __('Website', 'yiontech-lms') . '</label>' . '<input id="url" name="url" type="url" value="' . esc_attr($commenter['comment_author_url']) . '" size="30" maxlength="200" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
+                'author' => '<div class="comment-form-author mb-4">' . '<label for="author">' . __('Name', 'yiontech-lms') . ($req ? ' <span class="required">*</span>' : '') . '</label> ' . '<input id="author" name="author" type="text" value="' . esc_attr($commenter['comment_author']) . '" size="30" maxlength="245"' . ($req ? ' required' : '') . ' class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
+                'email'  => '<div class="comment-form-email mb-4">' . '<label for="email">' . __('Email', 'yiontech-lms') . ($req ? ' <span class="required">*</span>' : '') . '</label> ' . '<input id="email" name="email" type="email" value="' . esc_attr($commenter['comment_author_email']) . '" size="30" maxlength="100" aria-describedby="email-notes"' . ($req ? ' required' : '') . ' class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
+                'url'    => '<div class="comment-form-url mb-4">' . '<label for="url">' . __('Website', 'yiontech-lms') . '</label>' . '<input id="url" name="url" type="url" value="' . esc_attr($commenter['comment_author_url']) . '" size="30" maxlength="200" class="w-full bg-gray-50 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>',
                 'cookies' => '<div class="comment-form-cookies-consent mb-4"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"' . $consent . ' /> <label for="wp-comment-cookies-consent">' . __('Save my name, email, and website in this browser for the next time I comment.', 'yiontech-lms') . '</label></div>',
             ),
-            'comment_field' => '<div class="comment-form-comment mb-4"><label for="comment">' . _x('Comment', 'noun', 'yiontech-lms') . '</label><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>',
+            'comment_field' => '<div class="comment-form-comment mb-4"><label for="comment">' . _x('Comment', 'noun', 'yiontech-lms') . '</label><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>',
             'submit_button' => '<button name="%1$s" type="submit" id="%2$s" class="%3$s px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-300">%4$s</button>',
             'submit_field' => '<p class="form-submit mt-4">%1$s %2$s</p>',
-            'must_log_in' => '<p class="must-log-in">' . sprintf(__('You must be <a href="%s">logged in</a> to post a comment.', 'yiontech-lms'), wp_login_url(apply_filters('the_permalink', get_permalink($post_id)))) . '</p>',
-            'logged_in_as' => '<p class="logged-in-as">' . sprintf(__('Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>', 'yiontech-lms'), get_edit_user_link(), $user_identity, wp_logout_url(apply_filters('the_permalink', get_permalink($post_id)))) . '</p>',
-            'comment_notes_before' => '<p class="comment-notes"><span id="email-notes">' . __('Your email address will not be published.', 'yiontech-lms') . '</span>' . ($req ? $required_text : '') . '</p>',
+            'must_log_in' => '<p class="must-log-in">' . sprintf(__('You must be <a href="%s">logged in</a> to post a comment.', 'yiontech-lms'), wp_login_url(apply_filters('the_permalink', get_permalink()))) . '</p>',
+            'logged_in_as' => '<p class="logged-in-as">' . sprintf(__('Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>', 'yiontech-lms'), get_edit_user_link(), $user_identity, wp_logout_url(apply_filters('the_permalink', get_permalink()))) . '</p>',
+            'comment_notes_before' => '<p class="comment-notes"><span id="email-notes">' . __('Your email address will not be published.', 'yiontech-lms') . '</span>' . ($req ? ' ' . __('Required fields are marked *', 'yiontech-lms') : '') . '</p>',
             'comment_notes_after' => '',
             'id_form' => 'commentform',
             'id_submit' => 'submit',
@@ -3005,6 +3091,10 @@ get_header();
         $('#export-data').on('click', function(e) {
             e.preventDefault();
             
+            // Show loading state
+            const $message = $('#profile-message');
+            $message.html('<div class="loading-message">Processing your request...</div>');
+            
             // Send AJAX request
             $.ajax({
                 type: 'POST',
@@ -3017,7 +3107,7 @@ get_header();
                 success: function(response) {
                     if (response.success) {
                         // Create a temporary link to download the file
-                        var link = document.createElement('a');
+                        const link = document.createElement('a');
                         link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(response.data, null, 2));
                         link.download = 'user-data-' + new Date().toISOString().slice(0, 10) + '.json';
                         document.body.appendChild(link);
@@ -3025,15 +3115,15 @@ get_header();
                         document.body.removeChild(link);
                         
                         // Show success message
-                        $('#profile-message').html('<div class="success-message">Your data has been exported successfully.</div>');
+                        $message.html('<div class="success-message">Your data has been exported successfully.</div>');
                     } else {
                         // Show error message
-                        $('#profile-message').html('<div class="error-message">' + response.data + '</div>');
+                        $message.html('<div class="error-message">' + (response.data || 'Failed to export your data. Please try again.') + '</div>');
                     }
                 },
-                error: function() {
+                error: function(xhr, status, error) {
                     // Show error message
-                    $('#profile-message').html('<div class="error-message">Failed to export your data. Please try again.</div>');
+                    $message.html('<div class="error-message">Failed to export your data. Please try again. (' + error + ')</div>');
                 }
             });
         });
@@ -3044,6 +3134,10 @@ get_header();
             
             // Confirm deletion
             if (confirm(yiontech_lms_user_profile.confirm_delete)) {
+                // Show loading state
+                const $message = $('#profile-message');
+                $message.html('<div class="loading-message">Processing your request...</div>');
+                
                 // Send AJAX request
                 $.ajax({
                     type: 'POST',
@@ -3056,7 +3150,7 @@ get_header();
                     success: function(response) {
                         if (response.success) {
                             // Show success message
-                            $('#profile-message').html('<div class="success-message">' + response.data + '</div>');
+                            $message.html('<div class="success-message">' + response.data + '</div>');
                             
                             // Redirect to home page after a short delay
                             setTimeout(function() {
@@ -3064,12 +3158,12 @@ get_header();
                             }, 2000);
                         } else {
                             // Show error message
-                            $('#profile-message').html('<div class="error-message">' + response.data + '</div>');
+                            $message.html('<div class="error-message">' + (response.data || 'Failed to delete your account. Please try again.') + '</div>');
                         }
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
                         // Show error message
-                        $('#profile-message').html('<div class="error-message">Failed to delete your account. Please try again.</div>');
+                        $message.html('<div class="error-message">Failed to delete your account. Please try again. (' + error + ')</div>');
                     }
                 });
             }
@@ -3151,36 +3245,52 @@ get_header();
     'use strict';
     
     $(document).ready(function() {
-        // Cookie consent accept button
-        $('#cookie-consent-accept').on('click', function(e) {
-            e.preventDefault();
+        // Check if cookie consent banner exists
+        const $cookieBanner = $('#cookie-consent-banner');
+        
+        if ($cookieBanner.length) {
+            // Check if user has already consented
+            if (document.cookie.indexOf('yiontech_lms_cookie_consent=accepted') > -1) {
+                $cookieBanner.hide();
+            }
             
-            // Send AJAX request
-            $.ajax({
-                type: 'POST',
-                url: yiontech_lms_cookie_consent.ajax_url,
-                data: {
-                    action: 'yiontech_lms_cookie_consent',
-                    nonce: yiontech_lms_cookie_consent.nonce
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Hide cookie consent banner
-                        $('#cookie-consent-banner').fadeOut();
-                        
-                        // Set cookie for 1 year
+            // Cookie consent accept button
+            $('#cookie-consent-accept').on('click', function(e) {
+                e.preventDefault();
+                
+                // Send AJAX request
+                $.ajax({
+                    type: 'POST',
+                    url: yiontech_lms_cookie_consent.ajax_url,
+                    data: {
+                        action: 'yiontech_lms_cookie_consent',
+                        nonce: yiontech_lms_cookie_consent.nonce
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Hide cookie consent banner
+                            $cookieBanner.fadeOut();
+                            
+                            // Set cookie for 1 year
+                            var date = new Date();
+                            date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+                            var expires = "expires=" + date.toUTCString();
+                            document.cookie = "yiontech_lms_cookie_consent=accepted;" + expires + ";path=/";
+                        }
+                    },
+                    error: function() {
+                        console.log('Cookie consent failed');
+                        // Fallback - set cookie anyway
                         var date = new Date();
                         date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
                         var expires = "expires=" + date.toUTCString();
                         document.cookie = "yiontech_lms_cookie_consent=accepted;" + expires + ";path=/";
+                        $cookieBanner.fadeOut();
                     }
-                },
-                error: function() {
-                    console.log('Cookie consent failed');
-                }
+                });
             });
-        });
+        }
     });
     
 })(jQuery);
@@ -3533,9 +3643,10 @@ if ($is_auth_page) {
     echo '</body></html>';
     return;
 }
-?>
-<?php
+
+// Get theme settings
 $footer_style = yiontech_lms_get_theme_setting('footer_style', 'default');
+$footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
 $footer_content = yiontech_lms_get_theme_setting('footer_content');
 $copyright_text = yiontech_lms_get_theme_setting('copyright_text', '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.');
 $footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
@@ -3630,360 +3741,211 @@ foreach ($columns as $column) {
         }
     }
 }
-?>
-<?php if ($footer_style == 'default') : ?>
-<footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; ">
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
-        // Elementor footer
+
+// Check if an Elementor footer template is selected
+if ($footer_elementor_template > 0 && function_exists('\\Elementor\\Plugin')) {
+    // Get the template post
+    $template_post = get_post($footer_elementor_template);
+    
+    // Check if the template exists and is published
+    if ($template_post && $template_post->post_status === 'publish') {
+        // Try to get Elementor content using the frontend renderer
+        if (class_exists('\\Elementor\\Plugin')) {
+            $elementor = \Elementor\Plugin::instance();
+            if (method_exists($elementor, 'frontend') && method_exists($elementor->frontend, 'get_builder_content_for_display')) {
+                $content = $elementor->frontend->get_builder_content_for_display($footer_elementor_template);
+                
+                if (!empty($content)) {
+                    // Display the Elementor template
+                    echo $content;
+                } else {
+                    // Fall back to default footer if content is empty
+                    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                }
+            } else {
+                // Fallback for older Elementor versions
+                echo apply_filters('the_content', $template_post->post_content);
+            }
+        } else {
+            // Fallback if Elementor instance isn't available
+            echo apply_filters('the_content', $template_post->post_content);
+        }
     } else {
-        // Default theme footer
-        ?>
-        <div class="max-w-7xl  mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
-                <!-- Column 1: Logo and Description -->
-                <div>
-                    <?php if ($logo) : ?>
-                        <div class="mb-4">
-                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
+        // Template not found or not published, fall back to default footer
+        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+    }
+} else {
+    // No Elementor template selected, use default footer
+    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+}
+?>
+
+<!-- Back to top button - only show if enabled in theme settings -->
+<?php if ($enable_back_to_top) : ?>
+<a href="#" id="back-to-top" class="back-to-top">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+    </svg>
+</a>
+<?php endif; ?>
+
+<?php wp_footer(); ?>
+</body>
+</html>
+
+<?php
+/**
+ * Function to display the default theme footer
+ */
+function yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
+    if ($footer_style == 'default') : ?>
+    <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; ">
+        <?php 
+        if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
+            // Elementor footer
+        } else {
+            // Default theme footer
+            ?>
+            <div class="max-w-7xl  mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                    <!-- Column 1: Logo and Description -->
+                    <div>
+                        <?php if ($logo) : ?>
+                            <div class="mb-4">
+                                <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
+                            </div>
+                        <?php elseif ( has_custom_logo() ) : ?>
+                            <div class="mb-4">
+                                <?php the_custom_logo(); ?>
+                            </div>
+                        <?php else : ?>
+                            <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
+                        <?php endif; ?>
+                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                                </svg>
+                            </a>
                         </div>
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <div class="mb-4">
-                            <?php the_custom_logo(); ?>
-                        </div>
-                    <?php else : ?>
-                        <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
-                    <?php endif; ?>
-                    <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column1']['content']); ?></p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
-                            </svg>
-                        </a>
                     </div>
-                </div>
-                
-                <!-- Column 2: Quick Links -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column2']['title']); ?></h3>
-                    <ul class="space-y-2">
-                        <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                            <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                        <?php echo esc_html($link['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                        
-                        <!-- Add privacy links if enabled -->
-                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Privacy Policy
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Terms of Service
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                
-                <!-- Column 3: Company -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column3']['title']); ?></h3>
-                    <ul class="space-y-2">
-                        <?php if (!empty($footer_content['column3']['links']) && is_array($footer_content['column3']['links'])) : ?>
-                            <?php foreach ($footer_content['column3']['links'] as $link) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                        <?php echo esc_html($link['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                
-                <!-- Column 4: User Portal -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column4']['title']); ?></h3>
-                    <ul class="space-y-2">
-                        <?php if (!empty($footer_content['column4']['links']) && is_array($footer_content['column4']['links'])) : ?>
-                            <?php foreach ($footer_content['column4']['links'] as $link) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                        <?php echo esc_html($link['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                
-                <!-- Column 5: Newsletter -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column5']['title']); ?></h3>
-                    <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column5']['content']); ?></p>
-                    <?php if ($newsletter_enable) : ?>
-                        <?php get_template_part('template-parts/newsletter-form'); ?>
-                    <?php endif; ?>
                     
-                    <div class="mt-6">
-                        <h4 class="text-lg font-medium mb-2">Contact Us</h4>
-                        <ul class="space-y-2 text-gray-400">
-                            <li class="flex items-start">
-                                <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                                <span><?php echo esc_html($footer_content['column5']['email']); ?></span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                </svg>
-                                <span><?php echo esc_html($footer_content['column5']['phone']); ?></span>
-                            </li>
+                    <!-- Column 2: Quick Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column2']['title']); ?></h3>
+                        <ul class="space-y-2">
+                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
+                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
+                                            <?php echo esc_html($link['text']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-    ?>
-    
-    <!-- Copyright -->
-    <div class="mt-0  text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <p><?php echo $copyright_text; ?></p>
-            
-            <!-- Add privacy links if enabled -->
-            <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
-                <p class="mt-2 text-sm">
-                    <?php if ($privacy_policy_url) : ?>
-                        <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                            Privacy Policy
-                        </a>
-                    <?php endif; ?>
                     
-                    <?php if ($privacy_policy_url && $terms_of_service_url) : ?>
-                        <span class="mx-2">|</span>
-                    <?php endif; ?>
+                    <!-- Column 3: Company -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column3']['title']); ?></h3>
+                        <ul class="space-y-2">
+                            <?php if (!empty($footer_content['column3']['links']) && is_array($footer_content['column3']['links'])) : ?>
+                                <?php foreach ($footer_content['column3']['links'] as $link) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
+                                            <?php echo esc_html($link['text']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
                     
-                    <?php if ($terms_of_service_url) : ?>
-                        <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                            Terms of Service
-                        </a>
-                    <?php endif; ?>
-                </p>
-            <?php endif; ?>
-        </div>
-    </div>
-</footer>
-<?php elseif ($footer_style == 'minimal') : ?>
-<footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
-        // Elementor footer
-    } else {
-        // Minimal theme footer
-        ?>
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <!-- Logo and Copyright -->
-                <div class="mb-4 md:mb-0">
-                    <?php if ($logo) : ?>
-                        <div class="mb-2">
-                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
-                        </div>
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <div class="mb-2">
-                            <?php the_custom_logo(); ?>
-                        </div>
-                    <?php else : ?>
-                        <h3 class="text-xl font-bold mb-2"><?php bloginfo( 'name' ); ?></h3>
-                    <?php endif; ?>
-                    <p class="text-gray-400 text-sm"><?php echo $copyright_text; ?></p>
-                </div>
-                
-                <!-- Quick Links -->
-                <div class="mb-4 md:mb-0">
-                    <ul class="flex flex-wrap justify-center gap-4">
-                        <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                            <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                        <?php echo esc_html($link['text']); ?>
-                                    </a>
+                    <!-- Column 4: User Portal -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column4']['title']); ?></h3>
+                        <ul class="space-y-2">
+                            <?php if (!empty($footer_content['column4']['links']) && is_array($footer_content['column4']['links'])) : ?>
+                                <?php foreach ($footer_content['column4']['links'] as $link) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
+                                            <?php echo esc_html($link['text']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    
+                    <!-- Column 5: Newsletter -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column5']['title']); ?></h3>
+                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column5']['content']); ?></p>
+                        <?php if ($newsletter_enable) : ?>
+                            <?php get_template_part('template-parts/newsletter-form'); ?>
+                        <?php endif; ?>
+                        
+                        <div class="mt-6">
+                            <h4 class="text-lg font-medium mb-2">Contact Us</h4>
+                            <ul class="space-y-2 text-gray-400">
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span><?php echo esc_html($footer_content['column5']['email']); ?></span>
                                 </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                        
-                        <!-- Add privacy links if enabled -->
-                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Privacy Policy
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Terms of Service
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                
-                <!-- Social Media -->
-                <div>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
-                            </svg>
-                        </a>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                    </svg>
+                                    <span><?php echo esc_html($footer_content['column5']['phone']); ?></span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <?php
-    }
-    ?>
-</footer>
-<?php elseif ($footer_style == 'centered') : ?>
-<footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
-        // Elementor footer
-    } else {
-        // Centered theme footer
+            <?php
+        }
         ?>
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center">
-                <!-- Logo -->
-                <div class="mb-6">
-                    <?php if ($logo) : ?>
-                        <img src="<?php echo esc_url($logo); ?>" class="custom-logo mx-auto" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <div class="flex justify-center">
-                            <?php the_custom_logo(); ?>
-                        </div>
-                    <?php else : ?>
-                        <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Description -->
-                <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html($footer_content['column1']['content']); ?></p>
-                
-                <!-- Quick Links -->
-                <div class="mb-6">
-                    <ul class="flex flex-wrap justify-center gap-6">
-                        <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                            <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                        <?php echo esc_html($link['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                        
-                        <!-- Add privacy links if enabled -->
-                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Privacy Policy
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Terms of Service
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                
-                <!-- Newsletter -->
-                <?php if ($newsletter_enable) : ?>
-                    <div class="mb-6 max-w-md mx-auto">
-                        <?php get_template_part('template-parts/newsletter-form'); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Social Media -->
-                <div class="mb-6">
-                    <div class="flex justify-center space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Contact Info -->
-                <div class="text-gray-400 text-sm mb-6">
-                    <p><?php echo esc_html($footer_content['column5']['email']); ?> | <?php echo esc_html($footer_content['column5']['phone']); ?></p>
-                </div>
-            </div>
-        </div>
         
         <!-- Copyright -->
-        <div class="mt-0 pt-6 text-center text-gray-400 text-sm" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
+        <div class="mt-0  text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <p><?php echo $copyright_text; ?></p>
                 
                 <!-- Add privacy links if enabled -->
                 <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
-                    <p class="mt-2">
+                    <p class="mt-2 text-sm">
                         <?php if ($privacy_policy_url) : ?>
                             <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
                                 Privacy Policy
@@ -4003,25 +3965,219 @@ foreach ($columns as $column) {
                 <?php endif; ?>
             </div>
         </div>
-        <?php
-    }
-    ?>
-</footer>
-<?php endif; ?>
-
-
-<!-- Back to top button - only show if enabled in theme settings -->
-<?php if ($enable_back_to_top) : ?>
-<a href="#" id="back-to-top" class="back-to-top">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-    </svg>
-</a>
-<?php endif; ?>
-
-<?php wp_footer(); ?>
-</body>
-</html>
+    </footer>
+    <?php elseif ($footer_style == 'minimal') : ?>
+    <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
+        <?php 
+        if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
+            // Elementor footer
+        } else {
+            // Minimal theme footer
+            ?>
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <!-- Logo and Copyright -->
+                    <div class="mb-4 md:mb-0">
+                        <?php if ($logo) : ?>
+                            <div class="mb-2">
+                                <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
+                            </div>
+                        <?php elseif ( has_custom_logo() ) : ?>
+                            <div class="mb-2">
+                                <?php the_custom_logo(); ?>
+                            </div>
+                        <?php else : ?>
+                            <h3 class="text-xl font-bold mb-2"><?php bloginfo( 'name' ); ?></h3>
+                        <?php endif; ?>
+                        <p class="text-gray-400 text-sm"><?php echo $copyright_text; ?></p>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div class="mb-4 md:mb-0">
+                        <ul class="flex flex-wrap justify-center gap-4">
+                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
+                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
+                                            <?php echo esc_html($link['text']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    </footer>
+    <?php elseif ($footer_style == 'centered') : ?>
+    <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
+        <?php 
+        if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' ) ) {
+            // Elementor footer
+        } else {
+            // Centered theme footer
+            ?>
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center">
+                    <!-- Logo -->
+                    <div class="mb-6">
+                        <?php if ($logo) : ?>
+                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo mx-auto" alt="<?php bloginfo('name'); ?>" style="max-height: 36px; width: auto;">
+                        <?php elseif ( has_custom_logo() ) : ?>
+                            <div class="flex justify-center">
+                                <?php the_custom_logo(); ?>
+                            </div>
+                        <?php else : ?>
+                            <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Description -->
+                    <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                    
+                    <!-- Quick Links -->
+                    <div class="mb-6">
+                        <ul class="flex flex-wrap justify-center gap-6">
+                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
+                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
+                                            <?php echo esc_html($link['text']); ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    
+                    <!-- Newsletter -->
+                    <?php if ($newsletter_enable) : ?>
+                        <div class="mb-6 max-w-md mx-auto">
+                            <?php get_template_part('template-parts/newsletter-form'); ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <!-- Social Media -->
+                    <div class="mb-6">
+                        <div class="flex justify-center space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="text-gray-400 text-sm mb-6">
+                        <p><?php echo esc_html($footer_content['column5']['email']); ?> | <?php echo esc_html($footer_content['column5']['phone']); ?></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="mt-0 pt-6 text-center text-gray-400 text-sm" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
+                <div class="max-w-7xl mx-auto px-4 py-4">
+                    <p><?php echo $copyright_text; ?></p>
+                    
+                    <!-- Add privacy links if enabled -->
+                    <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
+                        <p class="mt-2">
+                            <?php if ($privacy_policy_url) : ?>
+                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Privacy Policy
+                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if ($privacy_policy_url && $terms_of_service_url) : ?>
+                                <span class="mx-2">|</span>
+                            <?php endif; ?>
+                            
+                            <?php if ($terms_of_service_url) : ?>
+                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Terms of Service
+                                </a>
+                            <?php endif; ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    </footer>
+    <?php endif; ?>
+    <?php
+}
+?>
 
 ===== ./sidebar.php =====
 
@@ -4080,7 +4236,10 @@ body {
     display: flex;
     flex-direction: column;
 }
-
+mark{
+    background: transparent !important;
+    color: initial !important;
+}
 .site-content {
     flex: 1;
     overflow: hidden;
@@ -4460,6 +4619,11 @@ html, body {
     .site-header .flex.items-center.space-x-3 a {
         margin-left: 0.25rem;
     }
+    /* Cookie consent banner */
+.cookie-consent-banner {
+   
+    flex-direction: column !important;
+}
 }
 
 /* Fix for overflow issues */
@@ -4603,7 +4767,7 @@ body.menu-open {
 .register-page .auth-form textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #d1d5db !important;
     border-radius: 0.375rem;
     font-size: 1rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -4904,6 +5068,7 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    flex-direction: row;
 }
 
 .cookie-consent-content {
@@ -5159,23 +5324,10 @@ function yiontech_lms_scripts() {
     // Enqueue newsletter script if enabled
     $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
     if ($newsletter_enable) {
-        wp_enqueue_script('yiontech-lms-newsletter', get_template_directory_uri() . '/js/newsletter.js', array('jquery'), $theme_version, true);
+        wp_enqueue_script('yiontech_lms-newsletter', get_template_directory_uri() . '/js/newsletter.js', array('jquery'), $theme_version, true);
         wp_localize_script('yiontech_lms-newsletter', 'yiontech_lms_newsletter', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'success_message' => yiontech_lms_get_theme_setting('newsletter_success_message', 'Thank you for subscribing!'),
-        ));
-    }
-    
-    // Enqueue cookie consent script if privacy features are enabled
-    $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
-    if ($enable_privacy_features) {
-        wp_enqueue_script('yiontech-lms-cookie-consent', get_template_directory_uri() . '/js/cookie-consent.js', array('jquery'), $theme_version, true);
-        wp_localize_script('yiontech_lms-cookie-consent', 'yiontech_lms_cookie_consent', array(
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'cookie_consent_text' => yiontech_lms_get_theme_setting('cookie_consent_text', 'We use cookies to ensure you get the best experience on our website. By continuing to use this site, you consent to our use of cookies.'),
-            'cookie_consent_button_text' => yiontech_lms_get_theme_setting('cookie_consent_button_text', 'Accept'),
-            'cookie_consent_learn_more_text' => yiontech_lms_get_theme_setting('cookie_consent_learn_more_text', 'Learn More'),
-            'privacy_policy_url' => get_privacy_policy_url(),
         ));
     }
     
@@ -5186,6 +5338,16 @@ function yiontech_lms_scripts() {
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('yiontech_lms_user_profile_nonce'),
             'confirm_delete' => __('Are you sure you want to delete your account? This action cannot be undone.', 'yiontech-lms'),
+        ));
+    }
+
+    // Enqueue cookie consent script if privacy features are enabled
+    $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+    if ($enable_privacy_features) {
+        wp_enqueue_script('yiontech-lms-cookie-consent', get_template_directory_uri() . '/js/cookie-consent.js', array('jquery'), $theme_version, true);
+        wp_localize_script('yiontech-lms-cookie-consent', 'yiontech_lms_cookie_consent', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('yiontech_lms_cookie_consent_nonce'),
         ));
     }
     
@@ -5209,10 +5371,12 @@ add_action('wp_enqueue_scripts', 'yiontech_lms_scripts');
 // Elementor compatibility
 function yiontech_lms_elementor_setup() {
     // Add theme compatibility
-    add_action('elementor/theme/register_locations', function($elementor_theme_manager) {
-        $elementor_theme_manager->register_location('header');
-        $elementor_theme_manager->register_location('footer');
-    });
+    if (function_exists('elementor_theme_do_location')) {
+        add_action('elementor/theme/register_locations', function($elementor_theme_manager) {
+            $elementor_theme_manager->register_location('header');
+            $elementor_theme_manager->register_location('footer');
+        });
+    }
 }
 add_action('after_setup_theme', 'yiontech_lms_elementor_setup');
 
@@ -6275,12 +6439,40 @@ function yiontech_lms_cookie_consent_handler() {
     }
     
     // Set cookie consent for 1 year
-    setcookie('yiontech_lms_cookie_consent', 'accepted', time() + YEAR_IN_SECONDS, '/');
+    $expiry = time() + YEAR_IN_SECONDS;
+    setcookie('yiontech_lms_cookie_consent', 'accepted', $expiry, '/');
     
     wp_send_json_success('Cookie consent accepted');
 }
 add_action('wp_ajax_yiontech_lms_cookie_consent', 'yiontech_lms_cookie_consent_handler');
 add_action('wp_ajax_nopriv_yiontech_lms_cookie_consent', 'yiontech_lms_cookie_consent_handler');
+
+// Add cookie consent banner to footer
+function yiontech_lms_cookie_consent_banner() {
+    $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+    
+    if ($enable_privacy_features && !isset($_COOKIE['yiontech_lms_cookie_consent'])) {
+        $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+        ?>
+        <div id="cookie-consent-banner" class="cookie-consent-banner">
+            <div class="cookie-consent-content">
+                <?php echo wp_kses_post(yiontech_lms_get_theme_setting('cookie_consent_text', 'We use cookies to ensure you get the best experience on our website. By continuing to use this site, you consent to our use of cookies.')); ?>
+            </div>
+            <div class="cookie-consent-buttons">
+                <?php if ($privacy_policy_url) : ?>
+                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="button cookie-consent-learn" target="_blank">
+                        <?php echo esc_html(yiontech_lms_get_theme_setting('cookie_consent_learn_more_text', 'Learn More')); ?>
+                    </a>
+                <?php endif; ?>
+                <button id="cookie-consent-accept" class="button cookie-consent-accept">
+                    <?php echo esc_html(yiontech_lms_get_theme_setting('cookie_consent_button_text', 'Accept')); ?>
+                </button>
+            </div>
+        </div>
+        <?php
+    }
+}
+add_action('wp_footer', 'yiontech_lms_cookie_consent_banner');
 
 // Export user data
 function yiontech_lms_export_user_data() {
@@ -6314,18 +6506,25 @@ function yiontech_lms_export_user_data() {
             'user_registered' => $user_data->user_registered,
             'display_name' => $user_data->display_name,
         ),
-        'user_meta' => $user_meta
+        'user_meta' => array()
     );
     
-    // Convert to JSON
-    $json_data = json_encode($export_data, JSON_PRETTY_PRINT);
+    // Sanitize user meta data
+    foreach ($user_meta as $key => $value) {
+        // Skip sensitive data
+        if (in_array($key, array('user_pass', 'user_activation_key', 'session_tokens'))) {
+            continue;
+        }
+        
+        // Handle arrays
+        if (is_array($value) && isset($value[0])) {
+            $export_data['user_meta'][$key] = maybe_unserialize($value[0]);
+        } else {
+            $export_data['user_meta'][$key] = $value;
+        }
+    }
     
-    // Set headers for download
-    header('Content-Type: application/json');
-    header('Content-Disposition: attachment; filename="user-data-' . $user_id . '.json"');
-    
-    echo $json_data;
-    exit;
+    wp_send_json_success($export_data);
 }
 add_action('wp_ajax_yiontech_lms_export_user_data', 'yiontech_lms_export_user_data');
 
@@ -6362,29 +6561,77 @@ function yiontech_lms_delete_user_account() {
 }
 add_action('wp_ajax_yiontech_lms_delete_user_account', 'yiontech_lms_delete_user_account');
 
-// Add cookie consent banner to footer
-function yiontech_lms_cookie_consent_banner() {
-    $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+// Helper function to get Elementor templates
+function yiontech_lms_get_elementor_templates($template_type = '') {
+    $args = array(
+        'post_type' => 'elementor_library',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+    );
     
-    if ($enable_privacy_features && !isset($_COOKIE['yiontech_lms_cookie_consent'])) {
-        ?>
-        <div id="cookie-consent-banner" class="cookie-consent-banner">
-            <div class="cookie-consent-content">
-                <?php echo wp_kses_post(yiontech_lms_get_theme_setting('cookie_consent_text', 'We use cookies to ensure you get the best experience on our website. By continuing to use this site, you consent to our use of cookies.')); ?>
-            </div>
-            <div class="cookie-consent-buttons">
-                <a href="<?php echo esc_url(yiontech_lms_get_privacy_policy_url()); ?>" class="button cookie-consent-learn" target="_blank">
-                    <?php echo esc_html(yiontech_lms_get_theme_setting('cookie_consent_learn_more_text', 'Learn More')); ?>
-                </a>
-                <button id="cookie-consent-accept" class="button cookie-consent-accept">
-                    <?php echo esc_html(yiontech_lms_get_theme_setting('cookie_consent_button_text', 'Accept')); ?>
-                </button>
-            </div>
-        </div>
-        <?php
+    if (!empty($template_type)) {
+        $args['meta_query'] = array(
+            array(
+                'key' => '_elementor_template_type',
+                'value' => $template_type,
+            ),
+        );
     }
+    
+    $templates = get_posts($args);
+    
+    $template_options = array();
+    if (!empty($templates)) {
+        foreach ($templates as $template) {
+            $template_options[$template->ID] = $template->post_title;
+        }
+    }
+    
+    return $template_options;
 }
-add_action('wp_footer', 'yiontech_lms_cookie_consent_banner');
+
+// Debug function to check Elementor template loading
+add_action('wp_footer', function() {
+    $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
+    
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        echo "<!-- Debug: Footer Elementor Template ID: " . esc_html($footer_elementor_template) . " -->\n";
+        
+        if ($footer_elementor_template > 0) {
+            $template_post = get_post($footer_elementor_template);
+            if ($template_post) {
+                echo "<!-- Debug: Template Post Status: " . esc_html($template_post->post_status) . " -->\n";
+                echo "<!-- Debug: Template Post Title: " . esc_html($template_post->post_title) . " -->\n";
+                
+                if (function_exists('\\Elementor\\Plugin')) {
+                    $elementor = \Elementor\Plugin::instance();
+                    $document = $elementor->documents->get($footer_elementor_template);
+                    if ($document) {
+                        echo "<!-- Debug: Document is built with Elementor: " . ($document->is_built_with_elementor() ? 'Yes' : 'No') . " -->\n";
+                    } else {
+                        echo "<!-- Debug: Document not found -->\n";
+                    }
+                } else {
+                    echo "<!-- Debug: Elementor Plugin not available -->\n";
+                }
+            } else {
+                echo "<!-- Debug: Template Post not found -->\n";
+            }
+        }
+    }
+}, 1); // High priority to output early
+
+// Add proper Elementor initialization
+add_action('wp', function() {
+    if (class_exists('\\Elementor\\Plugin')) {
+        $elementor = \Elementor\Plugin::instance();
+        
+        // Make sure Elementor frontend is initialized
+        if (method_exists($elementor, 'frontend')) {
+            $elementor->frontend->init();
+        }
+    }
+}, 20); // Priority 20 to run after most initializations
 
 ===== ./page.php =====
 
