@@ -1,4 +1,419 @@
-/* Remove all horizontal and vertical lines */
+/*
+Theme Name: Yiontech LMS Fixes
+Description: Fixes for theme layout and functionality issues
+Version: 1.0.0
+*/
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-content {
+    flex: 1;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Custom Logo Size */
+.custom-logo {
+    max-height: 36px;
+    width: auto;
+}
+
+/* Header Adjustments */
+.site-header {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 999;
+}
+
+.site-branding img {
+    max-height: 36px;
+    width: auto;
+}
+
+/* Navigation Menu */
+.main-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.main-navigation ul li {
+    position: relative;
+    border: none;
+}
+
+.main-navigation ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 0.25rem 0;
+    border: none;
+}
+
+.main-navigation ul li a:hover {
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+}
+
+/* Mobile Menu Toggle */
+#mobile-menu-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+#mobile-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Menu Sidebar */
+#mobile-menu-sidebar {
+    width: 80%;
+    max-width: 320px;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+#mobile-menu-sidebar.translate-x-full {
+    transform: translateX(100%);
+}
+
+#mobile-menu-sidebar:not(.translate-x-full) {
+    transform: translateX(0);
+}
+
+#mobile-menu-sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+#mobile-menu-sidebar ul li {
+    margin-bottom: 0.5rem;
+}
+
+#mobile-menu-sidebar ul li a {
+    color: #4B5563;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    display: block;
+    border: none;
+    transition: color 0.3s ease;
+}
+
+#mobile-menu-sidebar ul li a:hover {
+    color: #2563EB;
+    border: none;
+}
+
+/* Mobile Menu Sections */
+#mobile-menu-sidebar .border-b {
+    border-bottom: 1px solid #E5E7EB;
+}
+
+#mobile-menu-sidebar h3 {
+    color: #1F2937;
+    font-weight: 600;
+}
+
+/* Mobile Menu Overlay */
+#mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+}
+
+/* Course Card Adjustments */
+.course-thumbnail {
+    height: 180px;
+    border: none;
+}
+
+/* Pagination Adjustments */
+.page-numbers {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0.25rem;
+    border-radius: 0.375rem;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    text-decoration: none;
+    border: none;
+}
+
+.page-numbers.current {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+}
+
+.page-numbers:hover {
+    background-color: #e5e7eb;
+    border: none;
+}
+
+.page-numbers.current:hover {
+    background-color: #1d4ed8;
+    border: none;
+}
+
+/* Footer Adjustments */
+footer {
+    border: none;
+    box-shadow: none;
+}
+
+footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+footer ul li a {
+    color: #9CA3AF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    border: none;
+    display: inline-block;
+}
+
+footer ul li a:hover {
+    color: white;
+    border: none;
+}
+
+/* Newsletter Form */
+.newsletter-form input[type="email"] {
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+
+.newsletter-form input[type="email"]:focus {
+    border-color: #3B82F6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.newsletter-form button {
+    background-color: #2563EB;
+    border: none;
+}
+
+.newsletter-form button:hover {
+    background-color: #1D4ED8;
+}
+
+/* Mobile Menu Newsletter Form */
+#mobile-menu-sidebar form input[type="email"] {
+    border: 1px solid #D1D5DB;
+}
+
+#mobile-menu-sidebar form input[type="email"]:focus {
+    border-color: #3B82F6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#mobile-menu-sidebar form button {
+    background-color: #2563EB;
+    border: none;
+}
+
+#mobile-menu-sidebar form button:hover {
+    background-color: #1D4ED8;
+}
+
+/* Preloader Styles */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 99999 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.preloader-spinner {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: block !important;
+}
+
+.spinner {
+    width: 80px !important;
+    height: 80px !important;
+    border: 8px solid rgba(30, 64, 175, 0.2) !important;
+    border-top: 8px solid #1e40af !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    background-color: transparent !important;
+}
+
+/* Add a more visible spinner with multiple borders */
+.spinner::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #3b82f6;
+    animation: spin 2s linear infinite;
+}
+
+.spinner::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #60a5fa;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    background-color: #1e40af !important;
+    color: white !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s !important;
+    transform: translateY(20px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.back-to-top.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+.back-to-top:hover {
+    background-color: #1e3a8a !important;
+    transform: translateY(-5px) !important;
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.back-to-top svg {
+    width: 24px !important;
+    height: 24px !important;
+    pointer-events: none !important;
+}
+
+/* Sticky header styles */
+.site-header.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.site-header.scrolled {
+    background-color: #1e40af !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure body can scroll if needed */
+html, body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1279px) {
+    .site-header .flex.items-center.space-x-3 {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    
+    .site-header .flex.items-center.space-x-3 a {
+        margin-left: 0.25rem;
+    }
+}
+
+/* Fix for overflow issues */
+.container, .max-w-7xl {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Remove all horizontal lines and unnecessary borders */
 hr {
     display: none !important;
     border: none !important;
@@ -14,9 +429,10 @@ hr {
     border-style: none !important;
     border-color: transparent !important;
     outline: none !important;
+    box-shadow: none !important;
 }
 
-/* Remove borders from specific elements */
+/* Remove borders from specific elements that might be causing the issue */
 .site-header, footer, .site-content, .container, 
 .main-navigation, .sidebar, .widget, .course-thumbnail,
 .post-thumbnail, .content, .comments-area, .comment-list,
@@ -66,85 +482,227 @@ a, a:hover, a:focus, a:active {
     outline-color: transparent !important;
 }
 
-/* Prevent horizontal overflow */
-html, body {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    position: relative !important;
+/* Fix for layout shifts when mobile menu is open */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
 }
 
-.site-content {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100% !important;
+/* Header scroll effect */
+.site-header.scrolled {
+    background-color: #1e40af !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Fix for images and videos causing overflow */
-img, video, iframe, embed, object {
-    max-width: 100% !important;
-    height: auto !important;
-    border: none !important;
-    box-shadow: none !important;
+/* Add these styles at the end of the file */
+/* Auth page specific styles */
+.login-page, .register-page {
+    background-color: #f9fafb;
 }
 
-/* Fix for Elementor sections */
-.elementor-section {
-    overflow: hidden !important;
-    width: 100% !important;
-    max-width: 100% !important;
+.login-page .site-content, .register-page .site-content {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
 }
 
-.elementor-container {
-    max-width: 100% !important;
-    overflow: hidden !important;
+.login-page .custom-auth-form, .register-page .custom-auth-form {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    width: 100%;
+    max-width: 28rem;
 }
 
-/* Fix for tables */
-table {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
-    display: block !important;
-    white-space: nowrap !important;
+.login-page .custom-auth-form h2, .register-page .custom-auth-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
-/* Fix for preformatted text */
-pre {
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
+.login-page .auth-form .form-group, .register-page .auth-form .form-group {
+    margin-bottom: 1.25rem;
 }
 
-/* Fix for code blocks */
-code {
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-    max-width: 100% !important;
+.login-page .auth-form label, .register-page .auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
 }
 
-/* Fix for wide elements */
-.wide, .full-width, .alignwide, .alignfull {
-    max-width: 100% !important;
-    overflow: hidden !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+.login-page .auth-form input[type="text"],
+.login-page .auth-form input[type="email"],
+.login-page .auth-form input[type="password"],
+.login-page .auth-form input[type="tel"],
+.register-page .auth-form input[type="text"],
+.register-page .auth-form input[type="email"],
+.register-page .auth-form input[type="password"],
+.register-page .auth-form input[type="tel"],
+.register-page .auth-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Fix for mobile menu */
+.login-page .auth-form input:focus,
+.register-page .auth-form input:focus,
+.register-page .auth-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-page .auth-form .button, .register-page .auth-form .button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.login-page .auth-form .button:hover, .register-page .auth-form .button:hover {
+    background-color: #1e3a8a;
+}
+
+.login-page .auth-links, .register-page .auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #6b7280;
+}
+
+.login-page .auth-links a, .register-page .auth-links a {
+    color: #1e40af;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-page .auth-links a:hover, .register-page .auth-links a:hover {
+    text-decoration: underline;
+}
+
+.login-page .auth-message, .register-page .auth-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    text-align: center;
+}
+
+.login-page .error-message, .register-page .error-message {
+    background-color: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+}
+
+/* Fix for z-index conflicts between preloader, header, and back-to-top */
+#preloader {
+    z-index: 99999 !important;
+}
+
+.site-header {
+    z-index: 1000 !important;
+}
+
 #mobile-menu-sidebar {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
+    z-index: 9999 !important;
 }
 
-/* Prevent layout shifts when mobile menu opens */
-body.mobile-menu-open {
-    overflow: hidden !important;
-    position: fixed !important;
-    width: 100% !important;
+#mobile-menu-overlay {
+    z-index: 9998 !important;
 }
 
-.site-header{
+.back-to-top {
+    z-index: 998 !important;
+}
+
+/* Ensure proper loading sequence for components */
+body.preloader-active #preloader {
+    display: flex !important;
+}
+
+body.preloader-active .site-header {
+    opacity: 0.9;
+}
+
+body.preloader-active .back-to-top {
+    display: none !important;
+}
+
+/* Prevent scroll jump when transparent header is initialized */
+body {
+    overflow-x: hidden;
+}
+
+.site-header {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Fix for transparent header causing scroll reset */
+.header-transparent {
+    will-change: background-color;
+}
+
+/* Ensure smooth transitions for all header states */
+.site-header.sticky {
+    position: sticky;
+    top: 0;
     z-index: 999;
-    position: relative;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Prevent layout shifts during initialization */
+html, body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Add preloader class to body when preloader is active */
+body.preloader-active {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sticky header styles */
+.site-header.header-sticky-enabled {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.site-header.scrolled {
+    background-color: #1e40af !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Prevent layout shifts when mobile menu is open */
+body.mobile-menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
 }

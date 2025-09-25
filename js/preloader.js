@@ -1,36 +1,64 @@
-(function($) {
+/* ==========================
+   Preloader Script
+========================== */
+(function ($) {
     'use strict';
-    
-    $(window).on('load', function() {
-        console.log('Window loaded');
-        // Ensure preloader exists
+
+    // Function to restore scroll position
+    function restoreScrollPosition() {
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition));
+            sessionStorage.removeItem('scrollPosition');
+        }
+    }
+
+    $(window).on('load', function () {
         if ($('#preloader').length) {
-            console.log('Preloader found, delaying fade out');
-            // Show preloader for at least 1.5 seconds to ensure visibility
-            setTimeout(function() {
-                $('#preloader').fadeOut('slow', function() {
-                    $(this).remove();
-                    console.log('Preloader removed');
-                });
-            }, 1500);
+            // Remove preloader immediately when content is loaded
+            $('#preloader').fadeOut('slow', function () {
+                $(this).remove();
+                $('body').removeClass('preloader-active');
+                
+                // Restore scroll position after preloader is removed
+                restoreScrollPosition();
+                
+                // Trigger event for other scripts that depend on preloader removal
+                $(document).trigger('preloaderRemoved');
+            });
         } else {
-            console.log('Preloader not found');
+            $('body').removeClass('preloader-active');
+            
+            // Restore scroll position if no preloader
+            restoreScrollPosition();
+            
+            // Trigger event for consistency
+            $(document).trigger('preloaderRemoved');
         }
     });
-    
-    // Fallback in case load event doesn't fire properly
+
+    // Fallback in case window.load never triggers
     $(document).ready(function() {
-        console.log('Document ready');
-        // Longer fallback time
         setTimeout(function() {
-            if ($('#preloader').length) {
-                console.log('Preloader found in fallback, fading out');
-                $('#preloader').fadeOut('slow', function() {
+            if ($('#preloader').length && $('#preloader').is(':visible')) {
+                $('#preloader').fadeOut('slow', function () {
                     $(this).remove();
+                    $('body').removeClass('preloader-active');
+                    
+                    // Restore scroll position after preloader is removed
+                    restoreScrollPosition();
+                    
+                    // Trigger event for other scripts that depend on preloader removal
+                    $(document).trigger('preloaderRemoved');
                 });
-            } else {
-                console.log('Preloader not found in fallback');
+            } else if (!$('#preloader').length) {
+                // Restore scroll position if no preloader
+                restoreScrollPosition();
+                
+                // Trigger event for consistency
+                $(document).trigger('preloaderRemoved');
             }
-        }, 4000); // 4 seconds fallback
+        }, 1000); // Reduced timeout to 1 second
     });
+
 })(jQuery);

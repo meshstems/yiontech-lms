@@ -1,4 +1,7 @@
 <?php
+// Include theme settings
+require_once get_template_directory() . '/admin/theme-settings.php';
+
 // Theme setup
 function yiontech_lms_setup() {
     // Add theme support
@@ -11,11 +14,6 @@ function yiontech_lms_setup() {
         'flex-width'  => true,
     ));
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
-    
-    // Add Elementor support
-    add_theme_support('elementor');
-    add_theme_support('elementor-full-width');
-    add_theme_support('elementor-default-color-palette');
     
     // Register navigation menus
     register_nav_menus(array(
@@ -36,30 +34,28 @@ function yiontech_lms_setup() {
         'before_title'  => '<h2 class="widget-title text-xl font-bold mb-3">',
         'after_title'   => '</h2>',
     ));
-    
-    // Create front page template
+}
+add_action('after_setup_theme', 'yiontech_lms_setup');
+
+// Create front page on theme activation
+add_action('after_switch_theme', 'yiontech_lms_create_front_page');
+function yiontech_lms_create_front_page() {
     $front_page = get_page_by_path('front-page');
     if (!$front_page) {
-        $front_page = array(
+        $front_page_id = wp_insert_post(array(
             'post_title'    => 'Front Page',
             'post_content'  => '',
             'post_status'   => 'publish',
             'post_author'   => 1,
             'post_type'     => 'page',
             'post_name'     => 'front-page'
-        );
-        $front_page_id = wp_insert_post($front_page);
-        
-        // Set as front page
+        ));
         update_option('page_on_front', $front_page_id);
         update_option('show_on_front', 'page');
     }
 }
-add_action('after_setup_theme', 'yiontech_lms_setup');
 
-// Include theme settings
-require_once get_template_directory() . '/admin/theme-settings.php';
-
+// Enqueue scripts and styles
 // Enqueue scripts and styles
 function yiontech_lms_scripts() {
     // Get theme version for cache busting
@@ -77,12 +73,6 @@ function yiontech_lms_scripts() {
     // Enqueue mobile menu script
     wp_enqueue_script('yiontech-lms-mobile-menu', get_template_directory_uri() . '/js/script.js', array('jquery'), $theme_version, true);
     
-    // Enqueue back-to-top script if enabled
-    $enable_back_to_top = yiontech_lms_get_theme_setting('enable_back_to_top');
-    if ($enable_back_to_top) {
-        wp_enqueue_script('yiontech-lms-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', array('jquery'), $theme_version, true);
-    }
-    
     // Enqueue preloader script if enabled
     $enable_preloader = yiontech_lms_get_theme_setting('enable_preloader');
     if ($enable_preloader) {
@@ -96,6 +86,12 @@ function yiontech_lms_scripts() {
         wp_enqueue_script('yiontech-lms-header-scroll', get_template_directory_uri() . '/js/header-scroll.js', array('jquery'), $theme_version, true);
     }
     
+    // Enqueue back-to-top script if enabled
+    $enable_back_to_top = yiontech_lms_get_theme_setting('enable_back_to_top');
+    if ($enable_back_to_top) {
+        wp_enqueue_script('yiontech-lms-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', array('jquery'), $theme_version, true);
+    }
+    
     // Enqueue newsletter script if enabled
     $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
     if ($newsletter_enable) {
@@ -106,71 +102,20 @@ function yiontech_lms_scripts() {
         ));
     }
     
-    // Add inline script for back-to-top fallback
-    if ($enable_back_to_top) {
-        wp_add_inline_script('yiontech-lms-back-to-top', '
-            // Vanilla JavaScript fallback for back-to-top button
-            document.addEventListener("DOMContentLoaded", function() {
-                var backToTop = document.getElementById("back-to-top");
-                var scrollThreshold = 100;
-                
-                if (backToTop) {
-                    // Function to show the button
-                    function showBackToTop() {
-                        backToTop.classList.add("visible");
-                        // Force inline styles with !important
-                        backToTop.style.cssText = "opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important;";
-                    }
-                    
-                    // Function to hide the button
-                    function hideBackToTop() {
-                        backToTop.classList.remove("visible");
-                        // Force inline styles with !important
-                        backToTop.style.cssText = "opacity: 0 !important; visibility: hidden !important; transform: translateY(20px) !important; pointer-events: none !important;";
-                    }
-                    
-                    // Check if page is scrollable
-                    function isPageScrollable() {
-                        return document.body.scrollHeight > window.innerHeight;
-                    }
-                    
-                    // Scroll event listener
-                    window.addEventListener("scroll", function() {
-                        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        
-                        if (scrollTop > scrollThreshold) {
-                            showBackToTop();
-                        } else {
-                            hideBackToTop();
-                        }
-                    }, { passive: true });
-                    
-                    // Click event listener
-                    backToTop.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        window.scrollTo({
-                            top: 0,
-                            behavior: "smooth"
-                        });
-                    });
-                    
-                    // Initial check
-                    setTimeout(function() {
-                        var initialScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        
-                        // If page is not scrollable, show the button after a delay
-                        if (!isPageScrollable()) {
-                            setTimeout(showBackToTop, 2000);
-                        } else if (initialScrollTop > scrollThreshold) {
-                            showBackToTop();
-                        } else {
-                            hideBackToTop();
-                        }
-                    }, 100);
-                }
+    // Add inline script to prevent scroll jumps
+    wp_add_inline_script('jquery', '
+        jQuery(document).ready(function($) {
+            // Store scroll position before any scripts run
+            var scrollPosition = $(window).scrollTop();
+            
+            // Restore scroll position after all scripts are initialized
+            $(window).on("load", function() {
+                setTimeout(function() {
+                    $(window).scrollTop(scrollPosition);
+                }, 100);
             });
-        ');
-    }
+        });
+    ');
 }
 add_action('wp_enqueue_scripts', 'yiontech_lms_scripts');
 
@@ -197,7 +142,7 @@ function yiontech_lms_elementor_full_width() {
         if ($document && $document->is_built_with_elementor()) {
             ?>
             <style>
-                /* Make Elementor pages full width by default */
+                /* Only remove theme container constraints for Elementor pages */
                 body.elementor-page .site-content > .container,
                 body.elementor-page .site-content > .container > .flex,
                 body.elementor-page .site-content > .container > .flex > div:first-child {
@@ -207,53 +152,39 @@ function yiontech_lms_elementor_full_width() {
                     margin: 0 !important;
                 }
                 
-                /* Align Elementor content with Tailwind container */
-                body.elementor-page .elementor-section-boxed > .elementor-container {
-                    max-width: 1280px;
+                /* But preserve Elementor's own container settings */
+                body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
+                    max-width: 1140px;
                     width: 100%;
-                    padding-left: 1rem;
-                    padding-right: 1rem;
+                    padding-left: 15px;
+                    padding-right: 15px;
                     margin-left: auto;
                     margin-right: auto;
                 }
                 
-                /* Remove theme container padding for Elementor pages */
-                body.elementor-page .container {
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                }
-                
-                /* Full width sections */
-                body.elementor-page .elementor-section-full_width > .elementor-container {
+                /* Full width sections should remain full width */
+                body.elementor-page .elementor-section.elementor-section-full_width > .elementor-container {
                     max-width: 100% !important;
                     padding-left: 0 !important;
                     padding-right: 0 !important;
                 }
                 
-                /* Responsive adjustments matching Tailwind breakpoints */
-                @media (min-width: 640px) {
-                    body.elementor-page .elementor-section-boxed > .elementor-container {
-                        padding-left: 1.5rem;
-                        padding-right: 1.5rem;
+                /* Responsive adjustments */
+                @media (min-width: 768px) {
+                    body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
+                        max-width: 720px;
                     }
                 }
                 
-                @media (min-width: 1024px) {
-                    body.elementor-page .elementor-section-boxed > .elementor-container {
-                        padding-left: 2rem;
-                        padding-right: 2rem;
+                @media (min-width: 992px) {
+                    body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
+                        max-width: 960px;
                     }
                 }
                 
-                @media (min-width: 1280px) {
-                    body.elementor-page .elementor-section-boxed > .elementor-container {
-                        max-width: 1280px;
-                    }
-                }
-                
-                @media (min-width: 1536px) {
-                    body.elementor-page .elementor-section-boxed > .elementor-container {
-                        max-width: 1536px;
+                @media (min-width: 1200px) {
+                    body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
+                        max-width: 1140px;
                     }
                 }
             </style>

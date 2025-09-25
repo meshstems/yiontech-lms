@@ -63,7 +63,7 @@ $header_buttons = yiontech_lms_get_theme_setting('header_buttons');
 $header_menu = yiontech_lms_get_theme_setting('header_menu');
 ?>
 <?php if ($header_style == 'default') : ?>
-<header class="site-header text-white <?php echo $sticky_header ? 'sticky top-0 z-50' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
+<header class="site-header text-white <?php echo $sticky_header ? 'header-sticky-enabled' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
       <?php if (!$transparent_header || !is_front_page()) : ?>style="background-color: <?php echo esc_attr($header_background_color); ?>;"<?php endif; ?>>
     <?php 
     if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' ) ) {

@@ -2,16 +2,6 @@
     'use strict';
     
     document.addEventListener('DOMContentLoaded', function() {
-        // Restore scroll position after page reload
-        const scrollPosition = sessionStorage.getItem('scrollPosition');
-        if (scrollPosition) {
-            // Use a timeout to ensure the page is fully rendered
-            setTimeout(function() {
-                window.scrollTo(0, parseInt(scrollPosition));
-                sessionStorage.removeItem('scrollPosition');
-            }, 100);
-        }
-        
         // Save scroll position before page unload
         window.addEventListener('beforeunload', function() {
             sessionStorage.setItem('scrollPosition', window.scrollY);

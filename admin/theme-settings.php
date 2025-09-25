@@ -13,14 +13,14 @@ if (!defined('ABSPATH')) {
 // Default theme settings
 function yiontech_lms_get_default_settings() {
     return array(
-        'enable_preloader' => 1, // Changed from 0 to 1 to enable by default
+        'enable_preloader' => 1,
         'site_icon' => '',
         'header_style' => 'default',
         'transparent_header' => 0,
         'sticky_header' => 1,
         'header_background_color' => '#1e40af',
         'sticky_header_background_color' => '#1e40af',
-        'enable_back_to_top' => 1, // Add this new setting
+        'enable_back_to_top' => 1,
         'logo_upload' => '',
         'retina_logo_upload' => '',
         'header_buttons' => array(
@@ -132,17 +132,46 @@ function yiontech_lms_sanitize_settings($input) {
     // Start with current options
     $output = $current_options;
     
-    // Sanitize individual fields
-    $output['enable_preloader'] = isset($input['enable_preloader']) ? 1 : 0;
-    $output['site_icon'] = isset($input['site_icon']) ? esc_url_raw($input['site_icon']) : $current_options['site_icon'];
-    $output['header_style'] = isset($input['header_style']) && in_array($input['header_style'], array('default', 'minimal', 'centered')) ? $input['header_style'] : $current_options['header_style'];
-    $output['transparent_header'] = isset($input['transparent_header']) ? 1 : 0;
-    $output['sticky_header'] = isset($input['sticky_header']) ? 1 : 0;
-    $output['header_background_color'] = isset($input['header_background_color']) ? sanitize_hex_color($input['header_background_color']) : $current_options['header_background_color'];
-    $output['sticky_header_background_color'] = isset($input['sticky_header_background_color']) ? sanitize_hex_color($input['sticky_header_background_color']) : $current_options['sticky_header_background_color'];
-    $output['enable_back_to_top'] = isset($input['enable_back_to_top']) ? 1 : 0; // Add this line
-    $output['logo_upload'] = isset($input['logo_upload']) ? esc_url_raw($input['logo_upload']) : $current_options['logo_upload'];
-    $output['retina_logo_upload'] = isset($input['retina_logo_upload']) ? esc_url_raw($input['retina_logo_upload']) : $current_options['retina_logo_upload'];
+    // Sanitize individual fields only if they exist in input
+    if (isset($input['enable_preloader'])) {
+        $output['enable_preloader'] = $input['enable_preloader'] ? 1 : 0;
+    }
+    
+    if (isset($input['site_icon'])) {
+        $output['site_icon'] = esc_url_raw($input['site_icon']);
+    }
+    
+    if (isset($input['header_style'])) {
+        $output['header_style'] = in_array($input['header_style'], array('default', 'minimal', 'centered')) ? $input['header_style'] : $current_options['header_style'];
+    }
+    
+    if (isset($input['transparent_header'])) {
+        $output['transparent_header'] = $input['transparent_header'] ? 1 : 0;
+    }
+    
+    if (isset($input['sticky_header'])) {
+        $output['sticky_header'] = $input['sticky_header'] ? 1 : 0;
+    }
+    
+    if (isset($input['header_background_color'])) {
+        $output['header_background_color'] = sanitize_hex_color($input['header_background_color']);
+    }
+    
+    if (isset($input['sticky_header_background_color'])) {
+        $output['sticky_header_background_color'] = sanitize_hex_color($input['sticky_header_background_color']);
+    }
+    
+    if (isset($input['enable_back_to_top'])) {
+        $output['enable_back_to_top'] = $input['enable_back_to_top'] ? 1 : 0;
+    }
+    
+    if (isset($input['logo_upload'])) {
+        $output['logo_upload'] = esc_url_raw($input['logo_upload']);
+    }
+    
+    if (isset($input['retina_logo_upload'])) {
+        $output['retina_logo_upload'] = esc_url_raw($input['retina_logo_upload']);
+    }
     
     // Sanitize header buttons
     if (isset($input['header_buttons']) && is_array($input['header_buttons'])) {
@@ -174,11 +203,25 @@ function yiontech_lms_sanitize_settings($input) {
     }
     
     // Sanitize footer settings
-    $output['footer_style'] = isset($input['footer_style']) && in_array($input['footer_style'], array('default', 'minimal', 'centered')) ? $input['footer_style'] : $current_options['footer_style'];
-    $output['copyright_text'] = isset($input['copyright_text']) ? wp_kses_post($input['copyright_text']) : $current_options['copyright_text'];
-    $output['footer_text_color'] = isset($input['footer_text_color']) ? sanitize_hex_color($input['footer_text_color']) : $current_options['footer_text_color'];
-    $output['footer_background_color'] = isset($input['footer_background_color']) ? sanitize_hex_color($input['footer_background_color']) : $current_options['footer_background_color'];
-    $output['copyright_background_color'] = isset($input['copyright_background_color']) ? sanitize_hex_color($input['copyright_background_color']) : $current_options['copyright_background_color'];
+    if (isset($input['footer_style'])) {
+        $output['footer_style'] = in_array($input['footer_style'], array('default', 'minimal', 'centered')) ? $input['footer_style'] : $current_options['footer_style'];
+    }
+    
+    if (isset($input['copyright_text'])) {
+        $output['copyright_text'] = wp_kses_post($input['copyright_text']);
+    }
+    
+    if (isset($input['footer_text_color'])) {
+        $output['footer_text_color'] = sanitize_hex_color($input['footer_text_color']);
+    }
+    
+    if (isset($input['footer_background_color'])) {
+        $output['footer_background_color'] = sanitize_hex_color($input['footer_background_color']);
+    }
+    
+    if (isset($input['copyright_background_color'])) {
+        $output['copyright_background_color'] = sanitize_hex_color($input['copyright_background_color']);
+    }
     
     // Sanitize footer padding
     if (isset($input['footer_padding']) && is_array($input['footer_padding'])) {
@@ -230,15 +273,34 @@ function yiontech_lms_sanitize_settings($input) {
     }
     
     // Sanitize newsletter settings
-    $output['newsletter_enable'] = isset($input['newsletter_enable']) ? 1 : 0;
-    $output['newsletter_action_url'] = isset($input['newsletter_action_url']) ? esc_url_raw($input['newsletter_action_url']) : $current_options['newsletter_action_url'];
-    $output['newsletter_method'] = isset($input['newsletter_method']) && in_array($input['newsletter_method'], array('post', 'get')) ? $input['newsletter_method'] : $current_options['newsletter_method'];
-    $output['newsletter_email_field'] = isset($input['newsletter_email_field']) ? sanitize_text_field($input['newsletter_email_field']) : $current_options['newsletter_email_field'];
-    $output['newsletter_hidden_fields'] = isset($input['newsletter_hidden_fields']) ? sanitize_textarea_field($input['newsletter_hidden_fields']) : $current_options['newsletter_hidden_fields'];
-    $output['newsletter_success_message'] = isset($input['newsletter_success_message']) ? sanitize_textarea_field($input['newsletter_success_message']) : $current_options['newsletter_success_message'];
+    if (isset($input['newsletter_enable'])) {
+        $output['newsletter_enable'] = $input['newsletter_enable'] ? 1 : 0;
+    }
+    
+    if (isset($input['newsletter_action_url'])) {
+        $output['newsletter_action_url'] = esc_url_raw($input['newsletter_action_url']);
+    }
+    
+    if (isset($input['newsletter_method'])) {
+        $output['newsletter_method'] = in_array($input['newsletter_method'], array('post', 'get')) ? $input['newsletter_method'] : $current_options['newsletter_method'];
+    }
+    
+    if (isset($input['newsletter_email_field'])) {
+        $output['newsletter_email_field'] = sanitize_text_field($input['newsletter_email_field']);
+    }
+    
+    if (isset($input['newsletter_hidden_fields'])) {
+        $output['newsletter_hidden_fields'] = sanitize_textarea_field($input['newsletter_hidden_fields']);
+    }
+    
+    if (isset($input['newsletter_success_message'])) {
+        $output['newsletter_success_message'] = sanitize_textarea_field($input['newsletter_success_message']);
+    }
     
     // Sanitize custom CSS
-    $output['custom_css'] = isset($input['custom_css']) ? wp_strip_all_tags($input['custom_css']) : $current_options['custom_css'];
+    if (isset($input['custom_css'])) {
+        $output['custom_css'] = wp_strip_all_tags($input['custom_css']);
+    }
     
     return $output;
 }
@@ -281,6 +343,20 @@ function yiontech_lms_theme_settings_init() {
             'id' => 'site_icon',
             'name' => 'yiontech_lms_theme_settings[site_icon]',
             'description' => 'Upload site icon for browser tab',
+        )
+    );
+
+    // Enable Back to Top (moved to general section)
+    add_settings_field(
+        'enable_back_to_top',
+        'Enable Back to Top Button',
+        'yiontech_lms_checkbox_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_general_section',
+        array(
+            'id' => 'enable_back_to_top',
+            'name' => 'yiontech_lms_theme_settings[enable_back_to_top]',
+            'description' => 'Enable back to top button',
         )
     );
 
@@ -420,28 +496,6 @@ function yiontech_lms_theme_settings_init() {
             'id' => 'header_menu',
             'name' => 'yiontech_lms_theme_settings[header_menu]',
             'description' => 'Configure header menu items',
-        )
-    );
-
-    // Back to top section
-    add_settings_section(
-        'yiontech_lms_back_to_top_section',
-        'Back to Top Button',
-        'yiontech_lms_back_to_top_section_callback',
-        'yiontech_lms_theme_settings'
-    );
-
-    // Enable Back to Top
-    add_settings_field(
-        'enable_back_to_top',
-        'Enable Back to Top Button',
-        'yiontech_lms_checkbox_field',
-        'yiontech_lms_theme_settings',
-        'yiontech_lms_back_to_top_section',
-        array(
-            'id' => 'enable_back_to_top',
-            'name' => 'yiontech_lms_theme_settings[enable_back_to_top]',
-            'description' => 'Enable back to top button',
         )
     );
 
@@ -747,15 +801,6 @@ function yiontech_lms_add_theme_settings_page() {
     
     add_submenu_page(
         'theme-settings-general',
-        'Back to Top Settings',
-        'Back to Top',
-        'manage_options',
-        'theme-settings-back-to-top',
-        'yiontech_lms_back_to_top_settings_page'
-    );
-    
-    add_submenu_page(
-        'theme-settings-general',
         'Footer Settings',
         'Footer',
         'manage_options',
@@ -782,6 +827,135 @@ function yiontech_lms_add_theme_settings_page() {
     );
 }
 add_action('admin_menu', 'yiontech_lms_add_theme_settings_page');
+
+// Helper function to output hidden fields for preserving settings
+function yiontech_lms_output_hidden_fields($exclude_fields = array()) {
+    // Get all current settings
+    $all_settings = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
+    
+    // Output hidden fields for all settings not in the exclude list
+    foreach ($all_settings as $key => $value) {
+        if (!in_array($key, $exclude_fields)) {
+            if (is_array($value)) {
+                // For array values, encode as JSON
+                echo '<input type="hidden" name="yiontech_lms_theme_settings[' . esc_attr($key) . ']" value="' . esc_attr(json_encode($value)) . '" />';
+            } else {
+                // For scalar values
+                echo '<input type="hidden" name="yiontech_lms_theme_settings[' . esc_attr($key) . ']" value="' . esc_attr($value) . '" />';
+            }
+        }
+    }
+}
+
+// General settings page
+function yiontech_lms_general_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Yiontech LMS Theme Settings</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('enable_preloader', 'site_icon', 'enable_back_to_top'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_general_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// Header settings page
+function yiontech_lms_header_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Header Settings</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('header_style', 'transparent_header', 'sticky_header', 'header_background_color', 'sticky_header_background_color', 'logo_upload', 'retina_logo_upload', 'header_buttons', 'header_menu'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_header_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// Footer settings page
+function yiontech_lms_footer_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Footer Settings</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('footer_style', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_footer_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// Newsletter settings page
+function yiontech_lms_newsletter_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Newsletter Settings</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('newsletter_enable', 'newsletter_action_url', 'newsletter_method', 'newsletter_email_field', 'newsletter_hidden_fields', 'newsletter_success_message'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_newsletter_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+// CSS settings page
+function yiontech_lms_css_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>CSS Editor</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('custom_css'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_css_editor_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
 
 // Helper function to output a specific settings section
 function yiontech_lms_output_settings_section($section_id) {
@@ -823,114 +997,6 @@ function yiontech_lms_output_settings_section($section_id) {
     echo '</div>';
 }
 
-// General settings page
-function yiontech_lms_general_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Yiontech LMS Theme Settings</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_general_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// Header settings page
-function yiontech_lms_header_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Header Settings</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_header_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// Back to top settings page
-function yiontech_lms_back_to_top_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Back to Top Settings</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_back_to_top_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// Footer settings page
-function yiontech_lms_footer_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Footer Settings</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_footer_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// Newsletter settings page
-function yiontech_lms_newsletter_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Newsletter Settings</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_newsletter_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
-// CSS settings page
-function yiontech_lms_css_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>CSS Editor</h1>
-        <div class="settings-container">
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_settings_section('yiontech_lms_css_editor_section');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    </div>
-    <?php
-}
-
 // Section callbacks
 function yiontech_lms_general_section_callback() {
     echo '<p>General theme settings</p>';
@@ -938,10 +1004,6 @@ function yiontech_lms_general_section_callback() {
 
 function yiontech_lms_header_section_callback() {
     echo '<p>Configure your website header</p>';
-}
-
-function yiontech_lms_back_to_top_section_callback() {
-    echo '<p>Configure the back to top button settings</p>';
 }
 
 function yiontech_lms_footer_section_callback() {

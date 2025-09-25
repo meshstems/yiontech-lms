@@ -157,6 +157,25 @@
             e.preventDefault();
             $(this).closest('.footer-link-item').remove();
         });
+        
+        // Handle form submission to ensure proper checkbox handling
+        $('form').on('submit', function() {
+            // Ensure unchecked checkboxes are included in the form data
+            $(this).find('input[type="checkbox"]').each(function() {
+                var checkbox = $(this);
+                var name = checkbox.attr('name');
+                
+                // If checkbox is not checked, add a hidden field with value 0
+                if (!checkbox.is(':checked')) {
+                    var hiddenField = $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', name)
+                        .val('0');
+                    
+                    checkbox.after(hiddenField);
+                }
+            });
+        });
     });
 
 })(jQuery);
