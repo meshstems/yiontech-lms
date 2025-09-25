@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<div class="site-content w-full">
+<div class="site-content w-full overflow-hidden">
     <?php 
     while (have_posts()) : the_post(); 
         if (function_exists('\\Elementor\\Plugin') 
@@ -13,7 +13,7 @@
             
             <?php if (has_post_thumbnail()) : ?>
                 <!-- Full width hero background -->
-                <section class="relative w-full">
+                <section class="relative w-full overflow-hidden">
                     <?php the_post_thumbnail('full', [
                         'class' => 'w-full h-[500px] object-cover'
                     ]); ?>
@@ -30,10 +30,10 @@
             <?php endif; ?>
             
             <!-- Page content -->
-            <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="max-w-7xl mx-auto px-4 py-12 overflow-hidden">
                 <article id="post-<?php the_ID(); ?>" <?php post_class('bg-white shadow-md rounded-lg overflow-hidden'); ?>>
                     
-                    <div class="content p-6 prose max-w-none">
+                    <div class="content p-6 prose max-w-none overflow-hidden">
                         <?php the_content(); ?>
                     </div>
                 </article>

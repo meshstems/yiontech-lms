@@ -24,6 +24,7 @@ Use it to make something cool, have fun, and share what you've learned.
 html, body {
     height: 100%;
     overflow-x: hidden;
+    width: 100%;
 }
 
 body {
@@ -37,6 +38,8 @@ body {
 
 .site-content {
     flex: 1;
+    overflow: hidden;
+    width: 100%;
 }
 
 /* Custom Logo Size */
@@ -50,6 +53,8 @@ body {
     padding: 0;
     border: none;
     box-shadow: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 999;
 }
 
 .site-branding img {
@@ -269,4 +274,347 @@ footer ul li a:hover {
     background-color: #1D4ED8;
 }
 
-/*
+/* Preloader Styles */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 99999 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.preloader-spinner {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: block !important;
+}
+
+.spinner {
+    width: 80px !important;
+    height: 80px !important;
+    border: 8px solid rgba(30, 64, 175, 0.2) !important;
+    border-top: 8px solid #1e40af !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    background-color: transparent !important;
+}
+
+/* Add a more visible spinner with multiple borders */
+.spinner::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #3b82f6;
+    animation: spin 2s linear infinite;
+}
+
+.spinner::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #60a5fa;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    background-color: #1e40af !important;
+    color: white !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s !important;
+    transform: translateY(20px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.back-to-top.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+.back-to-top:hover {
+    background-color: #1e3a8a !important;
+    transform: translateY(-5px) !important;
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.back-to-top svg {
+    width: 24px !important;
+    height: 24px !important;
+    pointer-events: none !important;
+}
+
+/* Sticky header styles */
+.site-header.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.site-header.scrolled {
+    background-color: #1e40af !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure body can scroll if needed */
+html, body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1279px) {
+    .site-header .flex.items-center.space-x-3 {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    
+    .site-header .flex.items-center.space-x-3 a {
+        margin-left: 0.25rem;
+    }
+}
+
+/* Fix for overflow issues */
+.container, .max-w-7xl {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Remove all horizontal lines and unnecessary borders */
+hr {
+    display: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+}
+
+/* Remove borders from all elements */
+* {
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders from specific elements that might be causing the issue */
+.site-header, footer, .site-content, .container, 
+.main-navigation, .sidebar, .widget, .course-thumbnail,
+.post-thumbnail, .content, .comments-area, .comment-list,
+.comment-form, .page-links, .tagcloud, .wp-block,
+.entry-content, .entry-header, .entry-footer, .entry-summary {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Remove any pseudo-elements that might be adding lines */
+::before, ::after {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Remove any background images that might look like lines */
+body, .site-header, footer, .site-content, .container {
+    background-image: none !important;
+}
+
+/* Remove any box-shadows that might look like lines */
+body, .site-header, footer, .site-content, .container,
+.main-navigation, .sidebar, .widget, .course-thumbnail,
+.post-thumbnail, .content, .comments-area, .comment-list,
+.comment-form, .page-links, .tagcloud, .wp-block,
+.entry-content, .entry-header, .entry-footer, .entry-summary {
+    box-shadow: none !important;
+}
+
+/* Remove any text-decoration that might look like lines */
+a, a:hover, a:focus, a:active {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+/* Remove any outlines */
+:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+}
+
+/* Fix for layout shifts when mobile menu is open */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* Header scroll effect */
+.site-header.scrolled {
+    background-color: #1e40af !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Add these styles at the end of the file */
+/* Auth page specific styles */
+.login-page, .register-page {
+    background-color: #f9fafb;
+}
+
+.login-page .site-content, .register-page .site-content {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.login-page .custom-auth-form, .register-page .custom-auth-form {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    width: 100%;
+    max-width: 28rem;
+}
+
+.login-page .custom-auth-form h2, .register-page .custom-auth-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.login-page .auth-form .form-group, .register-page .auth-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.login-page .auth-form label, .register-page .auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.login-page .auth-form input[type="text"],
+.login-page .auth-form input[type="email"],
+.login-page .auth-form input[type="password"],
+.login-page .auth-form input[type="tel"],
+.register-page .auth-form input[type="text"],
+.register-page .auth-form input[type="email"],
+.register-page .auth-form input[type="password"],
+.register-page .auth-form input[type="tel"],
+.register-page .auth-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login-page .auth-form input:focus,
+.register-page .auth-form input:focus,
+.register-page .auth-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-page .auth-form .button, .register-page .auth-form .button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.login-page .auth-form .button:hover, .register-page .auth-form .button:hover {
+    background-color: #1e3a8a;
+}
+
+.login-page .auth-links, .register-page .auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #6b7280;
+}
+
+.login-page .auth-links a, .register-page .auth-links a {
+    color: #1e40af;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-page .auth-links a:hover, .register-page .auth-links a:hover {
+    text-decoration: underline;
+}
+
+.login-page .auth-message, .register-page .auth-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    text-align: center;
+}
+
+.login-page .error-message, .register-page .error-message {
+    background-color: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+}

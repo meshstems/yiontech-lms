@@ -1,24 +1,26 @@
 <?php get_header(); ?>
 <div class="site-content">
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto px-4 py-8 overflow-hidden">
         <div class="flex flex-col md:flex-row">
-            <div class="w-full md:w-2/3 md:pr-8">
+            <div class="w-full md:w-2/3 md:pr-8 overflow-hidden">
                 <h1 class="text-3xl font-bold mb-6">Available Courses</h1>
                 
                 <?php
                 // Check if Tutor LMS is active
                 if (function_exists('tutor_utils')) {
-                    // Get Tutor LMS courses
-                    $courses = tutor_utils()->get_courses([
+                    // Get Tutor LMS courses using WP_Query
+                    $courses_query = new WP_Query([
+                        'post_type' => 'courses',
                         'post_status' => 'publish',
                         'orderby' => 'post_date',
-                        'order' => 'DESC'
+                        'order' => 'DESC',
+                        'posts_per_page' => 12
                     ]);
                     
-                    if ($courses->have_posts()) :
+                    if ($courses_query->have_posts()) :
                         ?>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <?php while ($courses->have_posts()) : $courses->the_post(); ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">
+                            <?php while ($courses_query->have_posts()) : $courses_query->the_post(); ?>
                                 <?php get_template_part('template-parts/content', 'course'); ?>
                             <?php endwhile; ?>
                         </div>
@@ -27,7 +29,7 @@
                             <?php
                             // Pagination for courses
                             echo paginate_links(array(
-                                'total' => $courses->max_num_pages,
+                                'total' => $courses_query->max_num_pages,
                                 'prev_text' => __('&laquo; Previous', 'yiontech-lms'),
                                 'next_text' => __('Next &raquo;', 'yiontech-lms'),
                                 'type' => 'list',
@@ -67,7 +69,7 @@
                     // Display regular posts as fallback
                     if (have_posts()) :
                         ?>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">
                             <?php while (have_posts()) : the_post(); ?>
                                 <?php get_template_part('template-parts/content', get_post_format()); ?>
                             <?php endwhile; ?>
