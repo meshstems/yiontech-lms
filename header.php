@@ -61,6 +61,11 @@ $logo = yiontech_lms_get_theme_setting('logo_upload');
 $retina_logo = yiontech_lms_get_theme_setting('retina_logo_upload');
 $header_buttons = yiontech_lms_get_theme_setting('header_buttons');
 $header_menu = yiontech_lms_get_theme_setting('header_menu');
+
+// Get privacy settings
+$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 ?>
 <?php if ($header_style == 'default') : ?>
 <header class="site-header text-white <?php echo $sticky_header ? 'header-sticky-enabled' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
@@ -97,6 +102,23 @@ $header_menu = yiontech_lms_get_theme_setting('header_menu');
                                     </a>
                                 </li>
                             <?php endforeach; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     <?php else : ?>
                         <?php
@@ -188,6 +210,23 @@ $header_menu = yiontech_lms_get_theme_setting('header_menu');
                                     </a>
                                 </li>
                             <?php endforeach; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     <?php else : ?>
                         <?php
@@ -279,6 +318,23 @@ $header_menu = yiontech_lms_get_theme_setting('header_menu');
                                     </a>
                                 </li>
                             <?php endforeach; ?>
+                            
+                            <!-- Add privacy links if enabled -->
+                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                                <li>
+                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     <?php else : ?>
                         <?php
@@ -375,6 +431,23 @@ $header_menu = yiontech_lms_get_theme_setting('header_menu');
                                 </a>
                             </li>
                         <?php endforeach; ?>
+                        
+                        <!-- Add privacy links if enabled -->
+                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
+                                    Terms of Service
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 <?php else : ?>
                     <?php
@@ -548,6 +621,59 @@ if ($custom_css) {
         .site-header.scrolled {
             background-color: #1e40af !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* Cookie consent banner */
+        .cookie-consent-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            color: white;
+            padding: 15px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .cookie-consent-content {
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .cookie-consent-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cookie-consent-buttons .button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .cookie-consent-accept {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .cookie-consent-accept:hover {
+            background: #2563eb;
+        }
+        
+        .cookie-consent-learn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .cookie-consent-learn:hover {
+            background: rgba(255,255,255,0.1);
         }
     </style>
     <?php

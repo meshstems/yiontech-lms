@@ -97,6 +97,15 @@ function yiontech_lms_get_default_settings() {
         'newsletter_hidden_fields' => '',
         'newsletter_success_message' => 'Thank you for subscribing!',
         'custom_css' => '',
+        // Privacy Settings
+        'enable_privacy_features' => 1,
+        'privacy_policy_page' => 0,
+        'terms_of_service_page' => 0,
+        'cookie_consent_text' => 'We use cookies to ensure you get the best experience on our website. By continuing to use this site, you consent to our use of cookies.',
+        'cookie_consent_button_text' => 'Accept',
+        'cookie_consent_learn_more_text' => 'Learn More',
+        'enable_data_export' => 1,
+        'enable_account_deletion' => 1,
     );
 }
 
@@ -300,6 +309,39 @@ function yiontech_lms_sanitize_settings($input) {
     // Sanitize custom CSS
     if (isset($input['custom_css'])) {
         $output['custom_css'] = wp_strip_all_tags($input['custom_css']);
+    }
+    
+    // Sanitize privacy settings
+    if (isset($input['enable_privacy_features'])) {
+        $output['enable_privacy_features'] = $input['enable_privacy_features'] ? 1 : 0;
+    }
+    
+    if (isset($input['privacy_policy_page'])) {
+        $output['privacy_policy_page'] = absint($input['privacy_policy_page']);
+    }
+    
+    if (isset($input['terms_of_service_page'])) {
+        $output['terms_of_service_page'] = absint($input['terms_of_service_page']);
+    }
+    
+    if (isset($input['cookie_consent_text'])) {
+        $output['cookie_consent_text'] = wp_kses_post($input['cookie_consent_text']);
+    }
+    
+    if (isset($input['cookie_consent_button_text'])) {
+        $output['cookie_consent_button_text'] = sanitize_text_field($input['cookie_consent_button_text']);
+    }
+    
+    if (isset($input['cookie_consent_learn_more_text'])) {
+        $output['cookie_consent_learn_more_text'] = sanitize_text_field($input['cookie_consent_learn_more_text']);
+    }
+    
+    if (isset($input['enable_data_export'])) {
+        $output['enable_data_export'] = $input['enable_data_export'] ? 1 : 0;
+    }
+    
+    if (isset($input['enable_account_deletion'])) {
+        $output['enable_account_deletion'] = $input['enable_account_deletion'] ? 1 : 0;
     }
     
     return $output;
@@ -708,6 +750,127 @@ function yiontech_lms_theme_settings_init() {
         )
     );
 
+    // Privacy section
+    add_settings_section(
+        'yiontech_lms_privacy_section',
+        'Privacy Settings',
+        'yiontech_lms_privacy_section_callback',
+        'yiontech_lms_theme_settings'
+    );
+
+    // Enable Privacy Features
+    add_settings_field(
+        'enable_privacy_features',
+        'Enable Privacy Features',
+        'yiontech_lms_checkbox_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'enable_privacy_features',
+            'name' => 'yiontech_lms_theme_settings[enable_privacy_features]',
+            'description' => 'Enable privacy features including cookie consent and data protection',
+        )
+    );
+
+    // Privacy Policy Page
+    add_settings_field(
+        'privacy_policy_page',
+        'Privacy Policy Page',
+        'yiontech_lms_page_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'privacy_policy_page',
+            'name' => 'yiontech_lms_theme_settings[privacy_policy_page]',
+            'description' => 'Select your privacy policy page',
+        )
+    );
+
+    // Terms of Service Page
+    add_settings_field(
+        'terms_of_service_page',
+        'Terms of Service Page',
+        'yiontech_lms_page_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'terms_of_service_page',
+            'name' => 'yiontech_lms_theme_settings[terms_of_service_page]',
+            'description' => 'Select your terms of service page',
+        )
+    );
+
+    // Cookie Consent Text
+    add_settings_field(
+        'cookie_consent_text',
+        'Cookie Consent Text',
+        'yiontech_lms_textarea_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'cookie_consent_text',
+            'name' => 'yiontech_lms_theme_settings[cookie_consent_text]',
+            'description' => 'Enter the text to display in the cookie consent banner',
+            'rows' => 3,
+        )
+    );
+
+    // Cookie Consent Button Text
+    add_settings_field(
+        'cookie_consent_button_text',
+        'Cookie Consent Button Text',
+        'yiontech_lms_text_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'cookie_consent_button_text',
+            'name' => 'yiontech_lms_theme_settings[cookie_consent_button_text]',
+            'description' => 'Enter the text for the cookie consent accept button',
+        )
+    );
+
+    // Cookie Consent Learn More Text
+    add_settings_field(
+        'cookie_consent_learn_more_text',
+        'Cookie Consent Learn More Text',
+        'yiontech_lms_text_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'cookie_consent_learn_more_text',
+            'name' => 'yiontech_lms_theme_settings[cookie_consent_learn_more_text]',
+            'description' => 'Enter the text for the cookie consent learn more link',
+        )
+    );
+
+    // Enable Data Export
+    add_settings_field(
+        'enable_data_export',
+        'Enable Data Export',
+        'yiontech_lms_checkbox_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'enable_data_export',
+            'name' => 'yiontech_lms_theme_settings[enable_data_export]',
+            'description' => 'Allow users to export their data from their profile page',
+        )
+    );
+
+    // Enable Account Deletion
+    add_settings_field(
+        'enable_account_deletion',
+        'Enable Account Deletion',
+        'yiontech_lms_checkbox_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_privacy_section',
+        array(
+            'id' => 'enable_account_deletion',
+            'name' => 'yiontech_lms_theme_settings[enable_account_deletion]',
+            'description' => 'Allow users to delete their account from their profile page',
+        )
+    );
+
     // CSS Editor section
     add_settings_section(
         'yiontech_lms_css_editor_section',
@@ -815,6 +978,15 @@ function yiontech_lms_add_theme_settings_page() {
         'manage_options',
         'theme-settings-newsletter',
         'yiontech_lms_newsletter_settings_page'
+    );
+    
+    add_submenu_page(
+        'theme-settings-general',
+        'Privacy Settings',
+        'Privacy',
+        'manage_options',
+        'theme-settings-privacy',
+        'yiontech_lms_privacy_settings_page'
     );
     
     add_submenu_page(
@@ -935,6 +1107,28 @@ function yiontech_lms_newsletter_settings_page() {
     <?php
 }
 
+// Privacy settings page
+function yiontech_lms_privacy_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Privacy Settings</h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('yiontech_lms_theme_settings');
+                
+                // Output hidden fields for all settings not in this section
+                yiontech_lms_output_hidden_fields(array('enable_privacy_features', 'privacy_policy_page', 'terms_of_service_page', 'cookie_consent_text', 'cookie_consent_button_text', 'cookie_consent_learn_more_text', 'enable_data_export', 'enable_account_deletion'));
+                
+                yiontech_lms_output_settings_section('yiontech_lms_privacy_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 // CSS settings page
 function yiontech_lms_css_settings_page() {
     ?>
@@ -1012,6 +1206,10 @@ function yiontech_lms_footer_section_callback() {
 
 function yiontech_lms_newsletter_section_callback() {
     echo '<p>Newsletter configuration settings</p>';
+}
+
+function yiontech_lms_privacy_section_callback() {
+    echo '<p>Configure privacy settings for GDPR compliance</p>';
 }
 
 function yiontech_lms_css_editor_section_callback() {
@@ -1340,6 +1538,30 @@ function yiontech_lms_footer_content_field($args) {
         </div>
     </div>
     
+    <?php if (isset($args['description'])) : ?>
+        <p class="description"><?php echo esc_html($args['description']); ?></p>
+    <?php endif; ?>
+    <?php
+}
+
+// Page select field callback
+function yiontech_lms_page_select_field($args) {
+    $options = get_option('yiontech_lms_theme_settings');
+    $defaults = yiontech_lms_get_default_settings();
+    $value = isset($options[$args['id']]) ? $options[$args['id']] : $defaults[$args['id']];
+    
+    // Get all pages
+    $pages = get_pages();
+    
+    ?>
+    <select name="<?php echo esc_attr($args['name']); ?>">
+        <option value="0"><?php _e('— Select —', 'yiontech-lms'); ?></option>
+        <?php foreach ($pages as $page) : ?>
+            <option value="<?php echo esc_attr($page->ID); ?>" <?php selected($value, $page->ID); ?>>
+                <?php echo esc_html($page->post_title); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
     <?php if (isset($args['description'])) : ?>
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php endif; ?>

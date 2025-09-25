@@ -11,6 +11,11 @@ $newsletter_action_url = yiontech_lms_get_theme_setting('newsletter_action_url')
 $newsletter_method = yiontech_lms_get_theme_setting('newsletter_method', 'post');
 $newsletter_email_field = yiontech_lms_get_theme_setting('newsletter_email_field', 'email');
 $newsletter_hidden_fields = yiontech_lms_get_theme_setting('newsletter_hidden_fields', '');
+
+// Get privacy settings
+$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 ?>
 <?php if ($newsletter_enable && $newsletter_action_url) : ?>
 <div class="newsletter-form">
@@ -34,8 +39,25 @@ $newsletter_hidden_fields = yiontech_lms_get_theme_setting('newsletter_hidden_fi
                 Subscribe
             </button>
         </div>
+        
+        <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
+            <div class="mt-2 text-xs text-gray-400">
+                <input type="checkbox" id="newsletter-privacy-consent" name="privacy_consent" required>
+                <label for="newsletter-privacy-consent">
+                    <?php 
+                    if ($privacy_policy_url && $terms_of_service_url) {
+                        echo 'I agree to the <a href="' . esc_url($privacy_policy_url) . '" target="_blank">Privacy Policy</a> and <a href="' . esc_url($terms_of_service_url) . '" target="_blank">Terms of Service</a>';
+                    } elseif ($privacy_policy_url) {
+                        echo 'I agree to the <a href="' . esc_url($privacy_policy_url) . '" target="_blank">Privacy Policy</a>';
+                    } elseif ($terms_of_service_url) {
+                        echo 'I agree to the <a href="' . esc_url($terms_of_service_url) . '" target="_blank">Terms of Service</a>';
+                    }
+                    ?>
+                </label>
+            </div>
+        <?php endif; ?>
+        
         <div id="newsletter-message" class="mt-2 text-sm hidden"></div>
-        <p class="text-xs text-gray-400 mt-2">By subscribing, you agree to our Privacy Policy and consent to receive updates.</p>
         <?php wp_nonce_field('yiontech_lms_newsletter_nonce', 'nonce'); ?>
     </form>
 </div>

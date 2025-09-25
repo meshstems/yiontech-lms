@@ -5,6 +5,12 @@
  * @package Yiontech_LMS
  */
 
+// Add custom body class
+add_filter('body_class', function($classes) {
+    $classes[] = 'profile-page';
+    return $classes;
+});
+
 get_header();
 ?>
 

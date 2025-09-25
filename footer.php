@@ -27,6 +27,11 @@ $logo = yiontech_lms_get_theme_setting('logo_upload');
 $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
 $enable_back_to_top = yiontech_lms_get_theme_setting('enable_back_to_top');
 
+// Get privacy settings
+$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+
 // Ensure footer_content is an array
 if (!is_array($footer_content)) {
     $footer_content = array(
@@ -161,6 +166,23 @@ foreach ($columns as $column) {
                                 </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
+                        
+                        <!-- Add privacy links if enabled -->
+                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Terms of Service
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 
@@ -232,6 +254,27 @@ foreach ($columns as $column) {
     <div class="mt-0  text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <p><?php echo $copyright_text; ?></p>
+            
+            <!-- Add privacy links if enabled -->
+            <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
+                <p class="mt-2 text-sm">
+                    <?php if ($privacy_policy_url) : ?>
+                        <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                            Privacy Policy
+                        </a>
+                    <?php endif; ?>
+                    
+                    <?php if ($privacy_policy_url && $terms_of_service_url) : ?>
+                        <span class="mx-2">|</span>
+                    <?php endif; ?>
+                    
+                    <?php if ($terms_of_service_url) : ?>
+                        <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                            Terms of Service
+                        </a>
+                    <?php endif; ?>
+                </p>
+            <?php endif; ?>
         </div>
     </div>
 </footer>
@@ -272,6 +315,23 @@ foreach ($columns as $column) {
                                     </a>
                                 </li>
                             <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <!-- Add privacy links if enabled -->
+                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Terms of Service
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -340,6 +400,23 @@ foreach ($columns as $column) {
                                 </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
+                        
+                        <!-- Add privacy links if enabled -->
+                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
+                            <li>
+                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                    Terms of Service
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 
@@ -382,6 +459,27 @@ foreach ($columns as $column) {
         <div class="mt-0 pt-6 text-center text-gray-400 text-sm" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <p><?php echo $copyright_text; ?></p>
+                
+                <!-- Add privacy links if enabled -->
+                <?php if ($enable_privacy_features && ($privacy_policy_url || $terms_of_service_url)) : ?>
+                    <p class="mt-2">
+                        <?php if ($privacy_policy_url) : ?>
+                            <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
+                                Privacy Policy
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if ($privacy_policy_url && $terms_of_service_url) : ?>
+                            <span class="mx-2">|</span>
+                        <?php endif; ?>
+                        
+                        <?php if ($terms_of_service_url) : ?>
+                            <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
+                                Terms of Service
+                            </a>
+                        <?php endif; ?>
+                    </p>
+                <?php endif; ?>
             </div>
         </div>
         <?php
