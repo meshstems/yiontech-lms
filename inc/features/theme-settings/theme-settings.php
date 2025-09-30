@@ -115,10 +115,7 @@ function yiontech_lms_get_theme_setting($key, $default = '') {
     $defaults = yiontech_lms_get_default_settings();
     $options = get_option('yiontech_lms_theme_settings', $defaults);
     
-    // Debug: Log the options
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('yiontech_lms_theme_settings: ' . print_r($options, true));
-    }
+    
     
     // If key exists in options, return it
     if (isset($options[$key])) {

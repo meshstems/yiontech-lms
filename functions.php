@@ -259,36 +259,18 @@ function yiontech_lms_admin_styles() {
 }
 add_action('admin_head', 'yiontech_lms_admin_styles');
 
-// Debug function to check Elementor template loading
-add_action('wp_footer', function() {
-    $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
-    
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        echo "<!-- Debug: Footer Elementor Template ID: " . esc_html($footer_elementor_template) . " -->\n";
-        
-        if ($footer_elementor_template > 0) {
-            $template_post = get_post($footer_elementor_template);
-            if ($template_post) {
-                echo "<!-- Debug: Template Post Status: " . esc_html($template_post->post_status) . " -->\n";
-                echo "<!-- Debug: Template Post Title: " . esc_html($template_post->post_title) . " -->\n";
-                
-                if (function_exists('\\Elementor\\Plugin')) {
-                    $elementor = \Elementor\Plugin::instance();
-                    $document = $elementor->documents->get($footer_elementor_template);
-                    if ($document) {
-                        echo "<!-- Debug: Document is built with Elementor: " . ($document->is_built_with_elementor() ? 'Yes' : 'No') . " -->\n";
-                    } else {
-                        echo "<!-- Debug: Document not found -->\n";
-                    }
-                } else {
-                    echo "<!-- Debug: Elementor Plugin not available -->\n";
-                }
-            } else {
-                echo "<!-- Debug: Template Post not found -->\n";
-            }
-        }
+
+add_action('wp_footer', 'show_template_with_path');
+function show_template_with_path() {
+    if (current_user_can('manage_options')) {
+        global $template;
+        echo '<div style="position:fixed;bottom:0;left:0;width:100%;background:#fff;padding:10px;border-top:2px solid #000;z-index:9999;font-size:14px;font-family:monospace">';
+        echo 'Template used: <strong>' . $template . '</strong>';
+        echo '</div>';
     }
-}, 1); // High priority to output early
+}
+
+
 
 // Fix WooCommerce translation loading notice
 function delay_woocommerce_translation() {
@@ -297,3 +279,6 @@ function delay_woocommerce_translation() {
     }
 }
 add_action('init', 'delay_woocommerce_translation', 5);
+
+
+

@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) {
  $features = array(
     'theme-settings',
     'login-modifier',
+    'registration-modifier',
+    'document-upload',
     'newsletter',
     'cookie-consent',
     'preloader',
