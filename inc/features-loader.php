@@ -16,6 +16,7 @@ if (!defined('ABSPATH')) {
     'login-modifier',
     'registration-modifier',
     'document-upload',
+    'gdpr',
     'newsletter',
     'cookie-consent',
     'preloader',
