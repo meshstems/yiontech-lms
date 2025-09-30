@@ -13,24 +13,31 @@ add_filter('tutor_dashboard/nav_items', function ($links) {
 // AJAX: Delete user account (non-admin only)
 add_action('wp_ajax_delete_user_account', function () {
     if (!is_user_logged_in()) wp_send_json_error(['message' => 'User not logged in']);
+
     $user_id = get_current_user_id();
     $user = wp_get_current_user();
+
     if (in_array('administrator', $user->roles)) {
-        wp_send_json_error(['message' => 'Admins cannot delete their accounts.']);
+        wp_send_json_error(['message' => 'Administrators cannot delete their accounts.']);
     }
-    delete_user_meta($user_id);
+
     require_once(ABSPATH . 'wp-admin/includes/user.php');
-    wp_delete_user($user_id);
-    wp_send_json_success(['message' => 'Account deleted successfully']);
+    $deleted = wp_delete_user($user_id);
+
+    if ($deleted) {
+        wp_logout();
+        wp_send_json_success(['message' => 'Your account has been deleted successfully.']);
+    } else {
+        wp_send_json_error(['message' => 'Failed to delete account. Please try again later.']);
+    }
 });
 
-// AJAX: Generate GDPR export ZIP
+// AJAX: Export GDPR data as ZIP
 add_action('wp_ajax_gdpr_export_zip', function () {
     if (!is_user_logged_in()) wp_send_json_error(['message' => 'User not logged in']);
+
     $user_id = get_current_user_id();
     $user = wp_get_current_user();
-
-    if (!$user) wp_send_json_error(['message' => 'User not found']);
 
     // Basic user info
     $personal_data = [
@@ -66,61 +73,11 @@ add_action('wp_ajax_gdpr_export_zip', function () {
         }
     }
 
-    // Tutor LMS enrolled courses
-    $enrolled_courses = tutor_utils()->get_user_enrolled_courses($user_id);
-    $personal_data['enrolled_courses'] = [];
-    if ($enrolled_courses) {
-        foreach ($enrolled_courses as $course_id => $course_data) {
-            $personal_data['enrolled_courses'][] = [
-                'course_id' => $course_id,
-                'course_title' => get_the_title($course_id),
-                'progress' => $course_data->progress ?? 0,
-                'completed_on' => $course_data->completed_on ?? null,
-            ];
-        }
-    }
-
-    // Completed lessons
-    $completed_lessons = tutor_utils()->get_user_completed_lessons($user_id);
-    $personal_data['completed_lessons'] = [];
-    if ($completed_lessons) {
-        foreach ($completed_lessons as $lesson_id => $completed_on) {
-            $personal_data['completed_lessons'][] = [
-                'lesson_id' => $lesson_id,
-                'lesson_title' => get_the_title($lesson_id),
-                'completed_on' => $completed_on,
-            ];
-        }
-    }
-
-    // Completed quizzes
-    $quiz_results = tutor_utils()->get_user_quiz_results($user_id);
-    $personal_data['completed_quizzes'] = [];
-    if ($quiz_results) {
-        foreach ($quiz_results as $quiz_id => $result) {
-            $personal_data['completed_quizzes'][] = [
-                'quiz_id' => $quiz_id,
-                'quiz_title' => get_the_title($quiz_id),
-                'marks' => $result->marks ?? '',
-                'max_marks' => $result->max_marks ?? '',
-                'status' => $result->status ?? '',
-                'completed_on' => $result->completed_on ?? '',
-            ];
-        }
-    }
-
-    // Certificates
-    $certs = get_user_meta($user_id, '_tutor_certificates', true);
-    $personal_data['certificates'] = [];
-    if (is_array($certs)) {
-        foreach ($certs as $cert) {
-            $personal_data['certificates'][] = [
-                'certificate_title' => $cert['title'] ?? '',
-                'certificate_link' => $cert['link'] ?? '',
-                'issued_on' => $cert['issued_on'] ?? '',
-            ];
-        }
-    }
+    // Tutor LMS courses, lessons, quizzes, certificates
+    $personal_data['enrolled_courses'] = tutor_utils()->get_user_enrolled_courses($user_id) ?: [];
+    $personal_data['completed_lessons'] = tutor_utils()->get_user_completed_lessons($user_id) ?: [];
+    $personal_data['completed_quizzes'] = tutor_utils()->get_user_quiz_results($user_id) ?: [];
+    $personal_data['certificates'] = get_user_meta($user_id, '_tutor_certificates', true) ?: [];
 
     // Create temporary files
     $upload_dir = wp_upload_dir();
@@ -149,7 +106,6 @@ add_action('wp_ajax_gdpr_export_zip', function () {
     header('Content-Length: ' . filesize($zip_file));
     readfile($zip_file);
 
-    // Clean up
     @unlink($json_file);
     @unlink($zip_file);
     exit;

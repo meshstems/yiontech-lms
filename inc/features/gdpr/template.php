@@ -3,12 +3,10 @@ if (!defined('ABSPATH')) exit;
 
 $user_id = get_current_user_id();
 $user = wp_get_current_user();
-
 if (!$user_id) {
     echo '<p>' . __('You must be logged in to access this page.', 'tutor') . '</p>';
     return;
 }
-
 $is_admin = in_array('administrator', $user->roles);
 ?>
 
@@ -33,7 +31,6 @@ $is_admin = in_array('administrator', $user->roles);
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-
     // Export Data
     document.getElementById('export-data-btn').addEventListener('click', function() {
         window.location.href = "<?php echo admin_url('admin-ajax.php?action=gdpr_export_zip'); ?>";
@@ -45,22 +42,27 @@ document.addEventListener("DOMContentLoaded", function() {
         if(!confirm("<?php echo esc_js('Are you sure you want to delete your account? This cannot be undone.'); ?>")) return;
 
         const statusDiv = document.getElementById('gdpr-status');
-        statusDiv.textContent = '<?php echo esc_js("Deleting account..."); ?>';
+        statusDiv.innerHTML = '<?php echo esc_js("Deleting account..."); ?>';
 
-        fetch("<?php echo admin_url('admin-ajax.php'); ?>?action=delete_user_account", {
+        fetch("<?php echo admin_url('admin-ajax.php?action=delete_user_account'); ?>", {
             method: "POST",
-            credentials: "same-origin"
-        }).then(res => res.json())
+            credentials: "same-origin",
+            headers: {
+                'X-WP-Nonce': "<?php echo wp_create_nonce('wp_rest'); ?>"
+            }
+        })
+        .then(res => res.json())
         .then(data => {
             if(data.success){
-                alert("<?php echo esc_js('Your account has been deleted successfully.'); ?>");
+                alert(data.data.message);
                 window.location.href = "<?php echo home_url(); ?>";
             } else {
                 statusDiv.innerHTML = '<div class="tutor-alert tutor-danger">' + data.data.message + '</div>';
             }
+        }).catch(err => {
+            statusDiv.innerHTML = '<div class="tutor-alert tutor-danger">An error occurred.</div>';
         });
     });
     <?php endif; ?>
-
 });
 </script>
