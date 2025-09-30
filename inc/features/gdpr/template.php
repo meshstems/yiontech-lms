@@ -9,7 +9,20 @@ if (!$user_id) {
 }
 $is_admin = in_array('administrator', $user->roles);
 ?>
+<style>
+.tutor-dashboard-menu-item.tutor-gdpr-tab .tutor-dashboard-menu-item-icon::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v4z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 
+</style>
 <div class="tutor-dashboard-content-inner">
     <h4><?php esc_html_e('GDPR Compliance – Your Data', 'tutor'); ?></h4>
     <p><?php esc_html_e('Export your personal data and delete your account if allowed.', 'tutor'); ?></p>

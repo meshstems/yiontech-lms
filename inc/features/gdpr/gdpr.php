@@ -5,10 +5,12 @@ if (!defined('ABSPATH')) exit;
 add_filter('tutor_dashboard/nav_items', function ($links) {
     $links['gdpr'] = [
         'title' => __('GDPR Compliance', 'tutor'),
-        'icon'  => 'tutor-icon-shield',
+        'icon'  => '', // empty
+        'menu_item_class' => 'tutor-gdpr-tab', 
     ];
     return $links;
 });
+
 
 // AJAX: Delete user account (non-admin only)
 add_action('wp_ajax_delete_user_account', function () {

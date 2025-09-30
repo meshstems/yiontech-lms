@@ -4,15 +4,6 @@
 (function ($) {
     'use strict';
 
-    // Function to restore scroll position
-    function restoreScrollPosition() {
-        const scrollPosition = sessionStorage.getItem('scrollPosition');
-        if (scrollPosition) {
-            window.scrollTo(0, parseInt(scrollPosition));
-            sessionStorage.removeItem('scrollPosition');
-        }
-    }
-
     $(window).on('load', function () {
         if ($('#preloader').length) {
             // Remove preloader immediately when content is loaded
@@ -20,17 +11,11 @@
                 $(this).remove();
                 $('body').removeClass('preloader-active');
                 
-                // Restore scroll position after preloader is removed
-                restoreScrollPosition();
-                
                 // Trigger event for other scripts that depend on preloader removal
                 $(document).trigger('preloaderRemoved');
             });
         } else {
             $('body').removeClass('preloader-active');
-            
-            // Restore scroll position if no preloader
-            restoreScrollPosition();
             
             // Trigger event for consistency
             $(document).trigger('preloaderRemoved');
@@ -45,20 +30,14 @@
                     $(this).remove();
                     $('body').removeClass('preloader-active');
                     
-                    // Restore scroll position after preloader is removed
-                    restoreScrollPosition();
-                    
                     // Trigger event for other scripts that depend on preloader removal
                     $(document).trigger('preloaderRemoved');
                 });
             } else if (!$('#preloader').length) {
-                // Restore scroll position if no preloader
-                restoreScrollPosition();
-                
                 // Trigger event for consistency
                 $(document).trigger('preloaderRemoved');
             }
-        }, 1000); // Reduced timeout to 1 second
+        }, 1000);
     });
 
 })(jQuery);

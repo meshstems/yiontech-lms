@@ -260,17 +260,6 @@ function yiontech_lms_admin_styles() {
 add_action('admin_head', 'yiontech_lms_admin_styles');
 
 
-add_action('wp_footer', 'show_template_with_path');
-function show_template_with_path() {
-    if (current_user_can('manage_options')) {
-        global $template;
-        echo '<div style="position:fixed;bottom:0;left:0;width:100%;background:#fff;padding:10px;border-top:2px solid #000;z-index:9999;font-size:14px;font-family:monospace">';
-        echo 'Template used: <strong>' . $template . '</strong>';
-        echo '</div>';
-    }
-}
-
-
 
 // Fix WooCommerce translation loading notice
 function delay_woocommerce_translation() {
@@ -281,4 +270,33 @@ function delay_woocommerce_translation() {
 add_action('init', 'delay_woocommerce_translation', 5);
 
 
+/**
+ * Disable Gutenberg and Restore Classic Editor
+ * Applies to posts, pages, and all custom post types.
+ */
 
+// Disable Gutenberg for all post types
+add_filter('use_block_editor_for_post', '__return_false', 10);
+add_filter('use_block_editor_for_post_type', '__return_false', 10);
+
+// Remove Gutenberg CSS from frontend
+function disable_gutenberg_frontend_styles() {
+    wp_dequeue_style('wp-block-library'); // Core block styles
+    wp_dequeue_style('wp-block-library-theme'); // Theme block styles
+    wp_dequeue_style('wc-block-style'); // WooCommerce block styles if using WooCommerce
+}
+add_action('wp_enqueue_scripts', 'disable_gutenberg_frontend_styles', 100);
+
+// Optional: Remove Gutenberg editor styles from admin
+function disable_gutenberg_admin_styles() {
+    wp_dequeue_style('wp-block-library'); // Removes Gutenberg CSS from admin
+    wp_dequeue_style('wp-edit-blocks');
+}
+add_action('admin_enqueue_scripts', 'disable_gutenberg_admin_styles', 100);
+
+// Optional: Remove Gutenberg scripts for a cleaner admin
+function disable_gutenberg_admin_scripts() {
+    wp_dequeue_script('wp-blocks');
+    wp_dequeue_script('wp-edit-post');
+}
+add_action('admin_enqueue_scripts', 'disable_gutenberg_admin_scripts', 100);

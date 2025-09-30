@@ -329,50 +329,6 @@ footer ul li a:hover {
     100% { transform: rotate(360deg); }
 }
 
-/* Back to top button */
-.back-to-top {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    background-color: #1e40af !important;
-    color: white !important;
-    width: 50px !important;
-    height: 50px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    z-index: 99999 !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 0.3s, visibility 0.3s, transform 0.3s !important;
-    transform: translateY(20px) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    pointer-events: none !important;
-}
-
-.back-to-top.visible {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translateY(0) !important;
-    pointer-events: auto !important;
-}
-
-.back-to-top:hover {
-    background-color: #1e3a8a !important;
-    transform: translateY(-5px) !important;
-    text-decoration: none !important;
-    color: white !important;
-}
-
-.back-to-top svg {
-    width: 24px !important;
-    height: 24px !important;
-    pointer-events: none !important;
-}
-
 /* Sticky header styles */
 .site-header.sticky {
     position: sticky;
@@ -483,11 +439,7 @@ a, a:hover, a:focus, a:active {
 }
 
 /* Fix for layout shifts when mobile menu is open */
-body.menu-open {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-}
+/* Removed scroll-locking styles to let browser handle */
 
 /* Header scroll effect */
 .site-header.scrolled {
@@ -626,10 +578,6 @@ body.menu-open {
     z-index: 9998 !important;
 }
 
-.back-to-top {
-    z-index: 998 !important;
-}
-
 /* Ensure proper loading sequence for components */
 body.preloader-active #preloader {
     display: flex !important;
@@ -637,10 +585,6 @@ body.preloader-active #preloader {
 
 body.preloader-active .site-header {
     opacity: 0.9;
-}
-
-body.preloader-active .back-to-top {
-    display: none !important;
 }
 
 /* Prevent scroll jump when transparent header is initialized */
@@ -674,12 +618,7 @@ html, body {
 }
 
 /* Add preloader class to body when preloader is active */
-body.preloader-active {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-}
+/* Removed scroll-locking to let browser handle */
 
 /* Sticky header styles */
 .site-header.header-sticky-enabled {
@@ -701,6 +640,37 @@ body.preloader-active {
 }
 
 /* Prevent layout shifts when mobile menu is open */
+/* Removed scroll-locking to let browser handle */
+
+/* Prevent layout shifts during page load */
+html {
+    scroll-behavior: auto; /* Ensure browser default scroll behavior */
+}
+
+body {
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* Ensure smooth transitions without forcing scroll positions */
+.site-header {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Remove any forced scroll positions */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Prevent scroll jump when mobile menu is open */
 body.mobile-menu-open {
     overflow: hidden;
     position: fixed;
