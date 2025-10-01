@@ -13,32 +13,7 @@ require_once get_template_directory() . '/inc/core/template-functions.php';
 // Include feature loader
 require_once get_template_directory() . '/inc/features-loader.php';
 
-// Theme Support
-function yiontech_lms_setup_theme() {
-    // Core WordPress features
-    add_theme_support('post-thumbnails');
-    add_theme_support('custom-logo', [
-        'height' => 36,
-        'width' => 200,
-        'flex-height' => true,
-        'flex-width' => true,
-    ]);
-    add_theme_support('title-tag');
-    add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
-    add_theme_support('custom-background', ['default-color' => '#ffffff']);
-    add_theme_support('custom-header', ['default-image' => '', 'width' => 1200, 'height' => 300, 'flex-height' => true]);
-    add_theme_support('editor-styles');
-    add_theme_support('woocommerce');
-    add_theme_support('automatic-feed-links');
 
-    // Custom image sizes for performance
-    add_image_size('yiontech_course_thumbnail', 600, 400, true);
-    add_image_size('yiontech_post_thumbnail', 800, 600, true);
-
-    // Load editor styles
-    add_editor_style('css/editor-style.css');
-}
-add_action('after_setup_theme', 'yiontech_lms_setup_theme');
 
 // Theme activation hook
 function yiontech_lms_activate() {

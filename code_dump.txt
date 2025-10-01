@@ -417,7 +417,6 @@ if ($enable_preloader) {
  $logo = yiontech_lms_get_theme_setting('logo_upload');
  $retina_logo = yiontech_lms_get_theme_setting('retina_logo_upload');
  $header_buttons = yiontech_lms_get_theme_setting('header_buttons');
- $header_menu = yiontech_lms_get_theme_setting('header_menu');
 
 // Get header background colors
  $header_background_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
@@ -454,42 +453,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-8 items-center">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-8 items-center',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-8 items-center',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -562,42 +533,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-6 items-center text-sm">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-6 items-center text-sm',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-6 items-center text-sm',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -670,42 +613,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex justify-center w-full">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-8 items-center">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-8 items-center',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-8 items-center',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -783,42 +698,14 @@ if ($enable_preloader) {
             <!-- Main Navigation -->
             <div class="p-4 border-b">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Navigation', 'yiontech-lms'); ?></h3>
-                <?php if (!empty($header_menu)) : ?>
-                    <ul class="space-y-2">
-                        <?php foreach ($header_menu as $item) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($item['url']); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php echo esc_html($item['text']); ?>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                        
-                        <!-- Add privacy links if enabled -->
-                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                <?php else : ?>
-                    <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'space-y-2',
-                        'container'      => false,
-                    ) );
-                    ?>
-                <?php endif; ?>
+                <?php
+                wp_nav_menu( array(
+                    'theme_location' => 'primary',
+                    'menu_class'     => 'space-y-2',
+                    'container'      => false,
+                    'fallback_cb'    => false,
+                ) );
+                ?>
             </div>
             
             <!-- Mobile Buttons -->
@@ -860,6 +747,7 @@ if ($enable_preloader) {
                     'theme_location' => 'footer-quick-links',
                     'menu_class'     => 'space-y-2',
                     'container'      => false,
+                    'fallback_cb'    => false,
                 ) );
                 ?>
             </div>
@@ -1145,20 +1033,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Theme setup
-function yiontech_lms_setup() {
-    // Add theme support
-    add_theme_support('title-tag');
-    add_theme_support('post-thumbnails');
-    add_theme_support('custom-logo', array(
-        'height'      => 36,
-        'width'       => 120,
-        'flex-height' => true,
-        'flex-width'  => true,
-    ));
-    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
-    
-    // Register navigation menus
+
+// Register navigation menus
+function yiontech_lms_register_menus() {
     register_nav_menus(array(
         'primary' => __('Primary Menu', 'yiontech-lms'),
         'footer' => __('Footer Menu', 'yiontech-lms'),
@@ -1166,19 +1043,38 @@ function yiontech_lms_setup() {
         'footer-company' => __('Footer Company Menu', 'yiontech-lms'),
         'footer-user-portal' => __('Footer User Portal Menu', 'yiontech-lms'),
     ));
-    
-    // Register sidebar
-    register_sidebar(array(
-        'name'          => __('Main Sidebar', 'yiontech-lms'),
-        'id'            => 'main-sidebar',
-        'description'   => __('Add widgets here.', 'yiontech-lms'),
-        'before_widget' => '<div id="%1$s" class="widget %2$s mb-6 bg-white p-4 rounded-lg shadow">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h2 class="widget-title text-xl font-bold mb-3">',
-        'after_title'   => '</h2>',
-    ));
 }
-add_action('after_setup_theme', 'yiontech_lms_setup');
+add_action('init', 'yiontech_lms_register_menus');
+// Theme setup
+// Add theme support
+function yiontech_lms_setup_theme() {
+    // Core WordPress features
+    add_theme_support('post-thumbnails');
+    add_theme_support('custom-logo', [
+        'height' => 36,
+        'width' => 200,
+        'flex-height' => true,
+        'flex-width' => true,
+    ]);
+    add_theme_support('title-tag');
+    add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
+    add_theme_support('custom-background', ['default-color' => '#ffffff']);
+    add_theme_support('custom-header', ['default-image' => '', 'width' => 1200, 'height' => 300, 'flex-height' => true]);
+    add_theme_support('editor-styles');
+    add_theme_support('woocommerce');
+    add_theme_support('automatic-feed-links');
+
+    // Custom image sizes for performance
+    add_image_size('yiontech_course_thumbnail', 600, 400, true);
+    add_image_size('yiontech_post_thumbnail', 800, 600, true);
+
+    // Load editor styles
+    add_editor_style('css/editor-style.css');
+    
+    // Register menus
+    yiontech_lms_register_menus();
+}
+add_action('after_setup_theme', 'yiontech_lms_setup_theme');
 
 // Create front page on theme activation
 add_action('after_switch_theme', 'yiontech_lms_create_front_page');
@@ -1202,7 +1098,9 @@ function yiontech_lms_create_front_page() {
 add_action('after_setup_theme', 'yiontech_lms_add_image_sizes');
 function yiontech_lms_add_image_sizes() {
     add_image_size('course-thumbnail', 400, 250, true);
-}-e 
+}
+
+-e 
 
 ===== ./inc/core/assets-loader.php =====
 
@@ -1377,11 +1275,100 @@ function yiontech_lms_elementor_setup() {
 }
 add_action('after_setup_theme', 'yiontech_lms_elementor_setup');
 
+// Enforce theme settings for Elementor
+function yiontech_lms_elementor_theme_settings() {
+    // Get theme settings
+    $primary_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
+    $secondary_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
+    $text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
+    $site_width = get_theme_mod('site_width', '1200');
+    
+    // Apply theme colors to Elementor
+    add_filter('elementor/theme/default_color_palette', function($palette) use ($primary_color, $secondary_color) {
+        return [
+            [
+                'title' => __('Primary', 'yiontech-lms'),
+                'color' => $primary_color,
+            ],
+            [
+                'title' => __('Secondary', 'yiontech-lms'),
+                'color' => $secondary_color,
+            ],
+            [
+                'title' => __('Text', 'yiontech-lms'),
+                'color' => $text_color,
+            ],
+            [
+                'title' => __('White', 'yiontech-lms'),
+                'color' => '#ffffff',
+            ],
+            [
+                'title' => __('Black', 'yiontech-lms'),
+                'color' => '#000000',
+            ],
+        ];
+    });
+    
+    // Apply theme typography to Elementor
+    add_filter('elementor/theme/default_typography', function($typography) {
+        $typography['primary_font_family'] = get_theme_mod('primary_font', 'Inter');
+        $typography['secondary_font_family'] = get_theme_mod('secondary_font', 'Inter');
+        $typography['primary_font_weight'] = get_theme_mod('primary_font_weight', '600');
+        $typography['secondary_font_weight'] = get_theme_mod('secondary_font_weight', '400');
+        
+        return $typography;
+    });
+    
+    // Apply site width to Elementor
+    add_filter('elementor/settings/page/settings', function($settings) use ($site_width) {
+        $settings['container_width']['default'] = [
+            'unit' => 'px',
+            'size' => $site_width,
+        ];
+        $settings['space_between_widgets']['default'] = [
+            'unit' => 'px',
+            'size' => 20,
+        ];
+        return $settings;
+    });
+    
+    // Force Elementor to use theme container width
+    add_action('elementor/css/after_post', function() {
+        $site_width = get_theme_mod('site_width', '1200');
+        ?>
+        <style>
+            .elementor-section.elementor-section-boxed > .elementor-container {
+                max-width: <?php echo esc_attr($site_width); ?>px;
+                width: 100%;
+                margin: 0 auto;
+            }
+            
+            .elementor-section.elementor-section-full_width > .elementor-container {
+                max-width: 100%;
+                width: 100%;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            @media (max-width: 767px) {
+                .elementor-section.elementor-section-boxed > .elementor-container,
+                .elementor-section.elementor-section-full_width > .elementor-container {
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+            }
+        </style>
+        <?php
+    });
+}
+add_action('wp', 'yiontech_lms_elementor_theme_settings');
+
 // Full width for Elementor pages with Tailwind container width
 function yiontech_lms_elementor_full_width() {
     if (function_exists('\\Elementor\\Plugin')) {
         $document = \Elementor\Plugin::$instance->documents->get(get_the_ID());
         if ($document && $document->is_built_with_elementor()) {
+            $site_width = get_theme_mod('site_width', '1200');
             ?>
             <style>
                 /* Only remove theme container constraints for Elementor pages */
@@ -1396,7 +1383,7 @@ function yiontech_lms_elementor_full_width() {
                 
                 /* But preserve Elementor's own container settings */
                 body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
-                    max-width: 1140px;
+                    max-width: <?php echo esc_attr($site_width); ?>px;
                     width: 100%;
                     padding-left: 15px;
                     padding-right: 15px;
@@ -1426,7 +1413,7 @@ function yiontech_lms_elementor_full_width() {
                 
                 @media (min-width: 1200px) {
                     body.elementor-page .elementor-section.elementor-section-boxed > .elementor-container {
-                        max-width: 1140px;
+                        max-width: <?php echo esc_attr($site_width); ?>px;
                     }
                 }
             </style>
@@ -1446,9 +1433,7 @@ add_action('wp', function() {
             $elementor->frontend->init();
         }
     }
-}, 20); // Priority 20 to run after most initializations
-
--e 
+}, 20); // Priority 20 to run after most initializations-e 
 
 ===== ./inc/features/gdpr/gdpr.php =====
 
@@ -2239,12 +2224,21 @@ function yiontech_lms_custom_registration_form_shortcode() {
                     </form>
 
                     <div id="registration_result" class="mt-4 w-full"></div>
-                    <p class="mt-6 text-center text-sm text-gray-600 w-full">
-                        Already have an account? 
-                        <a href="<?php echo esc_url(get_permalink(get_page_by_path('login'))); ?>" class="font-medium text-purple-600 hover:text-purple-500">
-                            Login
-                        </a>
-                    </p>
+                   <p class="mt-6 text-center text-sm text-gray-600 w-full">
+    Already have an account? 
+    <?php 
+    $login_page = get_page_by_path('login');
+    $login_url  = $login_page ? get_permalink($login_page->ID) : wp_login_url();
+
+    // Preserve redirect_to if passed to /register
+    if (!empty($_GET['redirect_to'])) {
+        $login_url = add_query_arg('redirect_to', urlencode($_GET['redirect_to']), $login_url);
+    }
+    ?>
+    <a href="<?php echo esc_url($login_url); ?>" class="font-medium text-purple-600 hover:text-purple-500">
+        Login
+    </a>
+</p>
 
                     <?php do_action('tutor_after_student_reg_form'); ?>
                 </div>
@@ -2494,7 +2488,12 @@ function yiontech_lms_ajax_register() {
     // Trigger Tutor registration hooks & notifications
     do_action('tutor_student_registered', $user_id);
 
-    wp_send_json_success(['redirect' => yiontech_get_tutor_dashboard_url()]);
+   $redirect = !empty($_REQUEST['redirect_to']) 
+    ? esc_url_raw($_REQUEST['redirect_to']) 
+    : yiontech_get_tutor_dashboard_url();
+
+wp_send_json_success(['redirect' => $redirect]);
+
 }
 add_action('wp_ajax_nopriv_yiontech_register', 'yiontech_lms_ajax_register');
 add_action('wp_ajax_yiontech_register', 'yiontech_lms_ajax_register');
@@ -2556,7 +2555,39 @@ add_filter('template_include', function ($template) {
         }
     }
     return $template;
-});-e 
+});
+
+/*--------------------------------------------------------------
+# 8. Force Tutor LMS to use custom /register page
+--------------------------------------------------------------*/
+add_filter('tutor_register_url', function($url, $args = []) {
+    $register_page = get_page_by_path('register'); 
+    if ($register_page) {
+        $custom_url = get_permalink($register_page->ID);
+
+        if (!empty($args['redirect_to'])) {
+            $custom_url = add_query_arg('redirect_to', urlencode($args['redirect_to']), $custom_url);
+        }
+        return $custom_url;
+    }
+    return $url;
+}, 1, 2); // priority 1 instead of 10
+add_action('init', function() {
+    $register_page = get_page_by_path('register');
+    if ($register_page) {
+        update_option('tutor_registration_page', $register_page->ID);
+    }
+});
+add_action('template_redirect', function() {
+    if (is_page('student-registration-page')) {
+        $register_page = get_page_by_path('register');
+        if ($register_page) {
+            wp_redirect(get_permalink($register_page->ID));
+            exit;
+        }
+    }
+});
+-e 
 
 ===== ./inc/features/document-upload/error-messages.php =====
 
@@ -2967,53 +2998,8 @@ function yiontech_lms_get_default_settings() {
                 'show_mobile' => true,
             ],
         ],
-        'header_menu' => [
-            ['text' => __('Home', 'yiontech-lms'), 'url' => '/'],
-            ['text' => __('Courses', 'yiontech-lms'), 'url' => '/courses'],
-            ['text' => __('About', 'yiontech-lms'), 'url' => '/about'],
-            ['text' => __('Contact', 'yiontech-lms'), 'url' => '/contact'],
-        ],
         'footer_style' => 'default',
         'footer_elementor_template' => 0,
-        'footer_content' => [
-            'column1' => [
-                'title' => __('About Us', 'yiontech-lms'),
-                'content' => __('A powerful learning management system designed for educators and students.', 'yiontech-lms'),
-            ],
-            'column2' => [
-                'title' => __('Quick Links', 'yiontech-lms'),
-                'links' => [
-                    ['text' => __('Home', 'yiontech-lms'), 'url' => '/'],
-                    ['text' => __('Courses', 'yiontech-lms'), 'url' => '/courses'],
-                    ['text' => __('About', 'yiontech-lms'), 'url' => '/about'],
-                    ['text' => __('Contact', 'yiontech-lms'), 'url' => '/contact'],
-                ],
-            ],
-            'column3' => [
-                'title' => __('Company', 'yiontech-lms'),
-                'links' => [
-                    ['text' => __('About Us', 'yiontech-lms'), 'url' => '/about'],
-                    ['text' => __('Our Team', 'yiontech-lms'), 'url' => '/team'],
-                    ['text' => __('Careers', 'yiontech-lms'), 'url' => '/careers'],
-                    ['text' => __('Blog', 'yiontech-lms'), 'url' => '/blog'],
-                ],
-            ],
-            'column4' => [
-                'title' => __('User Portal', 'yiontech-lms'),
-                'links' => [
-                    ['text' => __('Login', 'yiontech-lms'), 'url' => '/login'],
-                    ['text' => __('Register', 'yiontech-lms'), 'url' => '/register'],
-                    ['text' => __('Dashboard', 'yiontech-lms'), 'url' => '/dashboard'],
-                    ['text' => __('Profile', 'yiontech-lms'), 'url' => '/profile'],
-                ],
-            ],
-            'column5' => [
-                'title' => __('Newsletter', 'yiontech-lms'),
-                'content' => __('Get the latest news and updates delivered right to your inbox.', 'yiontech-lms'),
-                'email' => 'info@yiontech.com',
-                'phone' => '+1 (555) 123-4567',
-            ],
-        ],
         'copyright_text' => sprintf(__('&copy; %s %s. All rights reserved.', 'yiontech-lms'), date('Y'), get_bloginfo('name')),
         'footer_text_color' => '#ffffff',
         'footer_background_color' => '#111827',
@@ -3034,7 +3020,15 @@ function yiontech_lms_get_default_settings() {
         'cookie_consent_learn_more_text' => __('Learn More', 'yiontech-lms'),
         'enable_data_export' => true,
         'enable_account_deletion' => true,
-        'disable_gutenberg' => false, // Changed to false to encourage block editor support
+        'disable_gutenberg' => false,
+        'primary_color' => '#1e40af',
+        'secondary_color' => '#111827',
+        'text_color' => '#333333',
+        'site_width' => '1200',
+        'primary_font' => 'Inter',
+        'secondary_font' => 'Inter',
+        'primary_font_weight' => '600',
+        'secondary_font_weight' => '400',
     ];
     return apply_filters('yiontech_lms_default_settings', $defaults);
 }
@@ -3051,6 +3045,9 @@ function yiontech_lms_get_theme_setting($key, $default = '') {
         case 'footer_background_color':
         case 'footer_text_color':
         case 'copyright_background_color':
+        case 'primary_color':
+        case 'secondary_color':
+        case 'text_color':
             return sanitize_hex_color($value);
         case 'site_icon':
         case 'logo_upload':
@@ -3061,6 +3058,8 @@ function yiontech_lms_get_theme_setting($key, $default = '') {
         case 'newsletter_success_message':
         case 'cookie_consent_button_text':
         case 'cookie_consent_learn_more_text':
+        case 'primary_font':
+        case 'secondary_font':
             return sanitize_text_field($value);
         case 'newsletter_hidden_fields':
             return yiontech_lms_sanitize_hidden_fields($value);
@@ -3070,9 +3069,17 @@ function yiontech_lms_get_theme_setting($key, $default = '') {
         case 'cookie_consent_text':
             return wp_kses_post($value);
         case 'header_style':
+            return in_array($value, ['default', 'minimal', 'centered']) ? $value : $default;
         case 'footer_style':
+            return in_array($value, ['default', 'minimal', 'centered']) ? $value : $default;
         case 'newsletter_method':
-            return in_array($value, ['default', 'minimal', 'centered', 'post', 'get']) ? $value : $default;
+            return in_array($value, ['post', 'get']) ? $value : $default;
+        case 'site_width':
+            return in_array($value, ['1200', '1400', '1600']) ? $value : $default;
+        case 'primary_font_weight':
+            return in_array($value, ['400', '500', '600', '700']) ? $value : $default;
+        case 'secondary_font_weight':
+            return in_array($value, ['400', '500', '600', '700']) ? $value : $default;
         case 'enable_preloader':
         case 'transparent_header':
         case 'sticky_header':
@@ -3089,10 +3096,6 @@ function yiontech_lms_get_theme_setting($key, $default = '') {
             return absint($value);
         case 'header_buttons':
             return yiontech_lms_sanitize_header_buttons($value);
-        case 'header_menu':
-            return yiontech_lms_sanitize_header_menu($value);
-        case 'footer_content':
-            return yiontech_lms_sanitize_footer_content($value);
         case 'footer_padding':
             return yiontech_lms_sanitize_footer_padding($value);
         default:
@@ -3154,70 +3157,6 @@ function yiontech_lms_sanitize_header_buttons($input) {
     return $sanitized;
 }
 
-function yiontech_lms_sanitize_header_menu($input) {
-    $sanitized = [];
-    if (is_array($input)) {
-        foreach ($input as $item) {
-            $sanitized[] = [
-                'text' => sanitize_text_field($item['text'] ?? ''),
-                'url' => esc_url_raw($item['url'] ?? ''),
-            ];
-        }
-    }
-    return $sanitized;
-}
-
-function yiontech_lms_sanitize_footer_content($input) {
-    $sanitized = [];
-    $defaults = yiontech_lms_get_default_settings()['footer_content'];
-
-    foreach (['column1', 'column2', 'column3', 'column4', 'column5'] as $col) {
-        if (isset($input[$col])) {
-            $sanitized[$col] = $input[$col];
-        } else {
-            $sanitized[$col] = $defaults[$col];
-        }
-    }
-
-    $sanitized['column1'] = [
-        'title' => sanitize_text_field($sanitized['column1']['title'] ?? ''),
-        'content' => wp_kses_post($sanitized['column1']['content'] ?? ''),
-    ];
-    $sanitized['column2'] = [
-        'title' => sanitize_text_field($sanitized['column2']['title'] ?? ''),
-        'links' => yiontech_lms_sanitize_footer_links($sanitized['column2']['links'] ?? []),
-    ];
-    $sanitized['column3'] = [
-        'title' => sanitize_text_field($sanitized['column3']['title'] ?? ''),
-        'links' => yiontech_lms_sanitize_footer_links($sanitized['column3']['links'] ?? []),
-    ];
-    $sanitized['column4'] = [
-        'title' => sanitize_text_field($sanitized['column4']['title'] ?? ''),
-        'links' => yiontech_lms_sanitize_footer_links($sanitized['column4']['links'] ?? []),
-    ];
-    $sanitized['column5'] = [
-        'title' => sanitize_text_field($sanitized['column5']['title'] ?? ''),
-        'content' => wp_kses_post($sanitized['column5']['content'] ?? ''),
-        'email' => sanitize_email($sanitized['column5']['email'] ?? ''),
-        'phone' => sanitize_text_field($sanitized['column5']['phone'] ?? ''),
-    ];
-
-    return $sanitized;
-}
-
-function yiontech_lms_sanitize_footer_links($input) {
-    $sanitized = [];
-    if (is_array($input)) {
-        foreach ($input as $link) {
-            $sanitized[] = [
-                'text' => sanitize_text_field($link['text'] ?? ''),
-                'url' => esc_url_raw($link['url'] ?? ''),
-            ];
-        }
-    }
-    return $sanitized;
-}
-
 function yiontech_lms_sanitize_footer_padding($input) {
     return [
         'top' => absint($input['top'] ?? 48),
@@ -3241,10 +3180,8 @@ function yiontech_lms_sanitize_settings($input) {
         'logo_upload' => 'yiontech_lms_sanitize_url',
         'retina_logo_upload' => 'yiontech_lms_sanitize_url',
         'header_buttons' => 'yiontech_lms_sanitize_header_buttons',
-        'header_menu' => 'yiontech_lms_sanitize_header_menu',
         'footer_style' => fn($v) => in_array($v, ['default', 'minimal', 'centered']) ? $v : 'default',
         'footer_elementor_template' => 'absint',
-        'footer_content' => 'yiontech_lms_sanitize_footer_content',
         'copyright_text' => 'yiontech_lms_sanitize_html',
         'footer_text_color' => 'yiontech_lms_sanitize_color',
         'footer_background_color' => 'yiontech_lms_sanitize_color',
@@ -3266,6 +3203,14 @@ function yiontech_lms_sanitize_settings($input) {
         'enable_data_export' => 'yiontech_lms_sanitize_checkbox',
         'enable_account_deletion' => 'yiontech_lms_sanitize_checkbox',
         'disable_gutenberg' => 'yiontech_lms_sanitize_checkbox',
+        'primary_color' => 'yiontech_lms_sanitize_color',
+        'secondary_color' => 'yiontech_lms_sanitize_color',
+        'text_color' => 'yiontech_lms_sanitize_color',
+        'site_width' => fn($v) => in_array($v, ['1200', '1400', '1600']) ? $v : '1200',
+        'primary_font' => 'yiontech_lms_sanitize_text',
+        'secondary_font' => 'yiontech_lms_sanitize_text',
+        'primary_font_weight' => fn($v) => in_array($v, ['400', '500', '600', '700']) ? $v : '600',
+        'secondary_font_weight' => fn($v) => in_array($v, ['400', '500', '600', '700']) ? $v : '400',
     ];
 
     foreach ($fields as $key => $sanitize_callback) {
@@ -3342,6 +3287,124 @@ function yiontech_lms_theme_settings_init() {
             'name' => 'yiontech_lms_theme_settings[disable_gutenberg]',
             'description' => __('Disable the block editor (Gutenberg) for all posts and pages', 'yiontech-lms'),
             'label_for' => 'disable_gutenberg',
+        ]
+    );
+
+    // Typography section
+    add_settings_section(
+        'yiontech_lms_typography_section',
+        __('Typography', 'yiontech-lms'),
+        'yiontech_lms_typography_section_callback',
+        'yiontech_lms_theme_settings'
+    );
+
+    add_settings_field(
+        'primary_color',
+        __('Primary Color', 'yiontech-lms'),
+        'yiontech_lms_color_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'primary_color',
+            'name' => 'yiontech_lms_theme_settings[primary_color]',
+            'description' => __('Choose primary color for the theme', 'yiontech-lms'),
+            'label_for' => 'primary_color',
+        ]
+    );
+
+    add_settings_field(
+        'secondary_color',
+        __('Secondary Color', 'yiontech-lms'),
+        'yiontech_lms_color_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'secondary_color',
+            'name' => 'yiontech_lms_theme_settings[secondary_color]',
+            'description' => __('Choose secondary color for the theme', 'yiontech-lms'),
+            'label_for' => 'secondary_color',
+        ]
+    );
+
+    add_settings_field(
+        'text_color',
+        __('Text Color', 'yiontech-lms'),
+        'yiontech_lms_color_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'text_color',
+            'name' => 'yiontech_lms_theme_settings[text_color]',
+            'description' => __('Choose text color for the theme', 'yiontech-lms'),
+            'label_for' => 'text_color',
+        ]
+    );
+
+    add_settings_field(
+        'primary_font',
+        __('Primary Font', 'yiontech-lms'),
+        'yiontech_lms_font_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'primary_font',
+            'name' => 'yiontech_lms_theme_settings[primary_font]',
+            'description' => __('Choose primary font family', 'yiontech-lms'),
+            'label_for' => 'primary_font',
+        ]
+    );
+
+    add_settings_field(
+        'secondary_font',
+        __('Secondary Font', 'yiontech-lms'),
+        'yiontech_lms_font_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'secondary_font',
+            'name' => 'yiontech_lms_theme_settings[secondary_font]',
+            'description' => __('Choose secondary font family', 'yiontech-lms'),
+            'label_for' => 'secondary_font',
+        ]
+    );
+
+    add_settings_field(
+        'primary_font_weight',
+        __('Primary Font Weight', 'yiontech-lms'),
+        'yiontech_lms_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'primary_font_weight',
+            'name' => 'yiontech_lms_theme_settings[primary_font_weight]',
+            'options' => [
+                '400' => __('Normal (400)', 'yiontech-lms'),
+                '500' => __('Medium (500)', 'yiontech-lms'),
+                '600' => __('Semi Bold (600)', 'yiontech-lms'),
+                '700' => __('Bold (700)', 'yiontech-lms'),
+            ],
+            'description' => __('Choose primary font weight', 'yiontech-lms'),
+            'label_for' => 'primary_font_weight',
+        ]
+    );
+
+    add_settings_field(
+        'secondary_font_weight',
+        __('Secondary Font Weight', 'yiontech-lms'),
+        'yiontech_lms_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_typography_section',
+        [
+            'id' => 'secondary_font_weight',
+            'name' => 'yiontech_lms_theme_settings[secondary_font_weight]',
+            'options' => [
+                '400' => __('Normal (400)', 'yiontech-lms'),
+                '500' => __('Medium (500)', 'yiontech-lms'),
+                '600' => __('Semi Bold (600)', 'yiontech-lms'),
+                '700' => __('Bold (700)', 'yiontech-lms'),
+            ],
+            'description' => __('Choose secondary font weight', 'yiontech-lms'),
+            'label_for' => 'secondary_font_weight',
         ]
     );
 
@@ -3469,19 +3532,6 @@ function yiontech_lms_theme_settings_init() {
         ]
     );
 
-    add_settings_field(
-        'header_menu',
-        __('Header Menu', 'yiontech-lms'),
-        'yiontech_lms_menu_field',
-        'yiontech_lms_theme_settings',
-        'yiontech_lms_header_section',
-        [
-            'id' => 'header_menu',
-            'name' => 'yiontech_lms_theme_settings[header_menu]',
-            'description' => __('Configure header menu items', 'yiontech-lms'),
-        ]
-    );
-
     // Footer section
     add_settings_section(
         'yiontech_lms_footer_section',
@@ -3520,19 +3570,6 @@ function yiontech_lms_theme_settings_init() {
             'name' => 'yiontech_lms_theme_settings[footer_elementor_template]',
             'description' => __('Select an Elementor template for the footer. Leave empty to use the default theme footer.', 'yiontech-lms'),
             'label_for' => 'footer_elementor_template',
-        ]
-    );
-
-    add_settings_field(
-        'footer_content',
-        __('Footer Content', 'yiontech-lms'),
-        'yiontech_lms_footer_content_field',
-        'yiontech_lms_theme_settings',
-        'yiontech_lms_footer_section',
-        [
-            'id' => 'footer_content',
-            'name' => 'yiontech_lms_theme_settings[footer_content]',
-            'description' => __('Configure footer columns and content', 'yiontech-lms'),
         ]
     );
 
@@ -3604,6 +3641,33 @@ function yiontech_lms_theme_settings_init() {
             'name' => 'yiontech_lms_theme_settings[footer_padding]',
             'description' => __('Set footer padding top and bottom (in pixels)', 'yiontech-lms'),
             'label_for' => 'footer_padding_top',
+        ]
+    );
+
+    // Layout section
+    add_settings_section(
+        'yiontech_lms_layout_section',
+        __('Layout', 'yiontech-lms'),
+        'yiontech_lms_layout_section_callback',
+        'yiontech_lms_theme_settings'
+    );
+
+    add_settings_field(
+        'site_width',
+        __('Site Width', 'yiontech-lms'),
+        'yiontech_lms_select_field',
+        'yiontech_lms_theme_settings',
+        'yiontech_lms_layout_section',
+        [
+            'id' => 'site_width',
+            'name' => 'yiontech_lms_theme_settings[site_width]',
+            'options' => [
+                '1200' => __('1200px (Default)', 'yiontech-lms'),
+                '1400' => __('1400px', 'yiontech-lms'),
+                '1600' => __('1600px', 'yiontech-lms'),
+            ],
+            'description' => __('Choose site container width', 'yiontech-lms'),
+            'label_for' => 'site_width',
         ]
     );
 
@@ -4041,33 +4105,6 @@ function yiontech_lms_header_buttons_field($args) {
     <?php
 }
 
-function yiontech_lms_menu_field($args) {
-    $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
-    $menu_items = $options[$args['id']] ?? [];
-    ?>
-    <div class="menu-field" data-field-name="<?php echo esc_attr($args['name']); ?>">
-        <div class="menu-items">
-            <?php foreach ($menu_items as $index => $item): ?>
-                <div class="menu-item" data-index="<?php echo esc_attr($index); ?>">
-                    <div>
-                        <label for="<?php echo esc_attr($args['id'] . '-' . $index . '-text'); ?>"><?php _e('Menu Text:', 'yiontech-lms'); ?></label>
-                        <input type="text" id="<?php echo esc_attr($args['id'] . '-' . $index . '-text'); ?>" name="<?php echo esc_attr($args['name']); ?>[<?php echo $index; ?>][text]" value="<?php echo esc_attr($item['text']); ?>" class="regular-text" />
-                    </div>
-                    <div>
-                        <label for="<?php echo esc_attr($args['id'] . '-' . $index . '-url'); ?>"><?php _e('Menu URL:', 'yiontech-lms'); ?></label>
-                        <input type="text" id="<?php echo esc_attr($args['id'] . '-' . $index . '-url'); ?>" name="<?php echo esc_attr($args['name']); ?>[<?php echo $index; ?>][url]" value="<?php echo esc_attr($item['url']); ?>" class="regular-text" />
-                    </div>
-                    <button type="button" class="button remove-menu-item"><?php _e('Remove', 'yiontech-lms'); ?></button>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <button type="button" class="button add-menu-item"><?php _e('Add Menu Item', 'yiontech-lms'); ?></button>
-        <input type="hidden" class="item-counter" value="<?php echo esc_attr(count($menu_items)); ?>" />
-        <p class="description"><?php echo esc_html($args['description']); ?></p>
-    </div>
-    <?php
-}
-
 function yiontech_lms_elementor_template_select_field($args) {
     $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
     $value = $options[$args['id']] ?? 0;
@@ -4118,108 +4155,6 @@ function yiontech_lms_elementor_template_select_field($args) {
     <?php
 }
 
-function yiontech_lms_footer_content_field($args) {
-    $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
-    $footer_content = $options[$args['id']] ?? yiontech_lms_get_default_settings()['footer_content'];
-    ?>
-    <div class="footer-content-field" data-field-name="<?php echo esc_attr($args['name']); ?>">
-        <!-- Column 1 -->
-        <h4><?php _e('Column 1', 'yiontech-lms'); ?></h4>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column1-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column1-title'); ?>" name="<?php echo esc_attr($args['name']); ?>[column1][title]" value="<?php echo esc_attr($footer_content['column1']['title'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column1-content'); ?>"><?php _e('Content:', 'yiontech-lms'); ?></label>
-            <textarea id="<?php echo esc_attr($args['id'] . '-column1-content'); ?>" name="<?php echo esc_attr($args['name']); ?>[column1][content]" rows="4" class="large-text"><?php echo esc_textarea($footer_content['column1']['content'] ?? ''); ?></textarea>
-        </div>
-
-        <!-- Column 2 -->
-        <h4><?php _e('Column 2', 'yiontech-lms'); ?></h4>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column2-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column2-title'); ?>" name="<?php echo esc_attr($args['name']); ?>[column2][title]" value="<?php echo esc_attr($footer_content['column2']['title'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label><?php _e('Links:', 'yiontech-lms'); ?></label>
-            <div class="footer-links" data-column="column2">
-                <?php foreach ($footer_content['column2']['links'] ?? [] as $index => $link): ?>
-                    <div class="footer-link-item" data-index="<?php echo esc_attr($index); ?>">
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column2][links][<?php echo $index; ?>][text]" value="<?php echo esc_attr($link['text'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link Text', 'yiontech-lms'); ?>" class="regular-text" />
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column2][links][<?php echo $index; ?>][url]" value="<?php echo esc_attr($link['url'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link URL', 'yiontech-lms'); ?>" class="regular-text" />
-                        <button type="button" class="button remove-link"><?php _e('Remove', 'yiontech-lms'); ?></button>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <button type="button" class="button add-link" data-column="column2"><?php _e('Add Link', 'yiontech-lms'); ?></button>
-            <input type="hidden" class="item-counter" data-column="column2" value="<?php echo esc_attr(count($footer_content['column2']['links'] ?? [])); ?>" />
-        </div>
-
-        <!-- Column 3 -->
-        <h4><?php _e('Column 3', 'yiontech-lms'); ?></h4>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column3-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column3-title'); ?>" name="<?php echo esc_attr($args['name']); ?>[column3][title]" value="<?php echo esc_attr($footer_content['column3']['title'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label><?php _e('Links:', 'yiontech-lms'); ?></label>
-            <div class="footer-links" data-column="column3">
-                <?php foreach ($footer_content['column3']['links'] ?? [] as $index => $link): ?>
-                    <div class="footer-link-item" data-index="<?php echo esc_attr($index); ?>">
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column3][links][<?php echo $index; ?>][text]" value="<?php echo esc_attr($link['text'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link Text', 'yiontech-lms'); ?>" class="regular-text" />
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column3][links][<?php echo $index; ?>][url]" value="<?php echo esc_attr($link['url'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link URL', 'yiontech-lms'); ?>" class="regular-text" />
-                        <button type="button" class="button remove-link"><?php _e('Remove', 'yiontech-lms'); ?></button>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <button type="button" class="button add-link" data-column="column3"><?php _e('Add Link', 'yiontech-lms'); ?></button>
-            <input type="hidden" class="item-counter" data-column="column3" value="<?php echo esc_attr(count($footer_content['column3']['links'] ?? [])); ?>" />
-        </div>
-
-        <!-- Column 4 -->
-        <h4><?php _e('Column 4', 'yiontech-lms'); ?></h4>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column4-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column4-title'); ?>" name="<?php echo esc_attr($args['name']); ?>[column4][title]" value="<?php echo esc_attr($footer_content['column4']['title'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label><?php _e('Links:', 'yiontech-lms'); ?></label>
-            <div class="footer-links" data-column="column4">
-                <?php foreach ($footer_content['column4']['links'] ?? [] as $index => $link): ?>
-                    <div class="footer-link-item" data-index="<?php echo esc_attr($index); ?>">
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column4][links][<?php echo $index; ?>][text]" value="<?php echo esc_attr($link['text'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link Text', 'yiontech-lms'); ?>" class="regular-text" />
-                        <input type="text" name="<?php echo esc_attr($args['name']); ?>[column4][links][<?php echo $index; ?>][url]" value="<?php echo esc_attr($link['url'] ?? ''); ?>" placeholder="<?php esc_attr_e('Link URL', 'yiontech-lms'); ?>" class="regular-text" />
-                        <button type="button" class="button remove-link"><?php _e('Remove', 'yiontech-lms'); ?></button>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <button type="button" class="button add-link" data-column="column4"><?php _e('Add Link', 'yiontech-lms'); ?></button>
-            <input type="hidden" class="item-counter" data-column="column4" value="<?php echo esc_attr(count($footer_content['column4']['links'] ?? [])); ?>" />
-        </div>
-
-        <!-- Column 5 -->
-        <h4><?php _e('Column 5', 'yiontech-lms'); ?></h4>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column5-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column5-title'); ?>" name="<?php echo esc_attr($args['name']); ?>[column5][title]" value="<?php echo esc_attr($footer_content['column5']['title'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column5-content'); ?>"><?php _e('Content:', 'yiontech-lms'); ?></label>
-            <textarea id="<?php echo esc_attr($args['id'] . '-column5-content'); ?>" name="<?php echo esc_attr($args['name']); ?>[column5][content]" rows="4" class="large-text"><?php echo esc_textarea($footer_content['column5']['content'] ?? ''); ?></textarea>
-        </div>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column5-email'); ?>"><?php _e('Email:', 'yiontech-lms'); ?></label>
-            <input type="email" id="<?php echo esc_attr($args['id'] . '-column5-email'); ?>" name="<?php echo esc_attr($args['name']); ?>[column5][email]" value="<?php echo esc_attr($footer_content['column5']['email'] ?? ''); ?>" class="regular-text" />
-        </div>
-        <div>
-            <label for="<?php echo esc_attr($args['id'] . '-column5-phone'); ?>"><?php _e('Phone:', 'yiontech-lms'); ?></label>
-            <input type="text" id="<?php echo esc_attr($args['id'] . '-column5-phone'); ?>" name="<?php echo esc_attr($args['name']); ?>[column5][phone]" value="<?php echo esc_attr($footer_content['column5']['phone'] ?? ''); ?>" class="regular-text" />
-        </div>
-    </div>
-    <p class="description"><?php echo esc_html($args['description']); ?></p>
-    <?php
-}
-
 function yiontech_lms_page_select_field($args) {
     $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
     $value = $options[$args['id']] ?? 0;
@@ -4235,17 +4170,54 @@ function yiontech_lms_page_select_field($args) {
     <?php
 }
 
+function yiontech_lms_font_field($args) {
+    $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
+    $value = $options[$args['id']] ?? '';
+    ?>
+    <select id="<?php echo esc_attr($args['label_for']); ?>" name="<?php echo esc_attr($args['name']); ?>" aria-describedby="<?php echo esc_attr($args['id']); ?>-description">
+        <?php
+        $fonts = [
+            'Inter' => 'Inter',
+            'Roboto' => 'Roboto',
+            'Open Sans' => 'Open Sans',
+            'Lato' => 'Lato',
+            'Montserrat' => 'Montserrat',
+            'Poppins' => 'Poppins',
+            'Source Sans Pro' => 'Source Sans Pro',
+            'Raleway' => 'Raleway',
+            'Playfair Display' => 'Playfair Display',
+            'Merriweather' => 'Merriweather',
+        ];
+        
+        foreach ($fonts as $font_value => $font_label): ?>
+            <option value="<?php echo esc_attr($font_value); ?>" <?php selected($value, $font_value); ?>><?php echo esc_html($font_label); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <p class="description" id="<?php echo esc_attr($args['id']); ?>-description"><?php echo esc_html($args['description']); ?></p>
+    <?php
+}
+
 // Section callbacks
 function yiontech_lms_general_section_callback() {
     echo '<p>' . esc_html__('General theme settings', 'yiontech-lms') . '</p>';
 }
 
+function yiontech_lms_typography_section_callback() {
+    echo '<p>' . esc_html__('Configure typography settings for your website. These settings will be applied globally, including in Elementor pages.', 'yiontech-lms') . '</p>';
+}
+
 function yiontech_lms_header_section_callback() {
-    echo '<p>' . esc_html__('Configure your website header', 'yiontech-lms') . '</p>';
+    echo '<p>' . esc_html__('Configure your website header. Note: Menu items are managed through Appearance > Menus.', 'yiontech-lms') . '</p>';
+    echo '<p><a href="' . admin_url('nav-menus.php') . '" class="button button-secondary">' . esc_html__('Manage Menus', 'yiontech-lms') . '</a></p>';
 }
 
 function yiontech_lms_footer_section_callback() {
-    echo '<p>' . esc_html__('Configure your website footer', 'yiontech-lms') . '</p>';
+    echo '<p>' . esc_html__('Configure your website footer. Note: Footer menu items are managed through Appearance > Menus.', 'yiontech-lms') . '</p>';
+    echo '<p><a href="' . admin_url('nav-menus.php') . '" class="button button-secondary">' . esc_html__('Manage Menus', 'yiontech-lms') . '</a></p>';
+}
+
+function yiontech_lms_layout_section_callback() {
+    echo '<p>' . esc_html__('Configure layout settings for your website. These settings control the container width and spacing.', 'yiontech-lms') . '</p>';
 }
 
 function yiontech_lms_newsletter_section_callback() {
@@ -4266,85 +4238,88 @@ function yiontech_lms_add_theme_settings_page() {
         __('Yiontech LMS Settings', 'yiontech-lms'),
         __('Yiontech LMS', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-general',
-        'yiontech_lms_general_settings_page',
+        'yiontech-lms-settings',
+        'yiontech_lms_settings_page',
         'dashicons-admin-settings',
         5
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
         __('General Settings', 'yiontech-lms'),
         __('General', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-general',
-        'yiontech_lms_general_settings_page'
+        'yiontech-lms-settings',
+        'yiontech_lms_settings_page'
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
+        __('Typography', 'yiontech-lms'),
+        __('Typography', 'yiontech-lms'),
+        'manage_options',
+        'yiontech-lms-typography-settings',
+        'yiontech_lms_typography_settings_page'
+    );
+
+    add_submenu_page(
+        'yiontech-lms-settings',
         __('Header Settings', 'yiontech-lms'),
         __('Header', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-header',
+        'yiontech-lms-header-settings',
         'yiontech_lms_header_settings_page'
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
         __('Footer Settings', 'yiontech-lms'),
         __('Footer', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-footer',
+        'yiontech-lms-footer-settings',
         'yiontech_lms_footer_settings_page'
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
+        __('Layout Settings', 'yiontech-lms'),
+        __('Layout', 'yiontech-lms'),
+        'manage_options',
+        'yiontech-lms-layout-settings',
+        'yiontech_lms_layout_settings_page'
+    );
+
+    add_submenu_page(
+        'yiontech-lms-settings',
         __('Newsletter Settings', 'yiontech-lms'),
         __('Newsletter', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-newsletter',
+        'yiontech-lms-newsletter-settings',
         'yiontech_lms_newsletter_settings_page'
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
         __('Privacy Settings', 'yiontech-lms'),
         __('Privacy', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-privacy',
+        'yiontech-lms-privacy-settings',
         'yiontech_lms_privacy_settings_page'
     );
 
     add_submenu_page(
-        'theme-settings-general',
+        'yiontech-lms-settings',
         __('CSS Editor', 'yiontech-lms'),
         __('CSS Editor', 'yiontech-lms'),
         'manage_options',
-        'theme-settings-css',
+        'yiontech-lms-css-settings',
         'yiontech_lms_css_settings_page'
     );
 }
 add_action('admin_menu', 'yiontech_lms_add_theme_settings_page');
 
-// Helper function to output hidden fields for preserving settings
-function yiontech_lms_output_hidden_fields($exclude_fields = []) {
-    $options = get_option('yiontech_lms_theme_settings', yiontech_lms_get_default_settings());
-    foreach ($options as $key => $value) {
-        if (!in_array($key, $exclude_fields)) {
-            if (is_array($value)) {
-                $value = wp_json_encode($value, JSON_UNESCAPED_SLASHES);
-            }
-            ?>
-            <input type="hidden" name="yiontech_lms_theme_settings[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr($value); ?>" />
-            <?php
-        }
-    }
-}
-
-// General settings page
-function yiontech_lms_general_settings_page() {
+// Settings page callbacks
+function yiontech_lms_settings_page() {
     ?>
     <div class="wrap">
         <h1><?php _e('Yiontech LMS Theme Settings', 'yiontech-lms'); ?></h1>
@@ -4353,7 +4328,6 @@ function yiontech_lms_general_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['enable_preloader', 'site_icon', 'enable_back_to_top', 'disable_gutenberg']);
                 yiontech_lms_output_settings_section('yiontech_lms_general_section');
                 submit_button();
                 ?>
@@ -4363,7 +4337,24 @@ function yiontech_lms_general_settings_page() {
     <?php
 }
 
-// Header settings page
+function yiontech_lms_typography_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1><?php _e('Typography Settings', 'yiontech-lms'); ?></h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
+                settings_fields('yiontech_lms_theme_settings');
+                yiontech_lms_output_settings_section('yiontech_lms_typography_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 function yiontech_lms_header_settings_page() {
     ?>
     <div class="wrap">
@@ -4373,7 +4364,6 @@ function yiontech_lms_header_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['header_style', 'transparent_header', 'sticky_header', 'header_background_color', 'sticky_header_background_color', 'logo_upload', 'retina_logo_upload', 'header_buttons', 'header_menu']);
                 yiontech_lms_output_settings_section('yiontech_lms_header_section');
                 submit_button();
                 ?>
@@ -4383,7 +4373,6 @@ function yiontech_lms_header_settings_page() {
     <?php
 }
 
-// Footer settings page
 function yiontech_lms_footer_settings_page() {
     ?>
     <div class="wrap">
@@ -4393,7 +4382,6 @@ function yiontech_lms_footer_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['footer_style', 'footer_elementor_template', 'footer_content', 'copyright_text', 'footer_text_color', 'footer_background_color', 'copyright_background_color', 'footer_padding']);
                 yiontech_lms_output_settings_section('yiontech_lms_footer_section');
                 submit_button();
                 ?>
@@ -4403,7 +4391,24 @@ function yiontech_lms_footer_settings_page() {
     <?php
 }
 
-// Newsletter settings page
+function yiontech_lms_layout_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1><?php _e('Layout Settings', 'yiontech-lms'); ?></h1>
+        <div class="settings-container">
+            <form method="post" action="options.php">
+                <?php
+                wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
+                settings_fields('yiontech_lms_theme_settings');
+                yiontech_lms_output_settings_section('yiontech_lms_layout_section');
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
 function yiontech_lms_newsletter_settings_page() {
     ?>
     <div class="wrap">
@@ -4413,7 +4418,6 @@ function yiontech_lms_newsletter_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['newsletter_enable', 'newsletter_action_url', 'newsletter_method', 'newsletter_email_field', 'newsletter_hidden_fields', 'newsletter_success_message']);
                 yiontech_lms_output_settings_section('yiontech_lms_newsletter_section');
                 submit_button();
                 ?>
@@ -4423,7 +4427,6 @@ function yiontech_lms_newsletter_settings_page() {
     <?php
 }
 
-// Privacy settings page
 function yiontech_lms_privacy_settings_page() {
     ?>
     <div class="wrap">
@@ -4433,7 +4436,6 @@ function yiontech_lms_privacy_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['enable_privacy_features', 'privacy_policy_page', 'terms_of_service_page', 'cookie_consent_text', 'cookie_consent_button_text', 'cookie_consent_learn_more_text', 'enable_data_export', 'enable_account_deletion']);
                 yiontech_lms_output_settings_section('yiontech_lms_privacy_section');
                 submit_button();
                 ?>
@@ -4443,7 +4445,6 @@ function yiontech_lms_privacy_settings_page() {
     <?php
 }
 
-// CSS settings page
 function yiontech_lms_css_settings_page() {
     ?>
     <div class="wrap">
@@ -4453,7 +4454,6 @@ function yiontech_lms_css_settings_page() {
                 <?php
                 wp_nonce_field('yiontech_lms_settings_save', 'yiontech_lms_nonce');
                 settings_fields('yiontech_lms_theme_settings');
-                yiontech_lms_output_hidden_fields(['custom_css']);
                 yiontech_lms_output_settings_section('yiontech_lms_css_editor_section');
                 submit_button();
                 ?>
@@ -4511,7 +4511,7 @@ function yiontech_lms_output_settings_section($section_id) {
 
 // Enqueue admin scripts and styles
 function yiontech_lms_admin_enqueue_scripts($hook) {
-    if (strpos($hook, 'theme-settings') === false) {
+    if (strpos($hook, 'yiontech-lms-settings') === false) {
         return;
     }
 
@@ -4576,7 +4576,231 @@ function yiontech_lms_gutenberg_support() {
     }
 }
 add_action('after_setup_theme', 'yiontech_lms_gutenberg_support');
-?>-e 
+
+// Output typography and layout CSS
+function yiontech_lms_output_typography_css() {
+    $primary_color = yiontech_lms_get_theme_setting('primary_color');
+    $secondary_color = yiontech_lms_get_theme_setting('secondary_color');
+    $text_color = yiontech_lms_get_theme_setting('text_color');
+    $primary_font = yiontech_lms_get_theme_setting('primary_font');
+    $secondary_font = yiontech_lms_get_theme_setting('secondary_font');
+    $primary_font_weight = yiontech_lms_get_theme_setting('primary_font_weight');
+    $secondary_font_weight = yiontech_lms_get_theme_setting('secondary_font_weight');
+    $site_width = yiontech_lms_get_theme_setting('site_width');
+    
+    ?>
+    <style id="yiontech-lms-typography-css">
+        :root {
+            --yiontech-primary-color: <?php echo esc_attr($primary_color); ?>;
+            --yiontech-secondary-color: <?php echo esc_attr($secondary_color); ?>;
+            --yiontech-text-color: <?php echo esc_attr($text_color); ?>;
+            --yiontech-primary-font: '<?php echo esc_attr($primary_font); ?>', sans-serif;
+            --yiontech-secondary-font: '<?php echo esc_attr($secondary_font); ?>', sans-serif;
+            --yiontech-primary-font-weight: <?php echo esc_attr($primary_font_weight); ?>;
+            --yiontech-secondary-font-weight: <?php echo esc_attr($secondary_font_weight); ?>;
+            --yiontech-site-width: <?php echo esc_attr($site_width); ?>px;
+        }
+        
+        body {
+            font-family: var(--yiontech-secondary-font);
+            font-weight: var(--yiontech-secondary-font-weight);
+            color: var(--yiontech-text-color);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--yiontech-primary-font);
+            font-weight: var(--yiontech-primary-font-weight);
+            color: var(--yiontech-primary-color);
+        }
+        
+        .site-content {
+            max-width: var(--yiontech-site-width);
+            margin: 0 auto;
+        }
+        
+        a {
+            color: var(--yiontech-primary-color);
+        }
+        
+        a:hover {
+            color: var(--yiontech-secondary-color);
+        }
+        
+        button, .button, input[type="button"], input[type="submit"] {
+            background-color: var(--yiontech-primary-color);
+            color: white;
+            font-family: var(--yiontech-primary-font);
+            font-weight: var(--yiontech-primary-font-weight);
+        }
+        
+        button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+            background-color: var(--yiontech-secondary-color);
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'yiontech_lms_output_typography_css', 99);
+
+// Add data export and account deletion functionality
+function yiontech_lms_add_user_profile_actions() {
+    if (!yiontech_lms_get_theme_setting('enable_privacy_features')) {
+        return;
+    }
+    
+    $enable_data_export = yiontech_lms_get_theme_setting('enable_data_export');
+    $enable_account_deletion = yiontech_lms_get_theme_setting('enable_account_deletion');
+    
+    if (!$enable_data_export && !$enable_account_deletion) {
+        return;
+    }
+    
+    if (is_user_logged_in()) {
+        add_action('show_user_profile', 'yiontech_lms_user_profile_actions');
+        add_action('edit_user_profile', 'yiontech_lms_user_profile_actions');
+    }
+}
+add_action('init', 'yiontech_lms_add_user_profile_actions');
+
+function yiontech_lms_user_profile_actions($user) {
+    $enable_data_export = yiontech_lms_get_theme_setting('enable_data_export');
+    $enable_account_deletion = yiontech_lms_get_theme_setting('enable_account_deletion');
+    ?>
+    <h3><?php _e('Privacy Actions', 'yiontech-lms'); ?></h3>
+    <table class="form-table">
+        <?php if ($enable_data_export): ?>
+        <tr>
+            <th scope="row"><?php _e('Export Your Data', 'yiontech-lms'); ?></th>
+            <td>
+                <p class="description"><?php _e('Download a copy of your personal data stored on this site.', 'yiontech-lms'); ?></p>
+                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php?action=yiontech_export_data&user_id=' . $user->ID), 'yiontech_export_data_nonce')); ?>" class="button"><?php _e('Export Data', 'yiontech-lms'); ?></a>
+            </td>
+        </tr>
+        <?php endif; ?>
+        
+        <?php if ($enable_account_deletion): ?>
+        <tr>
+            <th scope="row"><?php _e('Delete Your Account', 'yiontech-lms'); ?></th>
+            <td>
+                <p class="description"><?php _e('Permanently delete your account and all associated data. This action cannot be undone.', 'yiontech-lms'); ?></p>
+                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php?action=yiontech_delete_account&user_id=' . $user->ID), 'yiontech_delete_account_nonce')); ?>" class="button" onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete your account? This action cannot be undone.', 'yiontech-lms'); ?>');"><?php _e('Delete Account', 'yiontech-lms'); ?></a>
+            </td>
+        </tr>
+        <?php endif; ?>
+    </table>
+    <?php
+}
+
+// Handle data export
+function yiontech_lms_handle_data_export() {
+    if (!yiontech_lms_get_theme_setting('enable_privacy_features') || !yiontech_lms_get_theme_setting('enable_data_export')) {
+        wp_die(__('Data export is not enabled.', 'yiontech-lms'));
+    }
+    
+    if (!isset($_GET['user_id']) || !isset($_GET['_wpnonce'])) {
+        wp_die(__('Invalid request.', 'yiontech-lms'));
+    }
+    
+    $user_id = intval($_GET['user_id']);
+    $current_user_id = get_current_user_id();
+    
+    // Only allow users to export their own data or admins to export any user's data
+    if ($user_id !== $current_user_id && !current_user_can('edit_users')) {
+        wp_die(__('You do not have permission to export this data.', 'yiontech-lms'));
+    }
+    
+    if (!wp_verify_nonce($_GET['_wpnonce'], 'yiontech_export_data_nonce')) {
+        wp_die(__('Security check failed.', 'yiontech-lms'));
+    }
+    
+    $user_data = get_userdata($user_id);
+    
+    if (!$user_data) {
+        wp_die(__('User not found.', 'yiontech-lms'));
+    }
+    
+    // Prepare user data for export
+    $data = [
+        'user_id' => $user_id,
+        'username' => $user_data->user_login,
+        'email' => $user_data->user_email,
+        'first_name' => $user_data->first_name,
+        'last_name' => $user_data->last_name,
+        'display_name' => $user_data->display_name,
+        'registration_date' => $user_data->user_registered,
+        'role' => $user_data->roles,
+    ];
+    
+    // Add user meta data
+    $user_meta = get_user_meta($user_id);
+    $data['meta'] = [];
+    
+    foreach ($user_meta as $key => $values) {
+        // Skip sensitive meta data
+        if (in_array($key, ['session_tokens', 'wp_capabilities', 'wp_user_level', 'wp_user_settings'])) {
+            continue;
+        }
+        
+        $data['meta'][$key] = $values;
+    }
+    
+    // Convert to JSON
+    $json_data = json_encode($data, JSON_PRETTY_PRINT);
+    
+    // Set headers for download
+    header('Content-Type: application/json');
+    header('Content-Disposition: attachment; filename="user_data_export_' . $user_id . '.json"');
+    
+    echo $json_data;
+    exit;
+}
+add_action('wp_ajax_yiontech_export_data', 'yiontech_lms_handle_data_export');
+
+// Handle account deletion
+function yiontech_lms_handle_account_deletion() {
+    if (!yiontech_lms_get_theme_setting('enable_privacy_features') || !yiontech_lms_get_theme_setting('enable_account_deletion')) {
+        wp_die(__('Account deletion is not enabled.', 'yiontech-lms'));
+    }
+    
+    if (!isset($_GET['user_id']) || !isset($_GET['_wpnonce'])) {
+        wp_die(__('Invalid request.', 'yiontech-lms'));
+    }
+    
+    $user_id = intval($_GET['user_id']);
+    $current_user_id = get_current_user_id();
+    
+    // Only allow users to delete their own account or admins to delete any user's account
+    if ($user_id !== $current_user_id && !current_user_can('edit_users')) {
+        wp_die(__('You do not have permission to delete this account.', 'yiontech-lms'));
+    }
+    
+    if (!wp_verify_nonce($_GET['_wpnonce'], 'yiontech_delete_account_nonce')) {
+        wp_die(__('Security check failed.', 'yiontech-lms'));
+    }
+    
+    // Check if it's the current user or an admin
+    if ($user_id === $current_user_id || current_user_can('edit_users')) {
+        require_once(ABSPATH . 'wp-admin/includes/user.php');
+        
+        $result = wp_delete_user($user_id);
+        
+        if (is_wp_error($result)) {
+            wp_die(__('Error deleting account: ', 'yiontech-lms') . $result->get_error_message());
+        }
+        
+        // Redirect to home page if user deleted their own account
+        if ($user_id === $current_user_id) {
+            wp_redirect(home_url());
+            exit;
+        }
+        
+        // Redirect to users page if admin deleted another user's account
+        wp_redirect(admin_url('users.php'));
+        exit;
+    }
+    
+    wp_die(__('You do not have permission to delete this account.', 'yiontech-lms'));
+}
+add_action('wp_ajax_yiontech_delete_account', 'yiontech_lms_handle_account_deletion');-e 
 
 ===== ./inc/features/cookie-consent/cookie-consent.js =====
 
@@ -5173,26 +5397,30 @@ add_action('wp_enqueue_scripts', 'yiontech_lms_enqueue_login_scripts');
 --------------------------------------------------------------*/
 // Nonce verification in the AJAX login handler section
 function yiontech_lms_ajax_login() {
-    // Verify nonce
     if (!wp_verify_nonce($_POST['custom_login_nonce'], 'custom_login_action')) {
         wp_send_json_error('Security check failed');
     }
     
     $creds = [
-        'user_login'    => isset($_POST['username']) ? sanitize_text_field($_POST['username']) : '',
-        'user_password' => isset($_POST['password']) ? $_POST['password'] : '',
-        'remember'      => isset($_POST['remember']) ? true : false
+        'user_login'    => sanitize_text_field($_POST['username']),
+        'user_password' => $_POST['password'],
+        'remember'      => !empty($_POST['remember'])
     ];
 
     $user = wp_signon($creds, false);
     if (is_wp_error($user)) {
         wp_send_json_error($user->get_error_message());
     } else {
+        $redirect = !empty($_REQUEST['redirect_to']) 
+            ? esc_url_raw($_REQUEST['redirect_to']) 
+            : yiontech_get_tutor_dashboard_url();
+
         wp_send_json_success([
-            'redirect' => yiontech_get_tutor_dashboard_url()
+            'redirect' => $redirect
         ]);
     }
 }
+
 add_action('wp_ajax_nopriv_yiontech_login', 'yiontech_lms_ajax_login');
 add_action('wp_ajax_yiontech_login', 'yiontech_lms_ajax_login');
 
@@ -5257,10 +5485,21 @@ add_filter('template_include', function ($template) {
  * Always override Tutor LMS login URL
  * This prevents links with `#`
  */
-add_filter('tutor_login_url', function($url) {
-    // Redirect to our custom login template page
-    return site_url('/login'); // you can change this slug
-});
+add_filter('tutor_login_url', function($url, $args = []) {
+    $login_page = get_page_by_path('login'); // or use your stored option
+    if ($login_page) {
+        $custom_url = get_permalink($login_page->ID);
+
+        // Preserve redirect_to parameter
+        if (!empty($args['redirect_to'])) {
+            $custom_url = add_query_arg('redirect_to', urlencode($args['redirect_to']), $custom_url);
+        }
+
+        return $custom_url;
+    }
+
+    return $url;
+}, 10, 2);
 
 /**
  * Force Tutor LMS to load our custom blank login template
@@ -5273,7 +5512,9 @@ add_action('template_redirect', function() {
             exit;
         }
     }
-});-e 
+});
+
+-e 
 
 ===== ./inc/features/login-modifier/templates/login-blank-template.php =====
 
@@ -5760,6 +6001,33 @@ class Yiontech_LMS_Footer_Menu_Walker extends Walker_Nav_Menu {
                 }
             });
         });
+        
+        // Fix for settings not saving
+        $('#submit').on('click', function(e) {
+            e.preventDefault();
+            
+            var form = $(this).closest('form');
+            
+            // Make sure all fields have proper names and values
+            form.find('input[type="checkbox"]').each(function() {
+                var checkbox = $(this);
+                var name = checkbox.attr('name');
+                
+                if (!checkbox.is(':checked')) {
+                    // Add hidden input for unchecked checkboxes
+                    if (!form.find('input[type="hidden"][name="' + name + '"]').length) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: name,
+                            value: '0'
+                        }).appendTo(form);
+                    }
+                }
+            });
+            
+            // Submit the form
+            form.submit();
+        });
     });
 
 })(jQuery);-e 
@@ -5823,45 +6091,105 @@ class Yiontech_LMS_Footer_Menu_Walker extends Walker_Nav_Menu {
 
 ===== ./readme.md =====
 
-# Yiontech LMS Theme
+# Yiontech LMS
 
-A WordPress theme for Learning Management Systems with Tutor LMS integration.
+**Contributors:** Yiontech Ltd  
+**Requires at least:** 6.0  
+**Tested up to:** 6.6  
+**Requires PHP:** 7.4  
+**Stable tag:** 1.0.0  
+**License:** Commercial (see LICENSE.txt)  
+**License URI:** LICENSE.txt  
+**Tags:** lms, education, e-learning, online courses, tutor lms, student dashboard  
+
+---
+
+## Description
+
+Yiontech LMS is a **premium WordPress theme** developed by **Yiontech Ltd**.  
+It is designed for **educational institutions, training providers, and online academies**, offering a complete solution for building modern learning platforms with **Tutor LMS integration**.  
+
+This theme includes:  
+- Custom authentication system (AJAX login & registration)  
+- Private document uploads per student  
+- Professional UI layouts optimized for engagement and usability  
+
+### Key Features
+- 🔑 Custom Login Page with AJAX authentication  
+- 📝 Custom Registration Page with file upload (documents stored privately per user)  
+- 🎓 Tutor LMS dashboard integration with overridden login/registration URLs  
+- 📄 Auto-creates `/login` and `/register` pages with dedicated blank templates (no header/footer)  
+- 🔒 Secure nonce and validation on all forms  
+- 🔐 Password strength meter with show/hide toggle  
+- 📂 Drag & drop file upload area during registration  
+- 🎨 Tailwind CSS powered UI for modern styling  
+- 📱 Responsive two-column layout (marketing + form)  
+- ⚡ Branded alert messages (success, warning, error)  
+- 🔄 Student redirect handling (`redirect_to` supported — users return to the page they intended after login/registration)  
+
+---
 
 ## Installation
-1. Upload the theme to `/wp-content/themes/`.
-2. Activate via Appearance > Themes.
-3. Configure settings at Yiontech LMS menu or Customizer.
 
-## Features
-- Tutor LMS overrides (dashboard, login, registration).
-- Custom auth pages with privacy integration.
-- GDPR compliance (cookie consent, data export/deletion).
-- Elementor support for pages and footer.
-- Responsive design with sticky header, back-to-top.
-- Newsletter subscription with custom form.
-- Custom CSS editor.
-- Optional Gutenberg disable with block styling support.
+1. Upload the theme ZIP via **WordPress > Appearance > Themes > Add New**.  
+2. Activate the theme.  
+3. The theme will automatically create:  
+   - `/login` page using the custom blank login template  
+   - `/register` page using the custom blank registration template  
+4. Visit **Appearance > Customize** to adjust branding and styling.  
+5. Ensure **Tutor LMS** is installed and configured.  
 
-## Requirements
-- WordPress 6.4+
-- PHP 8.2+
-- Tutor LMS (optional for LMS features)
-- Elementor (optional for advanced layouts)
+---
 
-## Documentation
-- Settings: Use the Yiontech LMS admin menu for configuration.
-- Privacy: Enable features in Privacy Settings for GDPR.
-- Customizer: Colors and logos can be adjusted in Appearance > Customize.
+## Frequently Asked Questions
+
+### ❓ Does this theme work without Tutor LMS?  
+Yes, but it is built and optimized for Tutor LMS. Some functionality (like dashboard redirects) requires Tutor LMS.  
+
+### ❓ Where are uploaded documents stored?  
+Documents are stored privately under:  
+
+` wp-content/uploads/yiontech-lms-private/{user_id}/`
+
+They are **not publicly accessible** via direct URL.  
+
+### ❓ Can I modify the templates?  
+Yes. Templates are located in the `inc/features/` directory and can be overridden in your **child theme**.  
+
+### ❓ Does it support WordPress default login/register?  
+The theme overrides Tutor LMS login/register URLs and enforces **custom `/login` and `/register` pages** with improved UI/UX.  
+
+---
 
 ## Changelog
-- 1.0.0: Initial release.
-- 1.1.0: Security fixes, performance optimizations, accessibility improvements.
 
-## Support
-Contact support@yiontech.com for help.
+### 1.0.0
+- Initial release  
+- Custom login/registration modules  
+- AJAX form handling  
+- Tutor LMS integration  
+- Private file upload support  
+- Tailwind CSS UI layouts  
+- Redirect-to support for user experience  
+
+---
 
 ## License
-GNU GPL v2 or later (see license.txt).-e 
+
+This theme is a **commercial product** of **Yiontech Ltd**.  
+See `LICENSE.txt` for full license terms.  
+🚫 Unauthorized distribution is strictly prohibited.  
+
+---
+
+## Support
+
+For support, updates, or licensing inquiries, contact:  
+
+**Yiontech Ltd**  
+📧 Email: [support@yiontech.co.uk](mailto:support@yiontech.co.uk)  
+🌐 Website: [https://yiontech.co.uk](https://yiontech.co.uk)  
+-e 
 
 ===== ./footer.php =====
 
@@ -5883,28 +6211,6 @@ if ($is_auth_page) {
 // Get theme settings with defaults
  $footer_style = yiontech_lms_get_theme_setting('footer_style', 'default');
  $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
- $footer_content = yiontech_lms_get_theme_setting('footer_content', [
-    'column1' => ['title' => 'About Us', 'content' => 'A powerful learning management system designed for educators and students.'],
-    'column2' => ['title' => 'Quick Links', 'links' => [
-        ['text' => 'Home', 'url' => '/'],
-        ['text' => 'Courses', 'url' => '/courses'],
-        ['text' => 'About', 'url' => '/about'],
-        ['text' => 'Contact', 'url' => '/contact'],
-    ]],
-    'column3' => ['title' => 'Company', 'links' => [
-        ['text' => 'About Us', 'url' => '/about'],
-        ['text' => 'Our Team', 'url' => '/team'],
-        ['text' => 'Careers', 'url' => '/careers'],
-        ['text' => 'Blog', 'url' => '/blog'],
-    ]],
-    'column4' => ['title' => 'User Portal', 'links' => [
-        ['text' => 'Login', 'url' => '/login'],
-        ['text' => 'Register', 'url' => '/register'],
-        ['text' => 'Dashboard', 'url' => '/dashboard'],
-        ['text' => 'Profile', 'url' => '/profile'],
-    ]],
-    'column5' => ['title' => 'Newsletter', 'content' => 'Get the latest news and updates delivered right to your inbox.', 'email' => 'info@yiontech.com', 'phone' => '+1 (555) 123-4567'],
-]);
  $copyright_text = yiontech_lms_get_theme_setting('copyright_text', '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.');
  $footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
  $footer_background_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
@@ -5919,83 +6225,8 @@ if ($is_auth_page) {
  $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
  $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 
-// Ensure footer_content is an array
-if (!is_array($footer_content)) {
-    $footer_content = array(
-        'column1' => array(
-            'title' => 'About Us',
-            'content' => 'A powerful learning management system designed for educators and students.',
-        ),
-        'column2' => array(
-            'title' => 'Quick Links',
-            'links' => array(
-                array('text' => 'Home', 'url' => '/'),
-                array('text' => 'Courses', 'url' => '/courses'),
-                array('text' => 'About', 'url' => '/about'),
-                array('text' => 'Contact', 'url' => '/contact'),
-            ),
-        ),
-        'column3' => array(
-            'title' => 'Company',
-            'links' => array(
-                array('text' => 'About Us', 'url' => '/about'),
-                array('text' => 'Our Team', 'url' => '/team'),
-                array('text' => 'Careers', 'url' => '/careers'),
-                array('text' => 'Blog', 'url' => '/blog'),
-            ),
-        ),
-        'column4' => array(
-            'title' => 'User Portal',
-            'links' => array(
-                array('text' => 'Login', 'url' => '/login'),
-                array('text' => 'Register', 'url' => '/register'),
-                array('text' => 'Dashboard', 'url' => '/dashboard'),
-                array('text' => 'Profile', 'url' => '/profile'),
-            ),
-        ),
-        'column5' => array(
-            'title' => 'Newsletter',
-            'content' => 'Get the latest news and updates delivered right to your inbox.',
-            'email' => 'info@yiontech.com',
-            'phone' => '+1 (555) 123-4567',
-        ),
-    );
-}
-
-// Ensure each column exists and has proper structure
- $columns = array('column1', 'column2', 'column3', 'column4', 'column5');
-foreach ($columns as $column) {
-    if (!isset($footer_content[$column])) {
-        $footer_content[$column] = array();
-    }
-    
-    // Ensure title exists for each column
-    if (!isset($footer_content[$column]['title'])) {
-        $footer_content[$column]['title'] = '';
-    }
-    
-    // Ensure content exists for column1 and column5
-    if (($column === 'column1' || $column === 'column5') && !isset($footer_content[$column]['content'])) {
-        $footer_content[$column]['content'] = '';
-    }
-    
-    // Ensure links exist for column2, column3, and column4
-    if (in_array($column, array('column2', 'column3', 'column4'))) {
-        if (!isset($footer_content[$column]['links']) || !is_array($footer_content[$column]['links'])) {
-            $footer_content[$column]['links'] = array();
-        }
-    }
-    
-    // Ensure email and phone exist for column5
-    if ($column === 'column5') {
-        if (!isset($footer_content[$column]['email'])) {
-            $footer_content[$column]['email'] = '';
-        }
-        if (!isset($footer_content[$column]['phone'])) {
-            $footer_content[$column]['phone'] = '';
-        }
-    }
-}
+ $padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
+ $padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
 
 // Check if an Elementor footer template is selected
 if ($footer_elementor_template > 0) {
@@ -6028,7 +6259,7 @@ if ($footer_elementor_template > 0) {
                         echo '</footer>';
                     } else {
                         // Fall back to default footer if content is empty
-                        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                        yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
                     }
                 } else {
                     // Fallback for older Elementor versions
@@ -6038,19 +6269,19 @@ if ($footer_elementor_template > 0) {
                 }
             } else {
                 // Document not found, fall back to default footer
-                yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
             }
         } else {
             // Elementor not active, fall back to default footer
-            yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+            yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
         }
     } else {
         // Template not found or not published, fall back to default footer
-        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+        yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
     }
 } else {
     // No Elementor template selected, use default footer
-    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+    yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
 }
 ?>
 
@@ -6071,10 +6302,7 @@ if ($footer_elementor_template > 0) {
 /**
  * Function to display the default theme footer
  */
-function yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
-    $padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
-    $padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
-    
+function yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
     if ($footer_style == 'default') : ?>
     <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; ">
         <?php 
@@ -6083,7 +6311,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
         } else {
             // Default theme footer
             ?>
-            <div class="max-w-7xl  mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
+            <div class="max-w-7xl mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
                     <!-- Column 1: Logo and Description -->
                     <div>
@@ -6098,7 +6326,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <?php else : ?>
                             <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
                         <?php endif; ?>
-                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                        <p class="text-gray-400 mb-4"><?php echo esc_html(get_bloginfo('description')); ?></p>
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-400 hover:text-white transition">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -6118,93 +6346,67 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         </div>
                     </div>
                     
-                    <!-- Column 2: Quick Links -->
+                    <!-- Column 2: Quick Links Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column2']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Quick Links', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
-                    <!-- Column 3: Company -->
+                    <!-- Column 3: Company Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column3']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column3']['links']) && is_array($footer_content['column3']['links'])) : ?>
-                                <?php foreach ($footer_content['column3']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Company', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-company',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
-                    <!-- Column 4: User Portal -->
+                    <!-- Column 4: User Portal Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column4']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column4']['links']) && is_array($footer_content['column4']['links'])) : ?>
-                                <?php foreach ($footer_content['column4']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('User Portal', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-user-portal',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Column 5: Newsletter -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column5']['title']); ?></h3>
-                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column5']['content']); ?></p>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Newsletter', 'yiontech-lms'); ?></h3>
+                        <p class="text-gray-400 mb-4"><?php _e('Get the latest news and updates delivered right to your inbox.', 'yiontech-lms'); ?></p>
                         <?php if ($newsletter_enable) : ?>
                             <?php get_template_part('template-parts/newsletter-form'); ?>
                         <?php endif; ?>
                         
                         <div class="mt-6">
-                            <h4 class="text-lg font-medium mb-2">Contact Us</h4>
+                            <h4 class="text-lg font-medium mb-2"><?php _e('Contact Us', 'yiontech-lms'); ?></h4>
                             <ul class="space-y-2 text-gray-400">
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
-                                    <span><?php echo esc_html($footer_content['column5']['email']); ?></span>
+                                    <span><?php echo esc_html(get_bloginfo('admin_email')); ?></span>
                                 </li>
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                     </svg>
-                                    <span><?php echo esc_html($footer_content['column5']['phone']); ?></span>
+                                    <span>+1 (555) 123-4567</span>
                                 </li>
                             </ul>
                         </div>
@@ -6216,7 +6418,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
         ?>
         
         <!-- Copyright -->
-        <div class="mt-0  text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
+        <div class="mt-0 text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <p><?php echo $copyright_text; ?></p>
                 
@@ -6225,7 +6427,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     <p class="mt-2 text-sm">
                         <?php if ($privacy_policy_url) : ?>
                             <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                Privacy Policy
+                                <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                             </a>
                         <?php endif; ?>
                         
@@ -6235,7 +6437,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         
                         <?php if ($terms_of_service_url) : ?>
                             <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                Terms of Service
+                                <?php _e('Terms of Service', 'yiontech-lms'); ?>
                             </a>
                         <?php endif; ?>
                     </p>
@@ -6269,36 +6471,16 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <p class="text-gray-400 text-sm"><?php echo $copyright_text; ?></p>
                     </div>
                     
-                    <!-- Quick Links -->
+                    <!-- Quick Links Menu -->
                     <div class="mb-4 md:mb-0">
-                        <ul class="flex flex-wrap justify-center gap-4">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'flex flex-wrap justify-center gap-4',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Social Media -->
@@ -6351,38 +6533,18 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     </div>
                     
                     <!-- Description -->
-                    <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                    <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html(get_bloginfo('description')); ?></p>
                     
-                    <!-- Quick Links -->
+                    <!-- Quick Links Menu -->
                     <div class="mb-6">
-                        <ul class="flex flex-wrap justify-center gap-6">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'flex flex-wrap justify-center gap-6',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Newsletter -->
@@ -6415,7 +6577,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     
                     <!-- Contact Info -->
                     <div class="text-gray-400 text-sm mb-6">
-                        <p><?php echo esc_html($footer_content['column5']['email']); ?> | <?php echo esc_html($footer_content['column5']['phone']); ?></p>
+                        <p><?php echo esc_html(get_bloginfo('admin_email')); ?> | +1 (555) 123-4567</p>
                     </div>
                 </div>
             </div>
@@ -6430,7 +6592,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <p class="mt-2">
                             <?php if ($privacy_policy_url) : ?>
                                 <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Privacy Policy
+                                    <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                 </a>
                             <?php endif; ?>
                             
@@ -6440,7 +6602,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                             
                             <?php if ($terms_of_service_url) : ?>
                                 <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Terms of Service
+                                    <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                 </a>
                             <?php endif; ?>
                         </p>
@@ -6958,32 +7120,7 @@ require_once get_template_directory() . '/inc/core/template-functions.php';
 // Include feature loader
 require_once get_template_directory() . '/inc/features-loader.php';
 
-// Theme Support
-function yiontech_lms_setup_theme() {
-    // Core WordPress features
-    add_theme_support('post-thumbnails');
-    add_theme_support('custom-logo', [
-        'height' => 36,
-        'width' => 200,
-        'flex-height' => true,
-        'flex-width' => true,
-    ]);
-    add_theme_support('title-tag');
-    add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
-    add_theme_support('custom-background', ['default-color' => '#ffffff']);
-    add_theme_support('custom-header', ['default-image' => '', 'width' => 1200, 'height' => 300, 'flex-height' => true]);
-    add_theme_support('editor-styles');
-    add_theme_support('woocommerce');
-    add_theme_support('automatic-feed-links');
 
-    // Custom image sizes for performance
-    add_image_size('yiontech_course_thumbnail', 600, 400, true);
-    add_image_size('yiontech_post_thumbnail', 800, 600, true);
-
-    // Load editor styles
-    add_editor_style('css/editor-style.css');
-}
-add_action('after_setup_theme', 'yiontech_lms_setup_theme');
 
 // Theme activation hook
 function yiontech_lms_activate() {
@@ -7403,306 +7540,132 @@ add_action('after_switch_theme', 'yiontech_lms_generate_pot_file');
 
 ===== ./css/admin.css =====
 
-/* Theme Settings Page Styles */
+/* Admin Styles */
 .settings-container {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 20px;
+    max-width: 1200px;
+    margin: 20px 0;
 }
 
 .settings-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.settings-section:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom: 20px;
+    padding: 20px;
 }
 
 .settings-section h2 {
-    margin: 0 0 15px 0;
-    padding: 0;
-    font-size: 1.5em;
-    color: #23282d;
-}
-
-.settings-section p {
-    margin: 0 0 15px 0;
-    color: #666;
-    font-style: italic;
-}
-
-/* Form Table Styles */
-.form-table {
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-.form-table th {
-    vertical-align: top;
-    text-align: left;
-    padding: 20px 10px 20px 0;
-    width: 200px;
-    background: #f9f9f9;
+    margin-top: 0;
+    padding-bottom: 10px;
     border-bottom: 1px solid #eee;
-    font-weight: 600;
-}
-
-.form-table td {
-    vertical-align: top;
-    padding: 20px 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.form-table tr:last-child th,
-.form-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* Form Field Styles */
-input[type="text"],
-input[type="email"],
-input[type="url"],
-input[type="number"],
-textarea,
-select {
-    width: 100%;
-    max-width: 400px;
-    padding: 8px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
-    transition: border-color 0.15s ease-in-out;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-select:focus {
-    border-color: #00a0d2;
-    outline: none;
-    box-shadow: 0 0 0 1px #00a0d2;
-}
-
-input[type="color"] {
-    height: 35px;
-    width: 80px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-input[type="checkbox"] {
-    margin-right: 8px;
-}
-
-.description {
-    color: #666;
-    font-style: italic;
-    margin-top: 5px;
-    font-size: 13px;
-}
-
-/* Button Styles */
-.button {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    margin: 0;
-    padding: 0 10px 1px;
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    -webkit-appearance: none;
-    border-radius: 3px;
-    white-space: nowrap;
-    box-sizing: border-box;
-    background: #f7f7f7;
-    color: #555;
-    border-color: #ccc;
-    box-shadow: 0 1px 0 #ccc;
-    vertical-align: top;
-}
-
-.button:hover,
-.button:focus {
-    background: #fafafa;
-    border-color: #999;
-    color: #23282d;
-}
-
-.button-primary {
-    background: #0085ba;
-    border-color: #0073a8;
-    color: #fff;
-    box-shadow: 0 1px 0 #0073a8;
-    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
-}
-
-.button-primary:hover,
-.button-primary:focus {
-    background: #0073a8;
-    border-color: #006799;
-    color: #fff;
-}
-
-.button.remove-button,
-.button.remove-menu-item,
-.button.remove-link {
-    background: #ff4d4d;
-    border-color: #ff1a1a;
-    color: #fff;
-    box-shadow: 0 1px 0 #ff1a1a;
-}
-
-.button.remove-button:hover,
-.button.remove-menu-item:hover,
-.button.remove-link:hover {
-    background: #ff1a1a;
-    border-color: #e60000;
-    color: #fff;
-}
-
-.button.add-button,
-.button.add-menu-item,
-.button.add-link {
-    background: #5cb85c;
-    border-color: #4cae4c;
-    color: #fff;
-    box-shadow: 0 1px 0 #4cae4c;
-}
-
-.button.add-button:hover,
-.button.add-menu-item:hover,
-.button.add-link:hover {
-    background: #4cae4c;
-    border-color: #3d8b3d;
-    color: #fff;
 }
 
 /* Media Field Styles */
 .media-field {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .media-preview {
-    width: 200px;
-    height: 100px;
-    border: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #f9f9f9;
-    border-radius: 4px;
+    margin: 10px 0;
 }
 
 .media-preview img {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
+    border: 1px solid #ddd;
+    padding: 2px;
+    background: #f9f9f9;
 }
 
 /* Header Buttons Field Styles */
-.header-buttons-field,
-.menu-field {
-    margin-top: 10px;
-}
-
-.header-buttons,
-.menu-items {
-    margin-bottom: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 15px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    border-radius: 4px;
-}
-
-.header-button-item,
-.menu-item {
+.header-buttons-field {
     margin-bottom: 15px;
-    padding: 15px;
+}
+
+.header-button-item {
+    background: #f9f9f9;
     border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
 }
 
-.header-button-item:last-child,
-.menu-item:last-child {
-    margin-bottom: 0;
-}
-
-.header-button-item div,
-.menu-item div {
+.header-button-item > div {
     margin-bottom: 10px;
 }
 
-.header-button-item div:last-child,
-.menu-item div:last-child {
-    margin-bottom: 0;
+.header-button-item label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
 }
 
-.header-button-item label,
+.header-button-item input[type="text"],
+.header-button-item select {
+    width: 100%;
+    max-width: 400px;
+}
+
+.header-button-item .remove-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+/* Menu Field Styles */
+.menu-field {
+    margin-bottom: 15px;
+}
+
+.menu-item {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.menu-item > div {
+    margin-bottom: 10px;
+}
+
 .menu-item label {
     display: block;
+    font-weight: 600;
     margin-bottom: 5px;
-    font-weight: 500;
+}
+
+.menu-item input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+}
+
+.menu-item .remove-menu-item {
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }
 
 /* Footer Content Field Styles */
-.footer-content-field h4 {
-    margin: 20px 0 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 16px;
-    color: #23282d;
+.footer-content-field {
+    margin-bottom: 15px;
 }
 
 .footer-links {
-    margin-bottom: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 15px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    border-radius: 4px;
+    margin-bottom: 15px;
 }
 
 .footer-link-item {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 4px;
+    align-items: center;
 }
 
-.footer-link-item:last-child {
-    margin-bottom: 0;
-}
-
-.footer-link-item input {
+.footer-link-item input[type="text"] {
     flex: 1;
+}
+
+.footer-link-item .remove-link {
+    flex-shrink: 0;
 }
 
 /* Spacing Field Styles */
@@ -7717,13 +7680,55 @@ input[type="checkbox"] {
 
 .spacing-field label {
     display: block;
+    font-weight: 600;
     margin-bottom: 5px;
-    font-weight: 500;
 }
 
-/* Item Counter (hidden field for tracking dynamic items) */
-.item-counter {
-    display: none;
+/* Color Picker Styles */
+.yiontech-color-field {
+    width: 60px;
+    height: 30px;
+    border: 1px solid #ddd;
+    padding: 2px;
+    cursor: pointer;
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Button Styling */
+.button {
+    background: #f7f7f7;
+    border: 1px solid #cccccc;
+    color: #333;
+    padding: 3px 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    height: auto;
+    vertical-align: top;
+}
+
+.button:hover {
+    background: #fafafa;
+    border-color: #999;
+    color: #23282d;
+}
+
+.button.remove-button,
+.button.remove-menu-item,
+.button.remove-link {
+    color: #a00;
+    border-color: #a00;
+}
+
+.button.remove-button:hover,
+.button.remove-menu-item:hover,
+.button.remove-link:hover {
+    background: #a00;
+    color: #fff;
+    border-color: #a00;
 }-e 
 
 ===== ./css/fixes.css =====

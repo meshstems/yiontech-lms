@@ -16,28 +16,6 @@ if ($is_auth_page) {
 // Get theme settings with defaults
  $footer_style = yiontech_lms_get_theme_setting('footer_style', 'default');
  $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
- $footer_content = yiontech_lms_get_theme_setting('footer_content', [
-    'column1' => ['title' => 'About Us', 'content' => 'A powerful learning management system designed for educators and students.'],
-    'column2' => ['title' => 'Quick Links', 'links' => [
-        ['text' => 'Home', 'url' => '/'],
-        ['text' => 'Courses', 'url' => '/courses'],
-        ['text' => 'About', 'url' => '/about'],
-        ['text' => 'Contact', 'url' => '/contact'],
-    ]],
-    'column3' => ['title' => 'Company', 'links' => [
-        ['text' => 'About Us', 'url' => '/about'],
-        ['text' => 'Our Team', 'url' => '/team'],
-        ['text' => 'Careers', 'url' => '/careers'],
-        ['text' => 'Blog', 'url' => '/blog'],
-    ]],
-    'column4' => ['title' => 'User Portal', 'links' => [
-        ['text' => 'Login', 'url' => '/login'],
-        ['text' => 'Register', 'url' => '/register'],
-        ['text' => 'Dashboard', 'url' => '/dashboard'],
-        ['text' => 'Profile', 'url' => '/profile'],
-    ]],
-    'column5' => ['title' => 'Newsletter', 'content' => 'Get the latest news and updates delivered right to your inbox.', 'email' => 'info@yiontech.com', 'phone' => '+1 (555) 123-4567'],
-]);
  $copyright_text = yiontech_lms_get_theme_setting('copyright_text', '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.');
  $footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
  $footer_background_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
@@ -52,83 +30,8 @@ if ($is_auth_page) {
  $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
  $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 
-// Ensure footer_content is an array
-if (!is_array($footer_content)) {
-    $footer_content = array(
-        'column1' => array(
-            'title' => 'About Us',
-            'content' => 'A powerful learning management system designed for educators and students.',
-        ),
-        'column2' => array(
-            'title' => 'Quick Links',
-            'links' => array(
-                array('text' => 'Home', 'url' => '/'),
-                array('text' => 'Courses', 'url' => '/courses'),
-                array('text' => 'About', 'url' => '/about'),
-                array('text' => 'Contact', 'url' => '/contact'),
-            ),
-        ),
-        'column3' => array(
-            'title' => 'Company',
-            'links' => array(
-                array('text' => 'About Us', 'url' => '/about'),
-                array('text' => 'Our Team', 'url' => '/team'),
-                array('text' => 'Careers', 'url' => '/careers'),
-                array('text' => 'Blog', 'url' => '/blog'),
-            ),
-        ),
-        'column4' => array(
-            'title' => 'User Portal',
-            'links' => array(
-                array('text' => 'Login', 'url' => '/login'),
-                array('text' => 'Register', 'url' => '/register'),
-                array('text' => 'Dashboard', 'url' => '/dashboard'),
-                array('text' => 'Profile', 'url' => '/profile'),
-            ),
-        ),
-        'column5' => array(
-            'title' => 'Newsletter',
-            'content' => 'Get the latest news and updates delivered right to your inbox.',
-            'email' => 'info@yiontech.com',
-            'phone' => '+1 (555) 123-4567',
-        ),
-    );
-}
-
-// Ensure each column exists and has proper structure
- $columns = array('column1', 'column2', 'column3', 'column4', 'column5');
-foreach ($columns as $column) {
-    if (!isset($footer_content[$column])) {
-        $footer_content[$column] = array();
-    }
-    
-    // Ensure title exists for each column
-    if (!isset($footer_content[$column]['title'])) {
-        $footer_content[$column]['title'] = '';
-    }
-    
-    // Ensure content exists for column1 and column5
-    if (($column === 'column1' || $column === 'column5') && !isset($footer_content[$column]['content'])) {
-        $footer_content[$column]['content'] = '';
-    }
-    
-    // Ensure links exist for column2, column3, and column4
-    if (in_array($column, array('column2', 'column3', 'column4'))) {
-        if (!isset($footer_content[$column]['links']) || !is_array($footer_content[$column]['links'])) {
-            $footer_content[$column]['links'] = array();
-        }
-    }
-    
-    // Ensure email and phone exist for column5
-    if ($column === 'column5') {
-        if (!isset($footer_content[$column]['email'])) {
-            $footer_content[$column]['email'] = '';
-        }
-        if (!isset($footer_content[$column]['phone'])) {
-            $footer_content[$column]['phone'] = '';
-        }
-    }
-}
+ $padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
+ $padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
 
 // Check if an Elementor footer template is selected
 if ($footer_elementor_template > 0) {
@@ -161,7 +64,7 @@ if ($footer_elementor_template > 0) {
                         echo '</footer>';
                     } else {
                         // Fall back to default footer if content is empty
-                        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                        yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
                     }
                 } else {
                     // Fallback for older Elementor versions
@@ -171,19 +74,19 @@ if ($footer_elementor_template > 0) {
                 }
             } else {
                 // Document not found, fall back to default footer
-                yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
             }
         } else {
             // Elementor not active, fall back to default footer
-            yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+            yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
         }
     } else {
         // Template not found or not published, fall back to default footer
-        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+        yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
     }
 } else {
     // No Elementor template selected, use default footer
-    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+    yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
 }
 ?>
 
@@ -204,10 +107,7 @@ if ($footer_elementor_template > 0) {
 /**
  * Function to display the default theme footer
  */
-function yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
-    $padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
-    $padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
-    
+function yiontech_lms_display_default_footer($footer_style, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
     if ($footer_style == 'default') : ?>
     <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; ">
         <?php 
@@ -216,7 +116,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
         } else {
             // Default theme footer
             ?>
-            <div class="max-w-7xl  mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
+            <div class="max-w-7xl mx-auto px-4" style="padding-top: <?php echo esc_attr($padding_top); ?>px; padding-bottom: <?php echo esc_attr($padding_bottom); ?>px;">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
                     <!-- Column 1: Logo and Description -->
                     <div>
@@ -231,7 +131,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <?php else : ?>
                             <h3 class="text-xl font-bold mb-4"><?php bloginfo( 'name' ); ?></h3>
                         <?php endif; ?>
-                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                        <p class="text-gray-400 mb-4"><?php echo esc_html(get_bloginfo('description')); ?></p>
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-400 hover:text-white transition">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -251,93 +151,67 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         </div>
                     </div>
                     
-                    <!-- Column 2: Quick Links -->
+                    <!-- Column 2: Quick Links Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column2']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Quick Links', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
-                    <!-- Column 3: Company -->
+                    <!-- Column 3: Company Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column3']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column3']['links']) && is_array($footer_content['column3']['links'])) : ?>
-                                <?php foreach ($footer_content['column3']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Company', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-company',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
-                    <!-- Column 4: User Portal -->
+                    <!-- Column 4: User Portal Menu -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column4']['title']); ?></h3>
-                        <ul class="space-y-2">
-                            <?php if (!empty($footer_content['column4']['links']) && is_array($footer_content['column4']['links'])) : ?>
-                                <?php foreach ($footer_content['column4']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </ul>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('User Portal', 'yiontech-lms'); ?></h3>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-user-portal',
+                            'menu_class' => 'space-y-2',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Column 5: Newsletter -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4"><?php echo esc_html($footer_content['column5']['title']); ?></h3>
-                        <p class="text-gray-400 mb-4"><?php echo esc_html($footer_content['column5']['content']); ?></p>
+                        <h3 class="text-xl font-bold mb-4"><?php _e('Newsletter', 'yiontech-lms'); ?></h3>
+                        <p class="text-gray-400 mb-4"><?php _e('Get the latest news and updates delivered right to your inbox.', 'yiontech-lms'); ?></p>
                         <?php if ($newsletter_enable) : ?>
                             <?php get_template_part('template-parts/newsletter-form'); ?>
                         <?php endif; ?>
                         
                         <div class="mt-6">
-                            <h4 class="text-lg font-medium mb-2">Contact Us</h4>
+                            <h4 class="text-lg font-medium mb-2"><?php _e('Contact Us', 'yiontech-lms'); ?></h4>
                             <ul class="space-y-2 text-gray-400">
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
-                                    <span><?php echo esc_html($footer_content['column5']['email']); ?></span>
+                                    <span><?php echo esc_html(get_bloginfo('admin_email')); ?></span>
                                 </li>
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                     </svg>
-                                    <span><?php echo esc_html($footer_content['column5']['phone']); ?></span>
+                                    <span>+1 (555) 123-4567</span>
                                 </li>
                             </ul>
                         </div>
@@ -349,7 +223,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
         ?>
         
         <!-- Copyright -->
-        <div class="mt-0  text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
+        <div class="mt-0 text-center text-gray-400" style="background-color: <?php echo esc_attr($copyright_background_color); ?>;">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <p><?php echo $copyright_text; ?></p>
                 
@@ -358,7 +232,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     <p class="mt-2 text-sm">
                         <?php if ($privacy_policy_url) : ?>
                             <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                Privacy Policy
+                                <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                             </a>
                         <?php endif; ?>
                         
@@ -368,7 +242,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         
                         <?php if ($terms_of_service_url) : ?>
                             <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                Terms of Service
+                                <?php _e('Terms of Service', 'yiontech-lms'); ?>
                             </a>
                         <?php endif; ?>
                     </p>
@@ -402,36 +276,16 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <p class="text-gray-400 text-sm"><?php echo $copyright_text; ?></p>
                     </div>
                     
-                    <!-- Quick Links -->
+                    <!-- Quick Links Menu -->
                     <div class="mb-4 md:mb-0">
-                        <ul class="flex flex-wrap justify-center gap-4">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'flex flex-wrap justify-center gap-4',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Social Media -->
@@ -484,38 +338,18 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     </div>
                     
                     <!-- Description -->
-                    <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html($footer_content['column1']['content']); ?></p>
+                    <p class="text-gray-400 max-w-2xl mx-auto mb-6"><?php echo esc_html(get_bloginfo('description')); ?></p>
                     
-                    <!-- Quick Links -->
+                    <!-- Quick Links Menu -->
                     <div class="mb-6">
-                        <ul class="flex flex-wrap justify-center gap-6">
-                            <?php if (!empty($footer_content['column2']['links']) && is_array($footer_content['column2']['links'])) : ?>
-                                <?php foreach ($footer_content['column2']['links'] as $link) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url($link['url']); ?>" class="text-gray-400 hover:text-white transition">
-                                            <?php echo esc_html($link['text']); ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Privacy Policy
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                        Terms of Service
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
+                        <?php
+                        wp_nav_menu(array(
+                            'theme_location' => 'footer-quick-links',
+                            'menu_class' => 'flex flex-wrap justify-center gap-6',
+                            'container' => false,
+                            'fallback_cb' => false,
+                        ));
+                        ?>
                     </div>
                     
                     <!-- Newsletter -->
@@ -548,7 +382,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                     
                     <!-- Contact Info -->
                     <div class="text-gray-400 text-sm mb-6">
-                        <p><?php echo esc_html($footer_content['column5']['email']); ?> | <?php echo esc_html($footer_content['column5']['phone']); ?></p>
+                        <p><?php echo esc_html(get_bloginfo('admin_email')); ?> | +1 (555) 123-4567</p>
                     </div>
                 </div>
             </div>
@@ -563,7 +397,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                         <p class="mt-2">
                             <?php if ($privacy_policy_url) : ?>
                                 <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Privacy Policy
+                                    <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                 </a>
                             <?php endif; ?>
                             
@@ -573,7 +407,7 @@ function yiontech_lms_display_default_footer($footer_style, $footer_content, $co
                             
                             <?php if ($terms_of_service_url) : ?>
                                 <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-400 hover:text-white transition">
-                                    Terms of Service
+                                    <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                 </a>
                             <?php endif; ?>
                         </p>

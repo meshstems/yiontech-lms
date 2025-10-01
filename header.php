@@ -58,7 +58,6 @@ if ($enable_preloader) {
  $logo = yiontech_lms_get_theme_setting('logo_upload');
  $retina_logo = yiontech_lms_get_theme_setting('retina_logo_upload');
  $header_buttons = yiontech_lms_get_theme_setting('header_buttons');
- $header_menu = yiontech_lms_get_theme_setting('header_menu');
 
 // Get header background colors
  $header_background_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
@@ -95,42 +94,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-8 items-center">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-8 items-center',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-8 items-center',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -203,42 +174,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-6 items-center text-sm">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-6 items-center text-sm',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-6 items-center text-sm',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -311,42 +254,14 @@ if ($enable_preloader) {
                 
                 <!-- Desktop Navigation (Center) -->
                 <nav id="site-navigation" class="main-navigation hidden xl:flex justify-center w-full">
-                    <?php if (!empty($header_menu)) : ?>
-                        <ul class="flex space-x-8 items-center">
-                            <?php foreach ($header_menu as $item) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($item['url']); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php echo esc_html($item['text']); ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                            
-                            <!-- Add privacy links if enabled -->
-                            <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php else : ?>
-                        <?php
-                        wp_nav_menu( array(
-                            'theme_location' => 'primary',
-                            'menu_class'     => 'flex space-x-8 items-center',
-                            'container'      => false,
-                        ) );
-                        ?>
-                    <?php endif; ?>
+                    <?php
+                    wp_nav_menu( array(
+                        'theme_location' => 'primary',
+                        'menu_class'     => 'flex space-x-8 items-center',
+                        'container'      => false,
+                        'fallback_cb'    => false,
+                    ) );
+                    ?>
                 </nav>
                 
                 <!-- Right Side Buttons -->
@@ -424,42 +339,14 @@ if ($enable_preloader) {
             <!-- Main Navigation -->
             <div class="p-4 border-b">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Navigation', 'yiontech-lms'); ?></h3>
-                <?php if (!empty($header_menu)) : ?>
-                    <ul class="space-y-2">
-                        <?php foreach ($header_menu as $item) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($item['url']); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php echo esc_html($item['text']); ?>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                        
-                        <!-- Add privacy links if enabled -->
-                        <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php _e('Privacy Policy', 'yiontech-lms'); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        
-                        <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
-                            <li>
-                                <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    <?php _e('Terms of Service', 'yiontech-lms'); ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                <?php else : ?>
-                    <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'space-y-2',
-                        'container'      => false,
-                    ) );
-                    ?>
-                <?php endif; ?>
+                <?php
+                wp_nav_menu( array(
+                    'theme_location' => 'primary',
+                    'menu_class'     => 'space-y-2',
+                    'container'      => false,
+                    'fallback_cb'    => false,
+                ) );
+                ?>
             </div>
             
             <!-- Mobile Buttons -->
@@ -501,6 +388,7 @@ if ($enable_preloader) {
                     'theme_location' => 'footer-quick-links',
                     'menu_class'     => 'space-y-2',
                     'container'      => false,
+                    'fallback_cb'    => false,
                 ) );
                 ?>
             </div>
