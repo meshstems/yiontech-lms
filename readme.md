@@ -56,7 +56,7 @@ Yes, but it is built and optimized for Tutor LMS. Some functionality (like dashb
 ### ❓ Where are uploaded documents stored?  
 Documents are stored privately under:  
 
-wp-content/uploads/yiontech-lms-private/{user_id}/
+` wp-content/uploads/yiontech-lms-private/{user_id}/`
 
 They are **not publicly accessible** via direct URL.  
 
