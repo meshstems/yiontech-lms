@@ -1,0 +1,57 @@
+Yiontech LMS Theme License Agreement
+====================================
+
+Copyright © 2025 Yiontech Ltd. All rights reserved.
+
+This is a commercial theme and is NOT distributed under the GNU General Public License (GPL).
+By purchasing, downloading, installing, or using this theme ("Yiontech LMS"), you agree
+to the following terms and conditions:
+
+1. License Grant
+   - Upon purchase, you are granted a non-exclusive, non-transferable license
+     to use this theme on one (1) website or project unless your purchase
+     explicitly allows multiple sites.
+   - You may use this theme for personal or commercial projects, subject to
+     the restrictions in this license.
+
+2. Restrictions
+   - You may NOT resell, redistribute, sublicense, or share this theme in whole
+     or in part, whether modified or unmodified.
+   - You may NOT upload or distribute this theme on theme marketplaces,
+     free repositories, or file-sharing platforms.
+   - You may NOT claim authorship or ownership of this theme or its design.
+
+3. Modifications
+   - You may customize or modify this theme for your own use or for a client,
+     but all modified versions remain covered by this license.
+   - Modified versions may not be resold, redistributed, or repackaged as
+     new products.
+
+4. Ownership
+   - This theme remains the sole intellectual property of Yiontech Ltd.
+   - Purchasing or using this theme does not transfer ownership rights to you.
+
+5. Updates & Support
+   - If your purchase includes updates and support, they will be provided for
+     the duration specified at the time of purchase (e.g., 6 months or 12 months).
+   - Access to updates and support beyond this period may require renewal.
+
+6. Termination
+   - Failure to comply with this license will automatically terminate your rights
+     to use this theme without notice or refund.
+   - Upon termination, you must remove all copies of the theme from your projects.
+
+7. Disclaimer of Warranty & Liability
+   - This theme is provided "as is" without any warranties of any kind, either
+     express or implied, including but not limited to warranties of fitness for
+     a particular purpose.
+   - In no event shall Yiontech Ltd be liable for any damages, losses, or issues
+     arising from the use or inability to use this theme.
+
+------------------------------------------------
+For licensing inquiries, extended usage, or bulk
+purchase agreements, please contact:
+
+Yiontech Ltd  
+Email: support@yiontech.com  
+Website: https://yiontech.com
