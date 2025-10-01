@@ -4,7 +4,7 @@
  */
 
 // Check if this is a login or register page
-$is_auth_page = is_page_template('page-login.php') || is_page_template('page-register.php');
+ $is_auth_page = is_page_template('page-login.php') || is_page_template('page-register.php');
 
 // Don't load header for auth pages
 if ($is_auth_page) {
@@ -39,7 +39,7 @@ if ($is_auth_page) {
 <body <?php body_class(); ?>>
 <?php
 // Preloader
-$enable_preloader = yiontech_lms_get_theme_setting('enable_preloader');
+ $enable_preloader = yiontech_lms_get_theme_setting('enable_preloader');
 if ($enable_preloader) {
     ?>
     <div id="preloader">
@@ -52,20 +52,22 @@ if ($enable_preloader) {
 ?>
 
 <?php
-$header_style = yiontech_lms_get_theme_setting('header_style', 'default');
-$transparent_header = yiontech_lms_get_theme_setting('transparent_header');
-$sticky_header = yiontech_lms_get_theme_setting('sticky_header', true);
-$header_background_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
-$sticky_header_background_color = yiontech_lms_get_theme_setting('sticky_header_background_color', '#1e40af');
-$logo = yiontech_lms_get_theme_setting('logo_upload');
-$retina_logo = yiontech_lms_get_theme_setting('retina_logo_upload');
-$header_buttons = yiontech_lms_get_theme_setting('header_buttons');
-$header_menu = yiontech_lms_get_theme_setting('header_menu');
+ $header_style = yiontech_lms_get_theme_setting('header_style', 'default');
+ $transparent_header = yiontech_lms_get_theme_setting('transparent_header');
+ $sticky_header = yiontech_lms_get_theme_setting('sticky_header', true);
+ $logo = yiontech_lms_get_theme_setting('logo_upload');
+ $retina_logo = yiontech_lms_get_theme_setting('retina_logo_upload');
+ $header_buttons = yiontech_lms_get_theme_setting('header_buttons');
+ $header_menu = yiontech_lms_get_theme_setting('header_menu');
+
+// Get header background colors
+ $header_background_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
+ $sticky_header_background_color = yiontech_lms_get_theme_setting('sticky_header_background_color', '#1e40af');
 
 // Get privacy settings
-$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
-$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
-$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+ $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+ $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 ?>
 <?php if ($header_style == 'default') : ?>
 <header class="site-header text-white <?php echo $sticky_header ? 'header-sticky-enabled' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
@@ -107,7 +109,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Privacy Policy
+                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -115,7 +117,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Terms of Service
+                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -163,7 +165,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                     <?php endif; ?>
                     
                     <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1">
+                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -215,7 +217,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Privacy Policy
+                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -223,7 +225,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Terms of Service
+                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -271,7 +273,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                     <?php endif; ?>
                     
                     <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1">
+                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -323,7 +325,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Privacy Policy
+                                        <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -331,7 +333,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
                                 <li>
                                     <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-white hover:text-gray-200 transition">
-                                        Terms of Service
+                                        <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                     </a>
                                 </li>
                             <?php endif; ?>
@@ -379,7 +381,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                     <?php endif; ?>
                     
                     <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1">
+                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -411,7 +413,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                 <?php endif; ?>
             </div>
             <button id="mobile-menu-close" class="text-white focus:outline-none p-1">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
@@ -421,7 +423,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
         <div class="flex-grow overflow-y-auto">
             <!-- Main Navigation -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Navigation</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Navigation', 'yiontech-lms'); ?></h3>
                 <?php if (!empty($header_menu)) : ?>
                     <ul class="space-y-2">
                         <?php foreach ($header_menu as $item) : ?>
@@ -436,7 +438,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                         <?php if ($enable_privacy_features && $privacy_policy_url) : ?>
                             <li>
                                 <a href="<?php echo esc_url($privacy_policy_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    Privacy Policy
+                                    <?php _e('Privacy Policy', 'yiontech-lms'); ?>
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -444,7 +446,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                         <?php if ($enable_privacy_features && $terms_of_service_url) : ?>
                             <li>
                                 <a href="<?php echo esc_url($terms_of_service_url); ?>" class="text-gray-600 hover:text-blue-600 transition">
-                                    Terms of Service
+                                    <?php _e('Terms of Service', 'yiontech-lms'); ?>
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -462,7 +464,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
             
             <!-- Mobile Buttons -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Quick Actions</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Quick Actions', 'yiontech-lms'); ?></h3>
                 <div class="space-y-3">
                     <?php if (!empty($header_buttons)) : ?>
                         <?php foreach ($header_buttons as $button) : ?>
@@ -471,7 +473,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                             if ($show_mobile) : 
                             ?>
                                 <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="block px-4 py-2 text-center rounded-lg transition duration-300 
+                                   class="block px-4 py-2 rounded-lg transition duration-300 
                                           <?php echo $button['style'] == 'solid' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'; ?>">
                                     <?php echo esc_html($button['text']); ?>
                                 </a>
@@ -483,17 +485,17 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
             
             <!-- User Portal -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">User Portal</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('User Portal', 'yiontech-lms'); ?></h3>
                 <div class="space-y-3">
-                    <a href="<?php echo esc_url( home_url( '/login' ) ); ?>" class="block px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition duration-300">Login</a>
-                    <a href="<?php echo esc_url( home_url( '/register' ) ); ?>" class="block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">Create Account</a>
-                    <a href="<?php echo esc_url( home_url( '/dashboard' ) ); ?>" class="block px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-300">My Dashboard</a>
+                    <a href="<?php echo esc_url( home_url( '/login' ) ); ?>" class="block px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition duration-300"><?php _e('Login', 'yiontech-lms'); ?></a>
+                    <a href="<?php echo esc_url( home_url( '/register' ) ); ?>" class="block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"><?php _e('Create Account', 'yiontech-lms'); ?></a>
+                    <a href="<?php echo esc_url( home_url( '/dashboard' ) ); ?>" class="block px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-300"><?php _e('My Dashboard', 'yiontech-lms'); ?></a>
                 </div>
             </div>
             
             <!-- Quick Links -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Quick Links</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Quick Links', 'yiontech-lms'); ?></h3>
                 <?php
                 wp_nav_menu( array(
                     'theme_location' => 'footer-quick-links',
@@ -505,13 +507,13 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
             
             <!-- Contact Information -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Contact Us</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Contact Us', 'yiontech-lms'); ?></h3>
                 <ul class="space-y-2 text-gray-600">
                     <li class="flex items-start">
                         <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        <span>info@yiontech.com</span>
+                        <span><?php echo esc_html(get_bloginfo('admin_email')); ?></span>
                     </li>
                     <li class="flex items-start">
                         <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -521,10 +523,10 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
                     </li>
                 </ul>
             </div>
-            
+                                   
             <!-- Social Media -->
             <div class="p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Follow Us</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Follow Us', 'yiontech-lms'); ?></h3>
                 <div class="flex space-x-4">
                     <a href="#" class="text-blue-600 hover:text-blue-800">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -546,8 +548,8 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
             
             <!-- Newsletter Signup -->
             <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Newsletter</h3>
-                <p class="text-gray-600 text-sm mb-3">Subscribe to get the latest updates and offers.</p>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3"><?php _e('Newsletter', 'yiontech-lms'); ?></h3>
+                <p class="text-gray-600 text-sm mb-3"><?php _e('Subscribe to get the latest updates and offers.', 'yiontech-lms'); ?></p>
                 <?php get_template_part('template-parts/newsletter-form'); ?>
             </div>
         </div>
@@ -556,7 +558,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
         <div class="p-4 bg-gray-100 border-t">
             <div class="text-center text-gray-600 text-sm">
                 <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?></p>
-                <p class="mt-1">All rights reserved.</p>
+                <p class="mt-1"><?php _e('All rights reserved.', 'yiontech-lms'); ?></p>
             </div>
         </div>
     </div>
@@ -564,7 +566,7 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 
 <?php
 // Add custom CSS from theme settings
-$custom_css = yiontech_lms_get_theme_setting('custom_css');
+ $custom_css = yiontech_lms_get_theme_setting('custom_css');
 if ($custom_css) {
     ?>
     <style>
@@ -616,11 +618,6 @@ if ($custom_css) {
             z-index: 999;
             width: 100%;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .site-header.scrolled {
-            background-color: #1e40af !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
         }
         
         /* Cookie consent banner */

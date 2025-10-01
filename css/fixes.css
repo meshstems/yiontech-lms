@@ -41,8 +41,6 @@ body {
 /* Header Adjustments */
 .site-header {
     padding: 0;
-    border: none;
-    box-shadow: none;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     z-index: 999;
 }
@@ -57,12 +55,10 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    border: none;
 }
 
 .main-navigation ul li {
     position: relative;
-    border: none;
 }
 
 .main-navigation ul li a {
@@ -72,12 +68,10 @@ body {
     font-size: 0.95rem;
     transition: all 0.3s ease;
     padding: 0.25rem 0;
-    border: none;
 }
 
 .main-navigation ul li a:hover {
     color: rgba(255, 255, 255, 0.8);
-    border: none;
 }
 
 /* Mobile Menu Toggle */
@@ -116,7 +110,6 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    border: none;
 }
 
 #mobile-menu-sidebar ul li {
@@ -129,13 +122,11 @@ body {
     font-weight: 500;
     padding: 0.5rem 0;
     display: block;
-    border: none;
     transition: color 0.3s ease;
 }
 
 #mobile-menu-sidebar ul li a:hover {
     color: #2563EB;
-    border: none;
 }
 
 /* Mobile Menu Sections */
@@ -162,7 +153,6 @@ body {
 /* Course Card Adjustments */
 .course-thumbnail {
     height: 180px;
-    border: none;
 }
 
 /* Pagination Adjustments */
@@ -174,36 +164,26 @@ body {
     background-color: #f3f4f6;
     color: #4b5563;
     text-decoration: none;
-    border: none;
 }
 
 .page-numbers.current {
     background-color: #2563eb;
     color: white;
-    border: none;
 }
 
 .page-numbers:hover {
     background-color: #e5e7eb;
-    border: none;
 }
 
 .page-numbers.current:hover {
     background-color: #1d4ed8;
-    border: none;
 }
 
 /* Footer Adjustments */
-footer {
-    border: none;
-    box-shadow: none;
-}
-
 footer ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    border: none;
 }
 
 footer ul li {
@@ -214,13 +194,11 @@ footer ul li a {
     color: #9CA3AF;
     text-decoration: none;
     transition: color 0.3s ease;
-    border: none;
     display: inline-block;
 }
 
 footer ul li a:hover {
     color: white;
-    border: none;
 }
 
 /* Newsletter Form */
@@ -272,32 +250,31 @@ footer ul li a:hover {
     width: 100%;
     height: 100%;
     background-color: #ffffff;
-    z-index: 99999 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .preloader-spinner {
     width: 80px;
     height: 80px;
     position: relative;
-    display: block !important;
+    display: block;
 }
 
 .spinner {
-    width: 80px !important;
-    height: 80px !important;
-    border: 8px solid rgba(30, 64, 175, 0.2) !important;
-    border-top: 8px solid #1e40af !important;
-    border-radius: 50% !important;
-    animation: spin 1s linear infinite !important;
-    display: block !important;
-    box-sizing: border-box !important;
-    background-color: transparent !important;
+    width: 80px;
+    height: 80px;
+    border: 8px solid rgba(30, 64, 175, 0.2);
+    border-top: 8px solid #1e40af;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: block;
+    box-sizing: border-box;
+    background-color: transparent;
 }
 
-/* Add a more visible spinner with multiple borders */
 .spinner::before {
     content: "";
     position: absolute;
@@ -339,8 +316,8 @@ footer ul li a:hover {
 }
 
 .site-header.scrolled {
-    background-color: #1e40af !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    background-color: #1e40af;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Ensure body can scroll if needed */
@@ -371,21 +348,7 @@ html, body {
 
 /* Remove all horizontal lines and unnecessary borders */
 hr {
-    display: none !important;
-    border: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: 0 !important;
-}
-
-/* Remove borders from all elements */
-* {
-    border: none !important;
-    border-width: 0 !important;
-    border-style: none !important;
-    border-color: transparent !important;
-    outline: none !important;
-    box-shadow: none !important;
+    display: none;
 }
 
 /* Remove borders from specific elements that might be causing the issue */
@@ -394,60 +357,92 @@ hr {
 .post-thumbnail, .content, .comments-area, .comment-list,
 .comment-form, .page-links, .tagcloud, .wp-block,
 .entry-content, .entry-header, .entry-footer, .entry-summary {
-    border: none !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    border-left: none !important;
-    border-right: none !important;
-}
-
-/* Remove any pseudo-elements that might be adding lines */
-::before, ::after {
-    border: none !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    border-left: none !important;
-    border-right: none !important;
+    border: none;
+    box-shadow: none;
 }
 
 /* Remove any background images that might look like lines */
 body, .site-header, footer, .site-content, .container {
-    background-image: none !important;
-}
-
-/* Remove any box-shadows that might look like lines */
-body, .site-header, footer, .site-content, .container,
-.main-navigation, .sidebar, .widget, .course-thumbnail,
-.post-thumbnail, .content, .comments-area, .comment-list,
-.comment-form, .page-links, .tagcloud, .wp-block,
-.entry-content, .entry-header, .entry-footer, .entry-summary {
-    box-shadow: none !important;
+    background-image: none;
 }
 
 /* Remove any text-decoration that might look like lines */
 a, a:hover, a:focus, a:active {
-    text-decoration: none !important;
-    border-bottom: none !important;
+    text-decoration: none;
+    border-bottom: none;
 }
 
 /* Remove any outlines */
 :focus {
-    outline: none !important;
-    outline-width: 0 !important;
-    outline-style: none !important;
-    outline-color: transparent !important;
+    outline: none;
+    outline-width: 0;
+    outline-style: none;
+    outline-color: transparent;
 }
 
-/* Fix for layout shifts when mobile menu is open */
-/* Removed scroll-locking styles to let browser handle */
-
-/* Header scroll effect */
-.site-header.scrolled {
-    background-color: #1e40af !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+/* Remove any pseudo-elements that might be adding lines */
+::before, ::after {
+    border: none;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
 }
 
-/* Add these styles at the end of the file */
+/* Cookie consent banner */
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1e293b;
+    color: white;
+    padding: 15px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    flex-direction: row;
+}
+
+.cookie-consent-content {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.cookie-consent-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.cookie-consent-buttons .button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+.cookie-consent-accept {
+    background: #3b82f6;
+    color: white;
+}
+
+.cookie-consent-accept:hover {
+    background: #2563eb;
+}
+
+.cookie-consent-learn {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.cookie-consent-learn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
 /* Auth page specific styles */
 .login-page, .register-page {
     background-color: #f9fafb;
@@ -561,118 +556,4 @@ a, a:hover, a:focus, a:active {
     border: 1px solid #fcc;
 }
 
-/* Fix for z-index conflicts between preloader, header, and back-to-top */
-#preloader {
-    z-index: 99999 !important;
-}
-
-.site-header {
-    z-index: 1000 !important;
-}
-
-#mobile-menu-sidebar {
-    z-index: 9999 !important;
-}
-
-#mobile-menu-overlay {
-    z-index: 9998 !important;
-}
-
-/* Ensure proper loading sequence for components */
-body.preloader-active #preloader {
-    display: flex !important;
-}
-
-body.preloader-active .site-header {
-    opacity: 0.9;
-}
-
-/* Prevent scroll jump when transparent header is initialized */
-body {
-    overflow-x: hidden;
-}
-
-.site-header {
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Fix for transparent header causing scroll reset */
-.header-transparent {
-    will-change: background-color;
-}
-
-/* Ensure smooth transitions for all header states */
-.site-header.sticky {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    width: 100%;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Prevent layout shifts during initialization */
-html, body {
-    height: auto;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-/* Add preloader class to body when preloader is active */
-/* Removed scroll-locking to let browser handle */
-
-/* Sticky header styles */
-.site-header.header-sticky-enabled {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    width: 100%;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    will-change: transform;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-.site-header.scrolled {
-    background-color: #1e40af !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Prevent layout shifts when mobile menu is open */
-/* Removed scroll-locking to let browser handle */
-
-/* Prevent layout shifts during page load */
-html {
-    scroll-behavior: auto; /* Ensure browser default scroll behavior */
-}
-
-body {
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
-}
-
-/* Ensure smooth transitions without forcing scroll positions */
-.site-header {
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Remove any forced scroll positions */
-#preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff;
-    z-index: 99999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Prevent scroll jump when mobile menu is open */
-body.mobile-menu-open {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-}
+/* Fix

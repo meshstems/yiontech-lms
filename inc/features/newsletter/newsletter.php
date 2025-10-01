@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 // Newsletter AJAX handler
 function yiontech_lms_newsletter_handler() {
     // Verify nonce
-    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'yiontech_lms_newsletter_nonce')) {
+    if (!wp_verify_nonce($_POST['newsletter_subscription_nonce'], 'newsletter_subscription_action')) {
         wp_send_json_error('Security check failed');
     }
     

@@ -6,21 +6,24 @@
  */
 ?>
 <?php
-$newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
-$newsletter_action_url = yiontech_lms_get_theme_setting('newsletter_action_url');
-$newsletter_method = yiontech_lms_get_theme_setting('newsletter_method', 'post');
-$newsletter_email_field = yiontech_lms_get_theme_setting('newsletter_email_field', 'email');
-$newsletter_hidden_fields = yiontech_lms_get_theme_setting('newsletter_hidden_fields', '');
+ $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
+ $newsletter_action_url = yiontech_lms_get_theme_setting('newsletter_action_url');
+ $newsletter_method = yiontech_lms_get_theme_setting('newsletter_method', 'post');
+ $newsletter_email_field = yiontech_lms_get_theme_setting('newsletter_email_field', 'email');
+ $newsletter_hidden_fields = yiontech_lms_get_theme_setting('newsletter_hidden_fields', '');
 
 // Get privacy settings
-$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
-$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
-$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+ $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+ $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 ?>
 <?php if ($newsletter_enable && $newsletter_action_url) : ?>
 <div class="newsletter-form">
     <form id="newsletter-form" class="mt-4" action="<?php echo esc_url($newsletter_action_url); ?>" method="<?php echo esc_attr($newsletter_method); ?>">
         <?php
+        // Add nonce field
+        wp_nonce_field('yiontech_newsletter_subscription_action', 'yiontech_newsletter_subscription_nonce');
+        
         // Add hidden fields
         if (!empty($newsletter_hidden_fields)) {
             $lines = explode("\n", $newsletter_hidden_fields);
@@ -58,7 +61,6 @@ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
         <?php endif; ?>
         
         <div id="newsletter-message" class="mt-2 text-sm hidden"></div>
-        <?php wp_nonce_field('yiontech_lms_newsletter_nonce', 'nonce'); ?>
     </form>
 </div>
 <?php endif; ?>

@@ -4,7 +4,7 @@
  */
 
 // Check if this is a login or register page
-$is_auth_page = is_page_template('page-login.php') || is_page_template('page-register.php');
+ $is_auth_page = is_page_template('page-login.php') || is_page_template('page-register.php');
 
 // Don't load footer for auth pages
 if ($is_auth_page) {
@@ -13,25 +13,44 @@ if ($is_auth_page) {
     return;
 }
 
-// Get theme settings
-$footer_style = yiontech_lms_get_theme_setting('footer_style', 'default');
-$footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
-$footer_content = yiontech_lms_get_theme_setting('footer_content');
-$copyright_text = yiontech_lms_get_theme_setting('copyright_text', '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.');
-$footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
-$footer_background_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
-$copyright_background_color = yiontech_lms_get_theme_setting('copyright_background_color', '#0f172a');
-$footer_padding = yiontech_lms_get_theme_setting('footer_padding', array('top' => 48, 'bottom' => 48));
-$padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
-$padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
-$logo = yiontech_lms_get_theme_setting('logo_upload');
-$newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
-$enable_back_to_top = yiontech_lms_get_theme_setting('enable_back_to_top');
+// Get theme settings with defaults
+ $footer_style = yiontech_lms_get_theme_setting('footer_style', 'default');
+ $footer_elementor_template = yiontech_lms_get_theme_setting('footer_elementor_template', 0);
+ $footer_content = yiontech_lms_get_theme_setting('footer_content', [
+    'column1' => ['title' => 'About Us', 'content' => 'A powerful learning management system designed for educators and students.'],
+    'column2' => ['title' => 'Quick Links', 'links' => [
+        ['text' => 'Home', 'url' => '/'],
+        ['text' => 'Courses', 'url' => '/courses'],
+        ['text' => 'About', 'url' => '/about'],
+        ['text' => 'Contact', 'url' => '/contact'],
+    ]],
+    'column3' => ['title' => 'Company', 'links' => [
+        ['text' => 'About Us', 'url' => '/about'],
+        ['text' => 'Our Team', 'url' => '/team'],
+        ['text' => 'Careers', 'url' => '/careers'],
+        ['text' => 'Blog', 'url' => '/blog'],
+    ]],
+    'column4' => ['title' => 'User Portal', 'links' => [
+        ['text' => 'Login', 'url' => '/login'],
+        ['text' => 'Register', 'url' => '/register'],
+        ['text' => 'Dashboard', 'url' => '/dashboard'],
+        ['text' => 'Profile', 'url' => '/profile'],
+    ]],
+    'column5' => ['title' => 'Newsletter', 'content' => 'Get the latest news and updates delivered right to your inbox.', 'email' => 'info@yiontech.com', 'phone' => '+1 (555) 123-4567'],
+]);
+ $copyright_text = yiontech_lms_get_theme_setting('copyright_text', '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.');
+ $footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
+ $footer_background_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
+ $copyright_background_color = yiontech_lms_get_theme_setting('copyright_background_color', '#0f172a');
+ $footer_padding = yiontech_lms_get_theme_setting('footer_padding', ['top' => 48, 'bottom' => 48]);
+ $logo = yiontech_lms_get_theme_setting('logo_upload');
+ $newsletter_enable = yiontech_lms_get_theme_setting('newsletter_enable');
+ $enable_back_to_top = yiontech_lms_get_theme_setting('enable_back_to_top');
 
 // Get privacy settings
-$enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
-$privacy_policy_url = yiontech_lms_get_privacy_policy_url();
-$terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+ $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
+ $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
+ $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
 
 // Ensure footer_content is an array
 if (!is_array($footer_content)) {
@@ -77,7 +96,7 @@ if (!is_array($footer_content)) {
 }
 
 // Ensure each column exists and has proper structure
-$columns = array('column1', 'column2', 'column3', 'column4', 'column5');
+ $columns = array('column1', 'column2', 'column3', 'column4', 'column5');
 foreach ($columns as $column) {
     if (!isset($footer_content[$column])) {
         $footer_content[$column] = array();
@@ -142,7 +161,7 @@ if ($footer_elementor_template > 0) {
                         echo '</footer>';
                     } else {
                         // Fall back to default footer if content is empty
-                        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
                     }
                 } else {
                     // Fallback for older Elementor versions
@@ -152,19 +171,19 @@ if ($footer_elementor_template > 0) {
                 }
             } else {
                 // Document not found, fall back to default footer
-                yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+                yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
             }
         } else {
             // Elementor not active, fall back to default footer
-            yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+            yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
         }
     } else {
         // Template not found or not published, fall back to default footer
-        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+        yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
     }
 } else {
     // No Elementor template selected, use default footer
-    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
+    yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url);
 }
 ?>
 
@@ -185,7 +204,10 @@ if ($footer_elementor_template > 0) {
 /**
  * Function to display the default theme footer
  */
-function yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $padding_top, $padding_bottom, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
+function yiontech_lms_display_default_footer($footer_style, $footer_content, $copyright_text, $footer_text_color, $footer_background_color, $copyright_background_color, $footer_padding, $logo, $newsletter_enable, $enable_privacy_features, $privacy_policy_url, $terms_of_service_url) {
+    $padding_top = isset($footer_padding['top']) ? $footer_padding['top'] : 48;
+    $padding_bottom = isset($footer_padding['bottom']) ? $footer_padding['bottom'] : 48;
+    
     if ($footer_style == 'default') : ?>
     <footer class="text-white" style="background-color: <?php echo esc_attr($footer_background_color); ?>; color: <?php echo esc_attr($footer_text_color); ?>; ">
         <?php 

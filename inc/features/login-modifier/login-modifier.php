@@ -10,7 +10,6 @@
 
 if (!defined('ABSPATH')) exit;
 
-
 /*--------------------------------------------------------------
 # 2. Shortcode function (define, but register on init)
 --------------------------------------------------------------*/
@@ -123,6 +122,7 @@ function yiontech_lms_custom_login_form_shortcode() {
                 <!-- Right column: Form -->
                 <div class="p-8 w-full">
                     <form id="custom_login_form" method="post" class="space-y-6 w-full">
+                        <?php wp_nonce_field('custom_login_action', 'custom_login_nonce'); ?>
                         <div class="w-full">
                             <label class="block text-sm font-medium text-gray-700 mb-2" for="username">Username or Email</label>
                             <input type="text" name="username" id="username" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
@@ -216,22 +216,32 @@ add_action('wp_enqueue_scripts', 'yiontech_lms_enqueue_login_scripts');
 /*--------------------------------------------------------------
 # 5. AJAX Login Handler
 --------------------------------------------------------------*/
+// Nonce verification in the AJAX login handler section
 function yiontech_lms_ajax_login() {
+    if (!wp_verify_nonce($_POST['custom_login_nonce'], 'custom_login_action')) {
+        wp_send_json_error('Security check failed');
+    }
+    
     $creds = [
-        'user_login'    => isset($_POST['username']) ? sanitize_text_field($_POST['username']) : '',
-        'user_password' => isset($_POST['password']) ? $_POST['password'] : '',
-        'remember'      => isset($_POST['remember']) ? true : false
+        'user_login'    => sanitize_text_field($_POST['username']),
+        'user_password' => $_POST['password'],
+        'remember'      => !empty($_POST['remember'])
     ];
 
     $user = wp_signon($creds, false);
     if (is_wp_error($user)) {
         wp_send_json_error($user->get_error_message());
     } else {
+        $redirect = !empty($_REQUEST['redirect_to']) 
+            ? esc_url_raw($_REQUEST['redirect_to']) 
+            : yiontech_get_tutor_dashboard_url();
+
         wp_send_json_success([
-            'redirect' => yiontech_get_tutor_dashboard_url()
+            'redirect' => $redirect
         ]);
     }
 }
+
 add_action('wp_ajax_nopriv_yiontech_login', 'yiontech_lms_ajax_login');
 add_action('wp_ajax_yiontech_login', 'yiontech_lms_ajax_login');
 
@@ -296,10 +306,21 @@ add_filter('template_include', function ($template) {
  * Always override Tutor LMS login URL
  * This prevents links with `#`
  */
-add_filter('tutor_login_url', function($url) {
-    // Redirect to our custom login template page
-    return site_url('/login'); // you can change this slug
-});
+add_filter('tutor_login_url', function($url, $args = []) {
+    $login_page = get_page_by_path('login'); // or use your stored option
+    if ($login_page) {
+        $custom_url = get_permalink($login_page->ID);
+
+        // Preserve redirect_to parameter
+        if (!empty($args['redirect_to'])) {
+            $custom_url = add_query_arg('redirect_to', urlencode($args['redirect_to']), $custom_url);
+        }
+
+        return $custom_url;
+    }
+
+    return $url;
+}, 10, 2);
 
 /**
  * Force Tutor LMS to load our custom blank login template
@@ -313,3 +334,4 @@ add_action('template_redirect', function() {
         }
     }
 });
+

@@ -13,290 +13,147 @@ require_once get_template_directory() . '/inc/core/template-functions.php';
 // Include feature loader
 require_once get_template_directory() . '/inc/features-loader.php';
 
-// Add admin styles for theme settings
-function yiontech_lms_admin_styles() {
-    ?>
-    <style>
-        /* Improved admin styles for theme settings */
-        .wrap h1 {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .form-table {
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .form-table th {
-            padding: 20px;
-            background: #f9f9f9;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
-        
-        .form-table td {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .form-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        input[type="text"], 
-        input[type="email"], 
-        input[type="url"], 
-        input[type="password"], 
-        input[type="number"], 
-        textarea, 
-        select {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.07);
-        }
-        
-        input[type="color"] {
-            height: 40px;
-            width: 80px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        
-        .description {
-            color: #666;
-            font-style: italic;
-            margin-top: 5px;
-        }
-        
-        .button {
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 500;
-            text-decoration: none;
-        }
-        
-        .button-primary {
-            background: #0085ba;
-            color: #fff;
-            border: 1px solid #0085ba;
-        }
-        
-        .button-primary:hover {
-            background: #0073a8;
-            border-color: #0073a8;
-        }
-        
-        .button-secondary {
-            background: #f7f7f7;
-            color: #555;
-            border: 1px solid #ccc;
-        }
-        
-        .button-secondary:hover {
-            background: #f0f0f0;
-            border-color: #999;
-        }
-        
-        /* Media field styles */
-        .media-field {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .media-preview {
-            width: 200px;
-            height: 100px;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
-        
-        .media-preview img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-        
-        /* Header buttons field styles */
-        .header-buttons-field, .menu-field {
-            margin-top: 10px;
-        }
-        
-        .header-buttons, .menu-items {
-            margin-bottom: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            border: 1px solid #ddd;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
-        
-        .header-button-item, .menu-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        
-        .header-button-item:last-child, .menu-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .header-button-item div, .menu-item div {
-            margin-bottom: 10px;
-        }
-        
-        .header-button-item div:last-child, .menu-item div:last-child {
-            margin-bottom: 0;
-        }
-        
-        .header-button-item label, .menu-item label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .remove-button, .remove-menu-item, .remove-link {
-            background: #ff4d4d;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .remove-button:hover, .remove-menu-item:hover, .remove-link:hover {
-            background: #ff1a1a;
-        }
-        
-        .add-button, .add-menu-item, .add-link {
-            background: #5cb85c;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        .add-button:hover, .add-menu-item:hover, .add-link:hover {
-            background: #4cae4c;
-        }
-        
-        /* Footer content field styles */
-        .footer-content-field h4 {
-            margin: 20px 0 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 16px;
-            color: #23282d;
-        }
-        
-        .footer-links {
-            margin-bottom: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 15px;
-            border: 1px solid #ddd;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
-        
-        .footer-link-item {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 4px;
-        }
-        
-        .footer-link-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .footer-link-item input {
-            flex: 1;
-        }
-        
-        /* Spacing field styles */
-        .spacing-field {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .spacing-field > div {
-            flex: 1;
-        }
-        
-        .spacing-field label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-    </style>
-    <?php
+// Theme Support
+function yiontech_lms_setup_theme() {
+    // Core WordPress features
+    add_theme_support('post-thumbnails');
+    add_theme_support('custom-logo', [
+        'height' => 36,
+        'width' => 200,
+        'flex-height' => true,
+        'flex-width' => true,
+    ]);
+    add_theme_support('title-tag');
+    add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
+    add_theme_support('custom-background', ['default-color' => '#ffffff']);
+    add_theme_support('custom-header', ['default-image' => '', 'width' => 1200, 'height' => 300, 'flex-height' => true]);
+    add_theme_support('editor-styles');
+    add_theme_support('woocommerce');
+    add_theme_support('automatic-feed-links');
+
+    // Custom image sizes for performance
+    add_image_size('yiontech_course_thumbnail', 600, 400, true);
+    add_image_size('yiontech_post_thumbnail', 800, 600, true);
+
+    // Load editor styles
+    add_editor_style('css/editor-style.css');
 }
-add_action('admin_head', 'yiontech_lms_admin_styles');
+add_action('after_setup_theme', 'yiontech_lms_setup_theme');
+
+// Theme activation hook
+function yiontech_lms_activate() {
+    // Set default options if they don't exist
+    if (!get_option('yiontech_lms_theme_settings')) {
+        $defaults = yiontech_lms_get_default_settings();
+        add_option('yiontech_lms_theme_settings', wp_kses_post_deep($defaults));
+    }
+
+    // Create front page only if it doesn't exist
+    if (!get_page_by_path('front-page', OBJECT, 'page')) {
+        $front_page_id = wp_insert_post([
+            'post_title' => __('Front Page', 'yiontech-lms'),
+            'post_content' => '',
+            'post_status' => 'publish',
+            'post_author' => 1,
+            'post_type' => 'page',
+            'post_name' => 'front-page',
+        ]);
+        update_option('page_on_front', $front_page_id);
+        update_option('show_on_front', 'page');
+    }
+
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+register_activation_hook(__FILE__, 'yiontech_lms_activate');
 
 
+// Add dynamic styles to head
+function yiontech_lms_dynamic_styles() {
+    $header_background_color = yiontech_lms_get_theme_setting('header_background_color', '#1e40af');
+    $sticky_header_background_color = yiontech_lms_get_theme_setting('sticky_header_background_color', '#1e40af');
+    $transparent_header = yiontech_lms_get_theme_setting('transparent_header', false);
+    $footer_background_color = yiontech_lms_get_theme_setting('footer_background_color', '#111827');
+    $footer_text_color = yiontech_lms_get_theme_setting('footer_text_color', '#ffffff');
+    $copyright_background_color = yiontech_lms_get_theme_setting('copyright_background_color', '#0f172a');
 
-// Fix WooCommerce translation loading notice
-function delay_woocommerce_translation() {
-    if (function_exists('load_plugin_textdomain')) {
-        load_plugin_textdomain('woocommerce', false, plugin_dir_path(WC_PLUGIN_FILE) . 'i18n/languages/');
+    $css = "
+        .site-header:not(.header-transparent) {
+            background-color: {$header_background_color};
+        }
+        .site-header.sticky {
+            background-color: {$sticky_header_background_color};
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        footer {
+            background-color: {$footer_background_color};
+            color: {$footer_text_color};
+        }
+        .copyright-section {
+            background-color: {$copyright_background_color};
+        }
+        /* Gutenberg block styles (when not disabled) */
+        .wp-block-quote { border-left: 4px solid {$header_background_color}; padding-left: 1rem; }
+        .wp-block-button__link { background-color: {$header_background_color}; color: {$footer_text_color}; }
+    ";
+
+    wp_add_inline_style('yiontech-lms-style', $css);
+}
+add_action('wp_enqueue_scripts', 'yiontech_lms_dynamic_styles');
+
+// Fix WooCommerce translation loading
+function yiontech_lms_woocommerce_translation() {
+    if (defined('WC_PLUGIN_FILE') && function_exists('load_plugin_textdomain')) {
+        load_plugin_textdomain('woocommerce', false, dirname(plugin_basename(WC_PLUGIN_FILE)) . '/i18n/languages/');
     }
 }
-add_action('init', 'delay_woocommerce_translation', 5);
+add_action('init', 'yiontech_lms_woocommerce_translation', 5);
 
-
-/**
- * Disable Gutenberg and Restore Classic Editor
- * Applies to posts, pages, and all custom post types.
- */
-
-// Disable Gutenberg for all post types
-add_filter('use_block_editor_for_post', '__return_false', 10);
-add_filter('use_block_editor_for_post_type', '__return_false', 10);
+// Optional Gutenberg Disable
+function yiontech_lms_maybe_disable_gutenberg() {
+    if (yiontech_lms_get_theme_setting('disable_gutenberg', false)) {
+        add_filter('use_block_editor_for_post', '__return_false', 10);
+        add_filter('use_block_editor_for_post_type', '__return_false', 10);
+        add_action('wp_enqueue_scripts', 'yiontech_lms_disable_gutenberg_frontend_styles', 100);
+        add_action('admin_enqueue_scripts', 'yiontech_lms_disable_gutenberg_admin_styles', 100);
+        add_action('admin_enqueue_scripts', 'yiontech_lms_disable_gutenberg_admin_scripts', 100);
+    }
+}
+add_action('init', 'yiontech_lms_maybe_disable_gutenberg');
 
 // Remove Gutenberg CSS from frontend
-function disable_gutenberg_frontend_styles() {
-    wp_dequeue_style('wp-block-library'); // Core block styles
-    wp_dequeue_style('wp-block-library-theme'); // Theme block styles
-    wp_dequeue_style('wc-block-style'); // WooCommerce block styles if using WooCommerce
+function yiontech_lms_disable_gutenberg_frontend_styles() {
+    wp_dequeue_style('wp-block-library');
+    wp_dequeue_style('wp-block-library-theme');
+    wp_dequeue_style('wc-block-style');
 }
-add_action('wp_enqueue_scripts', 'disable_gutenberg_frontend_styles', 100);
 
-// Optional: Remove Gutenberg editor styles from admin
-function disable_gutenberg_admin_styles() {
-    wp_dequeue_style('wp-block-library'); // Removes Gutenberg CSS from admin
+// Remove Gutenberg editor styles from admin
+function yiontech_lms_disable_gutenberg_admin_styles() {
+    wp_dequeue_style('wp-block-library');
     wp_dequeue_style('wp-edit-blocks');
 }
-add_action('admin_enqueue_scripts', 'disable_gutenberg_admin_styles', 100);
 
-// Optional: Remove Gutenberg scripts for a cleaner admin
-function disable_gutenberg_admin_scripts() {
+// Remove Gutenberg scripts for a cleaner admin
+function yiontech_lms_disable_gutenberg_admin_scripts() {
     wp_dequeue_script('wp-blocks');
     wp_dequeue_script('wp-edit-post');
 }
-add_action('admin_enqueue_scripts', 'disable_gutenberg_admin_scripts', 100);
+
+// Child theme support
+function yiontech_lms_child_theme_styles() {
+    if (is_child_theme()) {
+        wp_enqueue_style('yiontech-lms-parent-style', get_template_directory_uri() . '/style.min.css', [], '1.1.0');
+    }
+}
+add_action('wp_enqueue_scripts', 'yiontech_lms_child_theme_styles', 5);
+
+// Generate .pot file on theme update
+function yiontech_lms_generate_pot_file() {
+    if (current_user_can('manage_options')) {
+        // Suggest running `wp i18n make-pot . languages/yiontech-lms.pot` via CLI
+        // Or automate with a plugin like WP-CLI
+    }
+}
+add_action('after_switch_theme', 'yiontech_lms_generate_pot_file');
+

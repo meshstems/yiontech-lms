@@ -1,13 +1,12 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-$user_id = get_current_user_id();
-$user = wp_get_current_user();
+ $user_id = get_current_user_id();
+ $user = wp_get_current_user();
 if (!$user_id) {
     echo '<p>' . __('You must be logged in to access this page.', 'tutor') . '</p>';
     return;
 }
-$is_admin = in_array('administrator', $user->roles);
 ?>
 <style>
 .tutor-dashboard-menu-item.tutor-gdpr-tab .tutor-dashboard-menu-item-icon::before {
@@ -21,7 +20,6 @@ $is_admin = in_array('administrator', $user->roles);
     background-size: contain;
     background-repeat: no-repeat;
 }
-
 </style>
 <div class="tutor-dashboard-content-inner">
     <h4><?php esc_html_e('GDPR Compliance – Your Data', 'tutor'); ?></h4>
@@ -33,11 +31,9 @@ $is_admin = in_array('administrator', $user->roles);
     </button>
 
     <!-- Delete Account -->
-    <?php if (!$is_admin): ?>
     <button type="button" id="delete-account-btn" class="tutor-btn tutor-btn-danger">
         <i class="tutor-icon-trash"></i> <?php esc_html_e('Delete My Account', 'tutor'); ?>
     </button>
-    <?php endif; ?>
 
     <div id="gdpr-status" class="tutor-mt-20"></div>
 </div>
@@ -50,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Delete Account
-    <?php if (!$is_admin): ?>
     document.getElementById('delete-account-btn').addEventListener('click', function() {
         if(!confirm("<?php echo esc_js('Are you sure you want to delete your account? This cannot be undone.'); ?>")) return;
 
@@ -76,6 +71,5 @@ document.addEventListener("DOMContentLoaded", function() {
             statusDiv.innerHTML = '<div class="tutor-alert tutor-danger">An error occurred.</div>';
         });
     });
-    <?php endif; ?>
 });
 </script>

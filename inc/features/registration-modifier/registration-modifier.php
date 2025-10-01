@@ -144,6 +144,7 @@ function yiontech_lms_custom_registration_form_shortcode() {
                 <!-- Right column: Form -->
                 <div class="p-8 w-full">
                     <form id="custom_registration_form" enctype="multipart/form-data" class="space-y-6 w-full">
+                        <?php wp_nonce_field('custom_registration_action', 'custom_registration_nonce'); ?>
                         <?php do_action('tutor_before_student_reg_form'); ?>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
@@ -246,12 +247,21 @@ function yiontech_lms_custom_registration_form_shortcode() {
                     </form>
 
                     <div id="registration_result" class="mt-4 w-full"></div>
-                    <p class="mt-6 text-center text-sm text-gray-600 w-full">
-                        Already have an account? 
-                        <a href="<?php echo esc_url(get_permalink(get_page_by_path('login'))); ?>" class="font-medium text-purple-600 hover:text-purple-500">
-                            Login
-                        </a>
-                    </p>
+                   <p class="mt-6 text-center text-sm text-gray-600 w-full">
+    Already have an account? 
+    <?php 
+    $login_page = get_page_by_path('login');
+    $login_url  = $login_page ? get_permalink($login_page->ID) : wp_login_url();
+
+    // Preserve redirect_to if passed to /register
+    if (!empty($_GET['redirect_to'])) {
+        $login_url = add_query_arg('redirect_to', urlencode($_GET['redirect_to']), $login_url);
+    }
+    ?>
+    <a href="<?php echo esc_url($login_url); ?>" class="font-medium text-purple-600 hover:text-purple-500">
+        Login
+    </a>
+</p>
 
                     <?php do_action('tutor_after_student_reg_form'); ?>
                 </div>
@@ -443,6 +453,11 @@ add_action('wp_enqueue_scripts', 'yiontech_lms_enqueue_registration_scripts');
 # 5. AJAX Registration Handler
 --------------------------------------------------------------*/
 function yiontech_lms_ajax_register() {
+     // Verify nonce
+    if (!wp_verify_nonce($_POST['custom_registration_nonce'], 'custom_registration_action')) {
+        wp_send_json_error('Security check failed');
+    }
+    
     $username   = sanitize_user($_POST['reg_username']);
     $email      = sanitize_email($_POST['reg_email']);
     $password   = $_POST['reg_password'];
@@ -496,7 +511,12 @@ function yiontech_lms_ajax_register() {
     // Trigger Tutor registration hooks & notifications
     do_action('tutor_student_registered', $user_id);
 
-    wp_send_json_success(['redirect' => yiontech_get_tutor_dashboard_url()]);
+   $redirect = !empty($_REQUEST['redirect_to']) 
+    ? esc_url_raw($_REQUEST['redirect_to']) 
+    : yiontech_get_tutor_dashboard_url();
+
+wp_send_json_success(['redirect' => $redirect]);
+
 }
 add_action('wp_ajax_nopriv_yiontech_register', 'yiontech_lms_ajax_register');
 add_action('wp_ajax_yiontech_register', 'yiontech_lms_ajax_register');
@@ -520,6 +540,7 @@ add_action('init', function () {
             'post_content' => $shortcode,
             'post_status'  => 'publish',
             'post_type'    => 'page',
+            'post_name'     => $slug
         ]);
 
         if ($page_id && !is_wp_error($page_id)) {
@@ -557,4 +578,35 @@ add_filter('template_include', function ($template) {
         }
     }
     return $template;
+});
+
+/*--------------------------------------------------------------
+# 8. Force Tutor LMS to use custom /register page
+--------------------------------------------------------------*/
+add_filter('tutor_register_url', function($url, $args = []) {
+    $register_page = get_page_by_path('register'); 
+    if ($register_page) {
+        $custom_url = get_permalink($register_page->ID);
+
+        if (!empty($args['redirect_to'])) {
+            $custom_url = add_query_arg('redirect_to', urlencode($args['redirect_to']), $custom_url);
+        }
+        return $custom_url;
+    }
+    return $url;
+}, 1, 2); // priority 1 instead of 10
+add_action('init', function() {
+    $register_page = get_page_by_path('register');
+    if ($register_page) {
+        update_option('tutor_registration_page', $register_page->ID);
+    }
+});
+add_action('template_redirect', function() {
+    if (is_page('student-registration-page')) {
+        $register_page = get_page_by_path('register');
+        if ($register_page) {
+            wp_redirect(get_permalink($register_page->ID));
+            exit;
+        }
+    }
 });

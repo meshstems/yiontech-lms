@@ -63,6 +63,23 @@ add_action('init', function () {
             exit;
         }
 
+        // Enhanced file type validation
+        $file_name = sanitize_file_name($file['name']);
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        $allowed_types = array('jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt');
+        
+        if (!in_array($file_ext, $allowed_types)) {
+            wp_redirect(add_query_arg('upload_status', 'invalid_file_type', tutor_utils()->tutor_dashboard_url('document-upload')));
+            exit;
+        }
+
+        // File size validation (10MB max)
+        $max_size = 10 * 1024 * 1024; // 10MB in bytes
+        if ($file['size'] > $max_size) {
+            wp_redirect(add_query_arg('upload_status', 'file_too_large', tutor_utils()->tutor_dashboard_url('document-upload')));
+            exit;
+        }
+
         $user_dir    = PRIVATE_UPLOAD_DIR_ROOT . $user_id . '/';
         $file_name   = sanitize_file_name($file['name']);
         $target_path = $user_dir . $file_name;

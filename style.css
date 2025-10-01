@@ -121,10 +121,12 @@ body {
 
 #mobile-menu-sidebar.translate-x-full {
     transform: translateX(100%);
+    margin-right: -15px;
 }
 
 #mobile-menu-sidebar:not(.translate-x-full) {
     transform: translateX(0);
+    margin-right: -15px;
 }
 
 #mobile-menu-sidebar ul {
