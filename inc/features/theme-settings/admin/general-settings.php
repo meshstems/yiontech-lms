@@ -114,7 +114,7 @@ function yiontech_lms_general_settings_init() {
         [
             'id' => 'disable_gutenberg',
             'name' => 'yiontech_lms_theme_settings[disable_gutenberg]',
-            'description' => __('Disable the block editor (Gutenberg) for all posts and pages', 'yiontech-lms'),
+            'description' => __('Disable the block editor (Gutenberg) for all posts and pages. Also disable block-based widgets for full classic editing experience', 'yiontech-lms'),
             'label_for' => 'disable_gutenberg',
         ]
     );

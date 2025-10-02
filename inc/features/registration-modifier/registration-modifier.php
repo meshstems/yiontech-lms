@@ -15,22 +15,9 @@
 
 if (!defined('ABSPATH')) exit;
 
-/*--------------------------------------------------------------
-# 1. Get Tutor Dashboard URL
---------------------------------------------------------------*/
-function yiontech_get_tutor_dashboard_url() {
-    if (function_exists('tutor_utils')) {
-        $dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
-        $dashboard_slug = $dashboard_page_id ? get_post_field('post_name', $dashboard_page_id) : '';
-        if ($dashboard_slug) {
-            return home_url(trailingslashit($dashboard_slug));
-        }
-    }
-    return home_url('/');
-}
 
 /*--------------------------------------------------------------
-# 2. Shortcode function (define, but register on init)
+# 1. Shortcode function (define, but register on init)
 --------------------------------------------------------------*/
 function yiontech_lms_custom_registration_form_shortcode() {
     if (is_user_logged_in()) {
@@ -278,7 +265,7 @@ function yiontech_lms_custom_registration_form_shortcode() {
 }
 
 /*--------------------------------------------------------------
-# 3. Register shortcode early (init)
+# 2. Register shortcode early (init)
 --------------------------------------------------------------*/
 add_action('init', function() {
     // register shortcode here so it's available before templates render
@@ -286,7 +273,7 @@ add_action('init', function() {
 });
 
 /*--------------------------------------------------------------
-# 4. Enqueue registration scripts (ajax)
+# 3. Enqueue registration scripts (ajax)
 --------------------------------------------------------------*/
 function yiontech_lms_enqueue_registration_scripts() {
     wp_enqueue_script('jquery');
@@ -450,7 +437,7 @@ function yiontech_lms_enqueue_registration_scripts() {
 add_action('wp_enqueue_scripts', 'yiontech_lms_enqueue_registration_scripts');
 
 /*--------------------------------------------------------------
-# 5. AJAX Registration Handler
+# 4. AJAX Registration Handler
 --------------------------------------------------------------*/
 function yiontech_lms_ajax_register() {
      // Verify nonce
@@ -522,7 +509,7 @@ add_action('wp_ajax_nopriv_yiontech_register', 'yiontech_lms_ajax_register');
 add_action('wp_ajax_yiontech_register', 'yiontech_lms_ajax_register');
 
 /*--------------------------------------------------------------
-# 6. Auto-create register page & assign template (init)
+# 5. Auto-create register page & assign template (init)
 #    Use init so shortcode registration and filters are available.
 --------------------------------------------------------------*/
 add_action('init', function () {
@@ -562,7 +549,7 @@ add_action('init', function () {
 });
 
 /*--------------------------------------------------------------
-# 7. Register and load custom blank template from this module
+# 6. Register and load custom blank template from this module
 --------------------------------------------------------------*/
 add_filter('theme_page_templates', function ($templates) {
     // expose the template name in Page > Template dropdown (optional)
@@ -581,7 +568,7 @@ add_filter('template_include', function ($template) {
 });
 
 /*--------------------------------------------------------------
-# 8. Force Tutor LMS to use custom /register page
+# 7. Force Tutor LMS to use custom /register page
 --------------------------------------------------------------*/
 add_filter('tutor_register_url', function($url, $args = []) {
     $register_page = get_page_by_path('register'); 

@@ -18,9 +18,9 @@ function yiontech_lms_checkbox_field($args) {
     ?>
     <label for="<?php echo esc_attr($args['label_for']); ?>">
         <input type="checkbox" id="<?php echo esc_attr($args['label_for']); ?>" name="<?php echo esc_attr($args['name']); ?>" value="1" <?php checked($value, true); ?> aria-describedby="<?php echo esc_attr($args['id']); ?>-description" />
-        <?php echo esc_html($args['description']); ?>
+        <?php echo esc_html($args['description']); // KEPT THIS DESCRIPTION ?>
     </label>
-    <p class="description" id="<?php echo esc_attr($args['id']); ?>-description"><?php echo esc_html($args['description']); ?></p>
+    <p class="description" id="<?php echo esc_attr($args['id']); ?>-description"><?php // REMOVED DESCRIPTION CONTENT HERE ?></p>
     <?php
 }
 
@@ -306,7 +306,6 @@ function yiontech_lms_footer_content_field($args) {
     $footer_content = isset($options[$args['id']]) ? $options[$args['id']] : yiontech_lms_get_default_footer_settings()['footer_content'];
     ?>
     <div class="footer-content-field" data-field-name="<?php echo esc_attr($args['name']); ?>">
-        <!-- Column 1 -->
         <h4><?php _e('Column 1', 'yiontech-lms'); ?></h4>
         <div>
             <label for="<?php echo esc_attr($args['id'] . '-column1-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
@@ -317,7 +316,6 @@ function yiontech_lms_footer_content_field($args) {
             <textarea id="<?php echo esc_attr($args['id'] . '-column1-content'); ?>" name="<?php echo esc_attr($args['name']); ?>[column1][content]" rows="4" class="large-text"><?php echo esc_textarea($footer_content['column1']['content'] ?? ''); ?></textarea>
         </div>
 
-        <!-- Column 2 -->
         <h4><?php _e('Column 2', 'yiontech-lms'); ?></h4>
         <div>
             <label for="<?php echo esc_attr($args['id'] . '-column2-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
@@ -338,7 +336,6 @@ function yiontech_lms_footer_content_field($args) {
             <input type="hidden" class="item-counter" data-column="column2" value="<?php echo esc_attr(count($footer_content['column2']['links'] ?? [])); ?>" />
         </div>
 
-        <!-- Column 3 -->
         <h4><?php _e('Column 3', 'yiontech-lms'); ?></h4>
         <div>
             <label for="<?php echo esc_attr($args['id'] . '-column3-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
@@ -359,7 +356,6 @@ function yiontech_lms_footer_content_field($args) {
             <input type="hidden" class="item-counter" data-column="column3" value="<?php echo esc_attr(count($footer_content['column3']['links'] ?? [])); ?>" />
         </div>
 
-        <!-- Column 4 -->
         <h4><?php _e('Column 4', 'yiontech-lms'); ?></h4>
         <div>
             <label for="<?php echo esc_attr($args['id'] . '-column4-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
@@ -380,7 +376,6 @@ function yiontech_lms_footer_content_field($args) {
             <input type="hidden" class="item-counter" data-column="column4" value="<?php echo esc_attr(count($footer_content['column4']['links'] ?? [])); ?>" />
         </div>
 
-        <!-- Column 5 -->
         <h4><?php _e('Column 5', 'yiontech-lms'); ?></h4>
         <div>
             <label for="<?php echo esc_attr($args['id'] . '-column5-title'); ?>"><?php _e('Title:', 'yiontech-lms'); ?></label>
