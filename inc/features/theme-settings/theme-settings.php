@@ -3,6 +3,7 @@
  * Theme Settings Module Loader
  *
  * @package Yiontech_LMS
+ * @since 1.0.0
  */
 
 // Exit if accessed directly
@@ -14,16 +15,22 @@ if (!defined('ABSPATH')) {
 define('YIONTECH_LMS_THEME_SETTINGS_DIR', get_template_directory() . '/inc/features/theme-settings');
 define('YIONTECH_LMS_THEME_SETTINGS_URL', get_template_directory_uri() . '/inc/features/theme-settings');
 
-// Include all necessary files
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/general-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/header-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/footer-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/newsletter-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/privacy-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/css-editor-settings.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/field-callbacks.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/settings-pages.php';
-require_once YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/display-functions.php';
+// Autoloader for admin files
+function yiontech_lms_theme_settings_autoloader() {
+    $admin_dir = YIONTECH_LMS_THEME_SETTINGS_DIR . '/admin/';
+    
+    // Get all PHP files in the admin directory
+    $files = glob($admin_dir . '*.php');
+    
+    if ($files) {
+        foreach ($files as $file) {
+            require_once $file;
+        }
+    }
+}
+
+// Run the autoloader
+yiontech_lms_theme_settings_autoloader();
 
 // Initialize the module
 function yiontech_lms_theme_settings_init() {
