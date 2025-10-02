@@ -52,7 +52,9 @@ if ($enable_preloader) {
 ?>
 
 <?php
+// Get theme settings
  $header_style = yiontech_lms_get_theme_setting('header_style', 'default');
+ $header_elementor_template = yiontech_lms_get_theme_setting('header_elementor_template', 0);
  $transparent_header = yiontech_lms_get_theme_setting('transparent_header');
  $sticky_header = yiontech_lms_get_theme_setting('sticky_header', true);
  $logo = yiontech_lms_get_theme_setting('logo_upload');
@@ -67,248 +69,63 @@ if ($enable_preloader) {
  $enable_privacy_features = yiontech_lms_get_theme_setting('enable_privacy_features');
  $privacy_policy_url = yiontech_lms_get_privacy_policy_url();
  $terms_of_service_url = yiontech_lms_get_terms_of_service_url();
+
+// Check if an Elementor header template is selected
+if ($header_elementor_template > 0) {
+    // Get the template post
+    $template_post = get_post($header_elementor_template);
+    
+    // Check if the template exists and is published
+    if ($template_post && $template_post->post_status === 'publish') {
+        // Try to get Elementor content using the frontend renderer
+        if (class_exists('\\Elementor\\Plugin')) {
+            $elementor = \Elementor\Plugin::instance();
+            
+            // Make sure Elementor frontend is initialized
+            if (method_exists($elementor, 'frontend')) {
+                $elementor->frontend->init();
+            }
+            
+            // Get the document
+            $document = $elementor->documents->get($header_elementor_template);
+            
+            if ($document) {
+                // Get the builder content for display
+                if (method_exists($elementor->frontend, 'get_builder_content_for_display')) {
+                    $content = $elementor->frontend->get_builder_content_for_display($header_elementor_template);
+                    
+                    if (!empty($content)) {
+                        // Display the Elementor template
+                        echo '<header class="elementor-header-template">';
+                        echo $content;
+                        echo '</header>';
+                    } else {
+                        // Fall back to default header if content is empty
+                        yiontech_lms_display_default_header($header_style, $transparent_header, $sticky_header, $header_background_color, $sticky_header_background_color, $logo, $retina_logo, $header_buttons);
+                    }
+                } else {
+                    // Fallback for older Elementor versions
+                    echo '<header class="elementor-header-template">';
+                    echo apply_filters('the_content', $template_post->post_content);
+                    echo '</header>';
+                }
+            } else {
+                // Document not found, fall back to default header
+                yiontech_lms_display_default_header($header_style, $transparent_header, $sticky_header, $header_background_color, $sticky_header_background_color, $logo, $retina_logo, $header_buttons);
+            }
+        } else {
+            // Elementor not active, fall back to default header
+            yiontech_lms_display_default_header($header_style, $transparent_header, $sticky_header, $header_background_color, $sticky_header_background_color, $logo, $retina_logo, $header_buttons);
+        }
+    } else {
+        // Template not found or not published, fall back to default header
+        yiontech_lms_display_default_header($header_style, $transparent_header, $sticky_header, $header_background_color, $sticky_header_background_color, $logo, $retina_logo, $header_buttons);
+    }
+} else {
+    // No Elementor template selected, use default header
+    yiontech_lms_display_default_header($header_style, $transparent_header, $sticky_header, $header_background_color, $sticky_header_background_color, $logo, $retina_logo, $header_buttons);
+}
 ?>
-<?php if ($header_style == 'default') : ?>
-<header class="site-header text-white <?php echo $sticky_header ? 'header-sticky-enabled' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
-      <?php if (!$transparent_header || !is_front_page()) : ?>style="background-color: <?php echo esc_attr($header_background_color); ?>;"<?php endif; ?>>
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' ) ) {
-        // Elementor header
-    } else {
-        // Default theme header
-        ?>
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-3">
-                <!-- Logo (Left) -->
-                <div class="site-branding flex items-center">
-                    <?php if ($logo) : ?>
-                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-logo-link">
-                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" <?php echo $retina_logo ? 'srcset="' . esc_url($logo) . ' 1x, ' . esc_url($retina_logo) . ' 2x"' : ''; ?>>
-                        </a>
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <?php the_custom_logo(); ?>
-                    <?php else : ?>
-                        <h1 class="text-xl font-bold"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-white"><?php bloginfo( 'name' ); ?></a></h1>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Desktop Navigation (Center) -->
-                <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'flex space-x-8 items-center',
-                        'container'      => false,
-                        'fallback_cb'    => false,
-                    ) );
-                    ?>
-                </nav>
-                
-                <!-- Right Side Buttons -->
-                <div class="flex items-center space-x-3">
-                    <?php if (!empty($header_buttons)) : ?>
-                        <?php foreach ($header_buttons as $button) : ?>
-                            <?php 
-                            $show_desktop = isset($button['show_desktop']) ? $button['show_desktop'] : true;
-                            $show_mobile = isset($button['show_mobile']) ? $button['show_mobile'] : true;
-                            if ($show_desktop) : 
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="hidden xl:block px-4 py-1.5 text-sm rounded-lg transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php endif; ?>
-                            
-                            <?php if ($show_mobile) : 
-                                // Show only the first button on mobile
-                                if ($button === reset($header_buttons)) :
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="xl:hidden px-4 py-1.5 text-sm rounded-lg transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php 
-                                endif;
-                            endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    
-                    <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-    ?>
-</header>
-<?php elseif ($header_style == 'minimal') : ?>
-<header class="site-header text-white <?php echo $sticky_header ? 'sticky top-0 z-50' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
-      <?php if (!$transparent_header || !is_front_page()) : ?>style="background-color: <?php echo esc_attr($header_background_color); ?>;"<?php endif; ?>>
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' ) ) {
-        // Elementor header
-    } else {
-        // Minimal theme header
-        ?>
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-2">
-                <!-- Logo (Left) -->
-                <div class="site-branding flex items-center">
-                    <?php if ($logo) : ?>
-                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-logo-link">
-                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" <?php echo $retina_logo ? 'srcset="' . esc_url($logo) . ' 1x, ' . esc_url($retina_logo) . ' 2x"' : ''; ?>>
-                        </a>
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <?php the_custom_logo(); ?>
-                    <?php else : ?>
-                        <h1 class="text-xl font-bold"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-white"><?php bloginfo( 'name' ); ?></a></h1>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Desktop Navigation (Center) -->
-                <nav id="site-navigation" class="main-navigation hidden xl:flex flex-1 justify-center">
-                    <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'flex space-x-6 items-center text-sm',
-                        'container'      => false,
-                        'fallback_cb'    => false,
-                    ) );
-                    ?>
-                </nav>
-                
-                <!-- Right Side Buttons -->
-                <div class="flex items-center space-x-3">
-                    <?php if (!empty($header_buttons)) : ?>
-                        <?php foreach ($header_buttons as $button) : ?>
-                            <?php 
-                            $show_desktop = isset($button['show_desktop']) ? $button['show_desktop'] : true;
-                            $show_mobile = isset($button['show_mobile']) ? $button['show_mobile'] : true;
-                            if ($show_desktop) : 
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="hidden xl:block px-3 py-1 text-sm rounded transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php endif; ?>
-                            
-                            <?php if ($show_mobile) : 
-                                // Show only the first button on mobile
-                                if ($button === reset($header_buttons)) :
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="xl:hidden px-3 py-1 text-sm rounded transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php 
-                                endif;
-                            endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    
-                    <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-    ?>
-</header>
-<?php elseif ($header_style == 'centered') : ?>
-<header class="site-header text-white <?php echo $sticky_header ? 'sticky top-0 z-50' : ''; ?> <?php echo $transparent_header && is_front_page() ? 'header-transparent' : ''; ?>" 
-      <?php if (!$transparent_header || !is_front_page()) : ?>style="background-color: <?php echo esc_attr($header_background_color); ?>;"<?php endif; ?>>
-    <?php 
-    if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' ) ) {
-        // Elementor header
-    } else {
-        // Centered theme header
-        ?>
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col items-center py-4">
-                <!-- Logo (Center) -->
-                <div class="site-branding flex items-center mb-3">
-                    <?php if ($logo) : ?>
-                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="custom-logo-link">
-                            <img src="<?php echo esc_url($logo); ?>" class="custom-logo" alt="<?php bloginfo('name'); ?>" <?php echo $retina_logo ? 'srcset="' . esc_url($logo) . ' 1x, ' . esc_url($retina_logo) . ' 2x"' : ''; ?>>
-                        </a>
-                    <?php elseif ( has_custom_logo() ) : ?>
-                        <?php the_custom_logo(); ?>
-                    <?php else : ?>
-                        <h1 class="text-xl font-bold"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-white"><?php bloginfo( 'name' ); ?></a></h1>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Desktop Navigation (Center) -->
-                <nav id="site-navigation" class="main-navigation hidden xl:flex justify-center w-full">
-                    <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'flex space-x-8 items-center',
-                        'container'      => false,
-                        'fallback_cb'    => false,
-                    ) );
-                    ?>
-                </nav>
-                
-                <!-- Right Side Buttons -->
-                <div class="flex items-center space-x-3 mt-3">
-                    <?php if (!empty($header_buttons)) : ?>
-                        <?php foreach ($header_buttons as $button) : ?>
-                            <?php 
-                            $show_desktop = isset($button['show_desktop']) ? $button['show_desktop'] : true;
-                            $show_mobile = isset($button['show_mobile']) ? $button['show_mobile'] : true;
-                            if ($show_desktop) : 
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="hidden xl:block px-4 py-1.5 text-sm rounded-lg transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php endif; ?>
-                            
-                            <?php if ($show_mobile) : 
-                                // Show only the first button on mobile
-                                if ($button === reset($header_buttons)) :
-                            ?>
-                                <a href="<?php echo esc_url($button['url']); ?>" 
-                                   class="xl:hidden px-4 py-1.5 text-sm rounded-lg transition duration-300 
-                                          <?php echo $button['style'] == 'solid' ? 'bg-white text-blue-600 hover:bg-blue-50' : 'border border-white hover:bg-white hover:text-blue-600'; ?>">
-                                    <?php echo esc_html($button['text']); ?>
-                                </a>
-                            <?php 
-                                endif;
-                            endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    
-                    <!-- Mobile Menu Toggle -->
-                    <button id="mobile-menu-toggle" class="text-white focus:outline-none p-1" aria-label="<?php esc_attr_e('Toggle mobile menu', 'yiontech-lms'); ?>" aria-expanded="false">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-    ?>
-</header>
-<?php endif; ?>
 
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"></div>
